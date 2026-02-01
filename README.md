@@ -20,19 +20,28 @@
 IChingLibrary/
 ├── src/
 │   ├── IChingLibrary.Core/              # 核心抽象和基础类
+│   │   ├── Abstractions/                 # 抽象接口
+│   │   │   ├── IGenerative<T>            # 相生关系接口
+│   │   │   ├── IRelationship<T>          # 通用关系接口
+│   │   │   └── IRestrictive<T>           # 相克关系接口
+│   │   ├── Annotations/                  # 注解
+│   │   │   └── IChingElementEnumAttribute # 元素枚举特性
+│   │   ├── Extensions/                   # 扩展方法
+│   │   │   └── HexagramExtensions        # 卦扩展（获取辞文）
+│   │   ├── Localization/                 # 国际化
+│   │   │   ├── IChingTranslationManager  # 翻译管理器
+│   │   │   ├── IIChingTranslationProvider # 翻译提供者接口
+│   │   │   └── ResxTranslationProvider   # RESX 翻译提供者
+│   │   ├── Resources/                    # 资源文件
+│   │   │   └── IChingResources.*.resx    # 多语言资源
 │   │   ├── IChingElement<T>              # 易学元素泛型基类
 │   │   ├── YinYang                       # 阴阳
 │   │   ├── FivePhase                     # 五行（金水木火土）
 │   │   ├── FourSymbol                    # 四象（老阴、少阳、少阴、老阳）
-│   │   ├── Trigram                       # 三爻（八卦）
-│   │   ├── Hexagram                      # 六爻（六十四卦）
-│   │   ├── HeavenlyStem                  # 天干
-│   │   ├── EarthlyBranch                 # 地支
-│   │   ├── StemBranch                    # 干支
-│   │   ├── SixKin                        # 六亲
-│   │   ├── SixSpirit                     # 六神
-│   │   ├── Position                      # 世应位置
-│   │   └── SymbolicStar                  # 神煞
+│   │   ├── Trigram                       # 三爻卦（八卦）
+│   │   ├── Hexagram                      # 六爻卦（六十四卦）
+│   │   ├── StemBranch                    # 天干地支（干支）
+│   │   └── GlobalUsings.cs               # 全局 using
 │   │
 │   ├── IChingLibrary.Generators/         # Roslyn 增量源代码生成器
 │   │
@@ -65,7 +74,9 @@ IChingLibrary/
 │           │   ├── ISixSpiritProvider
 │           │   └── IHiddenDeityProvider
 │           └── Default*.cs               # 默认实现
-└── test/                                 # 测试项目（待实现）
+└── test/                                 # 测试项目
+    ├── IChingLibrary.Core.Test/          # 核心库测试
+    └── IChingLibrary.SixLines.Test/      # 六爻库测试
 ```
 
 ## 快速开始
@@ -74,7 +85,7 @@ IChingLibrary/
 
 ```bash
 # 克隆仓库
-git clone https://github.com/your-repo/IChingLibrary.git
+git clone https://github.com/TheodoreCheung/IChingLibrary.git
 cd IChingLibrary
 
 # 恢复 NuGet 包
