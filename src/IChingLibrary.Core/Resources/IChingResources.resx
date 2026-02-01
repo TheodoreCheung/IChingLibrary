@@ -1,0 +1,2718 @@
+<?xml version='1.0' encoding='utf-8'?>
+<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:schema id="root">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:element name="root" ns1:IsDataSet="true">
+      <xs:complexType>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="metadata">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" />
+              </xs:sequence>
+              <xs:attribute name="name" use="required" type="xsd:string" />
+              <xs:attribute name="type" type="xsd:string" />
+              <xs:attribute name="mimetype" type="xsd:string" />
+              <xs:attribute ref="xml:space" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="assembly">
+            <xs:complexType>
+              <xs:attribute name="alias" type="xsd:string" />
+              <xs:attribute name="name" type="xsd:string" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="data">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
+              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
+              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
+              <xs:attribute ref="xml:space" ns1:Ordinal="5" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="resheader">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
+              </xs:sequence>
+              <xs:attribute name="name" type="xsd:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  
+  <data name="YinYang.Yin" xml:space="preserve">
+    <value>Yin</value>
+  </data>
+  <data name="YinYang.Yang" xml:space="preserve">
+    <value>Yang</value>
+  </data>
+
+  
+  <data name="FourSymbol.OldYin" xml:space="preserve">
+    <value>Old Yin</value>
+  </data>
+  <data name="FourSymbol.YoungYang" xml:space="preserve">
+    <value>Young Yang</value>
+  </data>
+  <data name="FourSymbol.YoungYin" xml:space="preserve">
+    <value>Young Yin</value>
+  </data>
+  <data name="FourSymbol.OldYang" xml:space="preserve">
+    <value>Old Yang</value>
+  </data>
+
+  
+  <data name="FivePhase.Metal" xml:space="preserve">
+    <value>Metal</value>
+  </data>
+  <data name="FivePhase.Water" xml:space="preserve">
+    <value>Water</value>
+  </data>
+  <data name="FivePhase.Wood" xml:space="preserve">
+    <value>Wood</value>
+  </data>
+  <data name="FivePhase.Fire" xml:space="preserve">
+    <value>Fire</value>
+  </data>
+  <data name="FivePhase.Earth" xml:space="preserve">
+    <value>Earth</value>
+  </data>
+
+  
+  <data name="HeavenlyStem.Jia" xml:space="preserve">
+    <value>Jia</value>
+  </data>
+  <data name="HeavenlyStem.Yi" xml:space="preserve">
+    <value>Yi</value>
+  </data>
+  <data name="HeavenlyStem.Bing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="HeavenlyStem.Ding" xml:space="preserve">
+    <value>Ding</value>
+  </data>
+  <data name="HeavenlyStem.Wu" xml:space="preserve">
+    <value>Wu</value>
+  </data>
+  <data name="HeavenlyStem.Ji" xml:space="preserve">
+    <value>Ji</value>
+  </data>
+  <data name="HeavenlyStem.Geng" xml:space="preserve">
+    <value>Geng</value>
+  </data>
+  <data name="HeavenlyStem.Xin" xml:space="preserve">
+    <value>Xin</value>
+  </data>
+  <data name="HeavenlyStem.Ren" xml:space="preserve">
+    <value>Ren</value>
+  </data>
+  <data name="HeavenlyStem.Gui" xml:space="preserve">
+    <value>Gui</value>
+  </data>
+
+  
+  <data name="EarthlyBranch.Zi" xml:space="preserve">
+    <value>Zi</value>
+  </data>
+  <data name="EarthlyBranch.Chou" xml:space="preserve">
+    <value>Chou</value>
+  </data>
+  <data name="EarthlyBranch.Yin" xml:space="preserve">
+    <value>Yin</value>
+  </data>
+  <data name="EarthlyBranch.Mao" xml:space="preserve">
+    <value>Mao</value>
+  </data>
+  <data name="EarthlyBranch.Chen" xml:space="preserve">
+    <value>Chen</value>
+  </data>
+  <data name="EarthlyBranch.Si" xml:space="preserve">
+    <value>Si</value>
+  </data>
+  <data name="EarthlyBranch.Wu" xml:space="preserve">
+    <value>Wu</value>
+  </data>
+  <data name="EarthlyBranch.Wei" xml:space="preserve">
+    <value>Wei</value>
+  </data>
+  <data name="EarthlyBranch.Shen" xml:space="preserve">
+    <value>Shen</value>
+  </data>
+  <data name="EarthlyBranch.You" xml:space="preserve">
+    <value>You</value>
+  </data>
+  <data name="EarthlyBranch.Xu" xml:space="preserve">
+    <value>Xu</value>
+  </data>
+  <data name="EarthlyBranch.Hai" xml:space="preserve">
+    <value>Hai</value>
+  </data>
+
+  
+  <data name="Trigram.Qian" xml:space="preserve">
+    <value>Qian</value>
+  </data>
+  <data name="Trigram.Dui" xml:space="preserve">
+    <value>Dui</value>
+  </data>
+  <data name="Trigram.Li" xml:space="preserve">
+    <value>Li</value>
+  </data>
+  <data name="Trigram.Zhen" xml:space="preserve">
+    <value>Zhen</value>
+  </data>
+  <data name="Trigram.Xun" xml:space="preserve">
+    <value>Xun</value>
+  </data>
+  <data name="Trigram.Kan" xml:space="preserve">
+    <value>Kan</value>
+  </data>
+  <data name="Trigram.Gen" xml:space="preserve">
+    <value>Gen</value>
+  </data>
+  <data name="Trigram.Kun" xml:space="preserve">
+    <value>Kun</value>
+  </data>
+
+  
+  <data name="Hexagram.TheCreative" xml:space="preserve">
+    <value>The Creative</value>
+  </data>
+  <data name="Hexagram.ComingToMeet" xml:space="preserve">
+    <value>Coming to Meet</value>
+  </data>
+  <data name="Hexagram.Retreat" xml:space="preserve">
+    <value>Retreat</value>
+  </data>
+  <data name="Hexagram.Standstill" xml:space="preserve">
+    <value>Standstill</value>
+  </data>
+  <data name="Hexagram.Contemplation" xml:space="preserve">
+    <value>Contemplation</value>
+  </data>
+  <data name="Hexagram.SplittingApart" xml:space="preserve">
+    <value>Splitting Apart</value>
+  </data>
+  <data name="Hexagram.Progress" xml:space="preserve">
+    <value>Progress</value>
+  </data>
+  <data name="Hexagram.PossessionInGreatMeasure" xml:space="preserve">
+    <value>Possession in Great Measure</value>
+  </data>
+  <data name="Hexagram.TheJoyous" xml:space="preserve">
+    <value>The Joyous</value>
+  </data>
+  <data name="Hexagram.Oppression" xml:space="preserve">
+    <value>Oppression</value>
+  </data>
+  <data name="Hexagram.GatheringTogether" xml:space="preserve">
+    <value>Gathering Together</value>
+  </data>
+  <data name="Hexagram.Influence" xml:space="preserve">
+    <value>Influence</value>
+  </data>
+  <data name="Hexagram.Obstruction" xml:space="preserve">
+    <value>Obstruction</value>
+  </data>
+  <data name="Hexagram.Modesty" xml:space="preserve">
+    <value>Modesty</value>
+  </data>
+  <data name="Hexagram.PreponderanceOfTheSmall" xml:space="preserve">
+    <value>Preponderance of the Small</value>
+  </data>
+  <data name="Hexagram.TheMarryingMaiden" xml:space="preserve">
+    <value>The Marrying Maiden</value>
+  </data>
+  <data name="Hexagram.TheClinging" xml:space="preserve">
+    <value>The Clinging</value>
+  </data>
+  <data name="Hexagram.TheWanderer" xml:space="preserve">
+    <value>The Wanderer</value>
+  </data>
+  <data name="Hexagram.TheCauldron" xml:space="preserve">
+    <value>The Cauldron</value>
+  </data>
+  <data name="Hexagram.BeforeCompletion" xml:space="preserve">
+    <value>Before Completion</value>
+  </data>
+  <data name="Hexagram.YouthfulFolly" xml:space="preserve">
+    <value>Youthful Folly</value>
+  </data>
+  <data name="Hexagram.Dispersion" xml:space="preserve">
+    <value>Dispersion</value>
+  </data>
+  <data name="Hexagram.Conflict" xml:space="preserve">
+    <value>Conflict</value>
+  </data>
+  <data name="Hexagram.FellowshipWithMen" xml:space="preserve">
+    <value>Fellowship with Men</value>
+  </data>
+  <data name="Hexagram.TheArousing" xml:space="preserve">
+    <value>The Arousing</value>
+  </data>
+  <data name="Hexagram.Enthusiasm" xml:space="preserve">
+    <value>Enthusiasm</value>
+  </data>
+  <data name="Hexagram.Deliverance" xml:space="preserve">
+    <value>Deliverance</value>
+  </data>
+  <data name="Hexagram.Duration" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="Hexagram.PushingUpward" xml:space="preserve">
+    <value>Pushing Upward</value>
+  </data>
+  <data name="Hexagram.TheWell" xml:space="preserve">
+    <value>The Well</value>
+  </data>
+  <data name="Hexagram.PreponderanceOfTheGreat" xml:space="preserve">
+    <value>Preponderance of the Great</value>
+  </data>
+  <data name="Hexagram.Following" xml:space="preserve">
+    <value>Following</value>
+  </data>
+  <data name="Hexagram.TheGentle" xml:space="preserve">
+    <value>The Gentle</value>
+  </data>
+  <data name="Hexagram.TheTamingPowerOfTheSmall" xml:space="preserve">
+    <value>The Taming Power of the Small</value>
+  </data>
+  <data name="Hexagram.TheFamily" xml:space="preserve">
+    <value>The Family</value>
+  </data>
+  <data name="Hexagram.Increase" xml:space="preserve">
+    <value>Increase</value>
+  </data>
+  <data name="Hexagram.Innocence" xml:space="preserve">
+    <value>Innocence</value>
+  </data>
+  <data name="Hexagram.BitingThrough" xml:space="preserve">
+    <value>Biting Through</value>
+  </data>
+  <data name="Hexagram.TheCornersOfTheMouth" xml:space="preserve">
+    <value>The Corners of the Mouth</value>
+  </data>
+  <data name="Hexagram.WorkOnTheDecayed" xml:space="preserve">
+    <value>Work on the Decayed</value>
+  </data>
+  <data name="Hexagram.TheAbysmal" xml:space="preserve">
+    <value>The Abysmal</value>
+  </data>
+  <data name="Hexagram.Limitation" xml:space="preserve">
+    <value>Limitation</value>
+  </data>
+  <data name="Hexagram.DifficultyAtTheBeginning" xml:space="preserve">
+    <value>Difficulty at the Beginning</value>
+  </data>
+  <data name="Hexagram.AfterCompletion" xml:space="preserve">
+    <value>After Completion</value>
+  </data>
+  <data name="Hexagram.Revolution" xml:space="preserve">
+    <value>Revolution</value>
+  </data>
+  <data name="Hexagram.Abundance" xml:space="preserve">
+    <value>Abundance</value>
+  </data>
+  <data name="Hexagram.DarkeningOfTheLight" xml:space="preserve">
+    <value>Darkening of the Light</value>
+  </data>
+  <data name="Hexagram.TheArmy" xml:space="preserve">
+    <value>The Army</value>
+  </data>
+  <data name="Hexagram.KeepingStill" xml:space="preserve">
+    <value>Keeping Still</value>
+  </data>
+  <data name="Hexagram.Grace" xml:space="preserve">
+    <value>Grace</value>
+  </data>
+  <data name="Hexagram.TheTamingPowerOfTheGreat" xml:space="preserve">
+    <value>The Taming Power of the Great</value>
+  </data>
+  <data name="Hexagram.Decrease" xml:space="preserve">
+    <value>Decrease</value>
+  </data>
+  <data name="Hexagram.Opposition" xml:space="preserve">
+    <value>Opposition</value>
+  </data>
+  <data name="Hexagram.Treading" xml:space="preserve">
+    <value>Treading</value>
+  </data>
+  <data name="Hexagram.InnerTruth" xml:space="preserve">
+    <value>Inner Truth</value>
+  </data>
+  <data name="Hexagram.Development" xml:space="preserve">
+    <value>Development</value>
+  </data>
+  <data name="Hexagram.TheReceptive" xml:space="preserve">
+    <value>The Receptive</value>
+  </data>
+  <data name="Hexagram.Return" xml:space="preserve">
+    <value>Return</value>
+  </data>
+  <data name="Hexagram.Approach" xml:space="preserve">
+    <value>Approach</value>
+  </data>
+  <data name="Hexagram.Peace" xml:space="preserve">
+    <value>Peace</value>
+  </data>
+  <data name="Hexagram.ThePowerOfTheGreat" xml:space="preserve">
+    <value>The Power of the Great</value>
+  </data>
+  <data name="Hexagram.BreakThrough" xml:space="preserve">
+    <value>Break-Through</value>
+  </data>
+  <data name="Hexagram.Waiting" xml:space="preserve">
+    <value>Waiting</value>
+  </data>
+  <data name="Hexagram.HoldingTogether" xml:space="preserve">
+    <value>Holding Together</value>
+  </data>
+
+  
+  <data name="Hexagram.1.Statement" xml:space="preserve">
+    <value>Sublime success, perseverance furthers.</value>
+  </data>
+  <data name="Hexagram.1.Commentary" xml:space="preserve">
+    <value>Indeed sublime is the creative power of the Creative. All things owe their beginning to it. It leads through the clouds and brings rain. It completes all species. Brightly shines the Creative from beginning to end. Each of the six stages reaches its proper time. Mounted on six dragons, it governs the heavens. The way of the Creative works through change and transformation, so that each thing receives its true nature and destiny and all is in accord with the Great Harmony. Thus it furthers to persevere. At the head of things, it leads all to their destiny. All nations are at peace.</value>
+  </data>
+  <data name="Hexagram.1.Image" xml:space="preserve">
+    <value>The movement of heaven is full of power. Thus the superior man strengthens himself without ceasing.</value>
+  </data>
+
+  
+  <data name="Line.1.First.Statement" xml:space="preserve">
+    <value>Hidden dragon. Do not act.</value>
+  </data>
+  <data name="Line.1.First.Image" xml:space="preserve">
+    <value>Hidden dragon. Do not act. The dragon is hidden below.</value>
+  </data>
+  <data name="Line.1.Second.Statement" xml:space="preserve">
+    <value>Dragon appearing in the field. It furthers one to see the great man.</value>
+  </data>
+  <data name="Line.1.Second.Image" xml:space="preserve">
+    <value>Dragon appearing in the field. It furthers one to see the great man. The virtue is spread abroad.</value>
+  </data>
+  <data name="Line.1.Third.Statement" xml:space="preserve">
+    <value>All day long the superior man is creatively active. At nightfall his mind is still anxious. This is dangerous. No blame.</value>
+  </data>
+  <data name="Line.1.Third.Image" xml:space="preserve">
+    <value>All day long the superior man is creatively active. At nightfall his mind is still anxious. This is dangerous. No blame. He moves back and forth, ever on the way.</value>
+  </data>
+  <data name="Line.1.Fourth.Statement" xml:space="preserve">
+    <value>Wavering flight over the depths. No blame.</value>
+  </data>
+  <data name="Line.1.Fourth.Image" xml:space="preserve">
+    <value>Wavering flight over the depths. No blame. Advancing brings good fortune.</value>
+  </data>
+  <data name="Line.1.Fifth.Statement" xml:space="preserve">
+    <value>Flying dragon in the heavens. It furthers one to see the great man.</value>
+  </data>
+  <data name="Line.1.Fifth.Image" xml:space="preserve">
+    <value>Flying dragon in the heavens. It furthers one to see the great man. The great man creates.</value>
+  </data>
+  <data name="Line.1.Sixth.Statement" xml:space="preserve">
+    <value>Arrogant dragon will have cause to repent.</value>
+  </data>
+  <data name="Line.1.Sixth.Image" xml:space="preserve">
+    <value>Arrogant dragon will have cause to repent. When arrogance reaches its limit, it cannot last long.</value>
+  </data>
+<data name="Line.55.First.Statement" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.Second.Statement" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.Third.Statement" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.Fourth.Statement" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.Fifth.Statement" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.Sixth.Statement" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.55.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.63.First.Statement" xml:space="preserve">
+    <value>'He drags back his wheel' – (this cautious attitude is) right, and therefore there is no blame.</value>
+  </data>
+  <data name="Line.63.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.63.Second.Statement" xml:space="preserve">
+    <value>'In seven days you will get it' – (because she adheres to) the central path (the Mean).</value>
+  </data>
+  <data name="Line.63.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.63.Third.Statement" xml:space="preserve">
+    <value>'After three years he conquered them' – (the state is) wearied.</value>
+  </data>
+  <data name="Line.63.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.63.Fourth.Statement" xml:space="preserve">
+    <value>'Be on guard all day long' – (because there is) something to be feared (suspicion of danger).</value>
+  </data>
+  <data name="Line.63.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.63.Fifth.Statement" xml:space="preserve">
+    <value>'The neighbor in the east who slaughters an ox is not equal to the neighbor in the west' – (because the latter's offering is) timely. 'He truly receives the blessing' – for great good fortune comes (to him).</value>
+  </data>
+  <data name="Line.63.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.63.Sixth.Statement" xml:space="preserve">
+    <value>'He gets his head immersed. There is peril.' – How can this last long?</value>
+  </data>
+  <data name="Line.63.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.19.First.Statement" xml:space="preserve">
+    <value>through feeling). Perseverance brings good fortune.
+Image: 'Approaching with influence. Perseverance brings good fortune.' – For the will is carried out in a correct way.</value>
+  </data>
+  <data name="Line.19.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.19.Second.Statement" xml:space="preserve">
+    <value>'Approaching with influence. All is auspicious.' – (This is so even though the one above) has not yet (fully) complied with (the natural course of) things.</value>
+  </data>
+  <data name="Line.19.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.19.Third.Statement" xml:space="preserve">
+    <value>complacent oversight). Nothing advantageous. If one becomes anxious about this (and mends one's ways), there will be no blame.
+Image: 'Approaching with sweet words' – (this is because) the position is not appropriate (a weak line on a strong place). 'If one becomes anxious about it' – the blame will not be long-lasting.</value>
+  </data>
+  <data name="Line.19.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.19.Fourth.Statement" xml:space="preserve">
+    <value>direct, intimate oversight). No blame.
+Image: 'Approaching in the highest sense. No blame.' – (Because) the position is appropriate.</value>
+  </data>
+  <data name="Line.19.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.19.Fifth.Statement" xml:space="preserve">
+    <value>overseeing with wisdom). This is fitting for a great prince. Good fortune.
+Image: 'This is fitting for a great prince' – (it means) to act in accordance with the Mean (the central path).</value>
+  </data>
+  <data name="Line.19.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.19.Sixth.Statement" xml:space="preserve">
+    <value>oversight). Good fortune. No blame.
+Image: The good fortune of 'sincere, magnanimous approach' – (comes from) the will being directed inward (toward one's own people/country).</value>
+  </data>
+  <data name="Line.19.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.64.First.Statement" xml:space="preserve">
+    <value>'He gets his tail immersed' – (because) he does not know the proper limit (or: the extreme danger).</value>
+  </data>
+  <data name="Line.64.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.64.Second.Statement" xml:space="preserve">
+    <value>The second nine's 'perseverance brings good fortune' – (is because) acting from the central position leads to correctness.</value>
+  </data>
+  <data name="Line.64.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.64.Third.Statement" xml:space="preserve">
+    <value>'Before completion. To advance brings misfortune.' – (Because) the position is not appropriate.</value>
+  </data>
+  <data name="Line.64.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.64.Fourth.Statement" xml:space="preserve">
+    <value>'Perseverance brings good fortune. Regret vanishes.' – (For) the will is carried out.</value>
+  </data>
+  <data name="Line.64.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.64.Fifth.Statement" xml:space="preserve">
+    <value>'The light of the superior man' – its brightness brings good fortune.</value>
+  </data>
+  <data name="Line.64.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.64.Sixth.Statement" xml:space="preserve">
+    <value>'Drinking wine and wetting his head' – (shows) he also does not know moderation.</value>
+  </data>
+  <data name="Line.64.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.21.First.Statement" xml:space="preserve">
+    <value>'Wearing foot-shackles that injure the toes' – (so that) he cannot walk (in wrong paths).</value>
+  </data>
+  <data name="Line.21.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.21.Second.Statement" xml:space="preserve">
+    <value>'Biting through tender skin and injuring the nose' – (because this yielding line) rides on a strong line (the first nine).</value>
+  </data>
+  <data name="Line.21.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.21.Third.Statement" xml:space="preserve">
+    <value>'Encountering poison' – (because) the position is not appropriate.</value>
+  </data>
+  <data name="Line.21.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.21.Fourth.Statement" xml:space="preserve">
+    <value>'Perseverance in difficulty is advantageous and leads to good fortune.' – (But the way is) not yet fully illuminated.</value>
+  </data>
+  <data name="Line.21.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.21.Fifth.Statement" xml:space="preserve">
+    <value>a golden arrowhead). Perseverance (even) in danger. No blame.
+Image: 'Perseverance in danger brings no blame.' – (Because his) actions are appropriate.</value>
+  </data>
+  <data name="Line.21.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.21.Sixth.Statement" xml:space="preserve">
+    <value>'Wearing a cangue that injures the ears' – (because) his hearing (and understanding) was not clear.</value>
+  </data>
+  <data name="Line.21.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.43.First.Statement" xml:space="preserve">
+    <value>'To go forward without the prospect of success' – this leads to blame.</value>
+  </data>
+  <data name="Line.43.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.43.Second.Statement" xml:space="preserve">
+    <value>'Though armed men come, have no fear.' – (Because he) has attained the central path.</value>
+  </data>
+  <data name="Line.43.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.43.Third.Statement" xml:space="preserve">
+    <value>'The superior man is resolute in his decision' – in the end, there will be no blame.</value>
+  </data>
+  <data name="Line.43.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.43.Fourth.Statement" xml:space="preserve">
+    <value>'He walks with difficulty' – (because) the position is not appropriate (a strong line on a weak place). 'Though he hears these words, he does not believe them' – (for) his hearing (and understanding) is not clear.</value>
+  </data>
+  <data name="Line.43.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.43.Fifth.Statement" xml:space="preserve">
+    <value>'Acting from the central position brings no blame' – (but) the centrality (of his virtue) is not yet brilliantly displayed.</value>
+  </data>
+  <data name="Line.43.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.43.Sixth.Statement" xml:space="preserve">
+    <value>The misfortune of 'no cry (availing)' – (means this state of affairs) cannot last long in the end.</value>
+  </data>
+  <data name="Line.43.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.44.First.Statement" xml:space="preserve">
+    <value>'Tied to a metal brake-block' – (this indicates) the way of the weak (line) is to be restrained.</value>
+  </data>
+  <data name="Line.44.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.44.Second.Statement" xml:space="preserve">
+    <value>'There is a fish in the baul' – (meaning) in righteousness, it should not extend to guests.</value>
+  </data>
+  <data name="Line.44.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.44.Third.Statement" xml:space="preserve">
+    <value>'He walks with difficulty' – (but) his movement is not (yet) influenced (by the weak line).</value>
+  </data>
+  <data name="Line.44.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.44.Fourth.Statement" xml:space="preserve">
+    <value>The misfortune of 'no fish' – (is due to) being distant from the people (the yin element below).</value>
+  </data>
+  <data name="Line.44.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.44.Fifth.Statement" xml:space="preserve">
+    <value>'The fifth nine contains his brilliance' – (because of) his central and correct position. 'Something will fall from heaven' – (for) his will does not neglect the ordinances (of Heaven).</value>
+  </data>
+  <data name="Line.44.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.44.Sixth.Statement" xml:space="preserve">
+    <value>'Encountering with his horn' – (means) being at the top, one is in an exhausted and humiliating position.</value>
+  </data>
+  <data name="Line.44.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.6.First.Statement" xml:space="preserve">
+    <value>'He does not perpetuate the affair' – contention should not be prolonged. Although 'there is a little gossip,' the matter will be clearly discerned.</value>
+  </data>
+  <data name="Line.6.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.6.Second.Statement" xml:space="preserve">
+    <value>'He is unequal to the contention; he retires and flees' – (for) from a lower position to contend with one above, calamity comes as if gathered (upon him).</value>
+  </data>
+  <data name="Line.6.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.6.Third.Statement" xml:space="preserve">
+    <value>lives on his hereditary estate). Perseverance (in contention) brings danger. In the end, there will be good fortune. If he follows the king's service, he will not achieve success.
+Image: 'He feeds on old virtue' – following those above brings good fortune.</value>
+  </data>
+  <data name="Line.6.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.6.Fourth.Statement" xml:space="preserve">
+    <value>'He returns to the acknowledgment of Heaven's ordinance, changes and rests in perseverance' – he does not lose (what is proper).</value>
+  </data>
+  <data name="Line.6.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.6.Fifth.Statement" xml:space="preserve">
+    <value>'Contention. Supremely auspicious.' – (Because he acts) from a central and correct position.</value>
+  </data>
+  <data name="Line.6.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.6.Sixth.Statement" xml:space="preserve">
+    <value>'To receive robes (of honor) through contention' – (shows one) is likewise not worthy of respect.</value>
+  </data>
+  <data name="Line.6.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.20.First.Statement" xml:space="preserve">
+    <value>'The first six contemplates like a child' – this is the way of a common man.</value>
+  </data>
+  <data name="Line.20.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.20.Second.Statement" xml:space="preserve">
+    <value>'Peeping contemplation advantageous for a woman' – (but for a man) it is also shameful.</value>
+  </data>
+  <data name="Line.20.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.20.Third.Statement" xml:space="preserve">
+    <value>course). (I consider) advance and retreat.
+Image: 'Contemplating my own course, considering advance and retreat' – (he) does not miss the right way.</value>
+  </data>
+  <data name="Line.20.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.20.Fourth.Statement" xml:space="preserve">
+    <value>'Contemplating the glory of the kingdom' – (he is one) who honors (and is fit to be) a guest.</value>
+  </data>
+  <data name="Line.20.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.20.Fifth.Statement" xml:space="preserve">
+    <value>people). For a superior man, no blame.
+Image Translation: 'Contemplating my own life' – (means) contemplating the people.</value>
+  </data>
+  <data name="Line.20.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.20.Sixth.Statement" xml:space="preserve">
+    <value>people). For a superior man, no blame.
+Image: 'Contemplating his life' – (shows that) his mind is not yet at ease.</value>
+  </data>
+  <data name="Line.20.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.36.First.Statement" xml:space="preserve">
+    <value>'When the superior man leaves, for three days he eats nothing' – in righteousness, he does not eat (the bread of the wicked).</value>
+  </data>
+  <data name="Line.36.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.36.Second.Statement" xml:space="preserve">
+    <value>The good fortune of the second six – (comes from) docility in accordance with rule.</value>
+  </data>
+  <data name="Line.36.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.36.Third.Statement" xml:space="preserve">
+    <value>'The aim in hunting in the south' – is to achieve something great.</value>
+  </data>
+  <data name="Line.36.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.36.Fourth.Statement" xml:space="preserve">
+    <value>'(He penetrates) into the left side of the belly' – (and thus) gets at the (true) mind and thoughts (of the situation).</value>
+  </data>
+  <data name="Line.36.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.36.Fifth.Statement" xml:space="preserve">
+    <value>'The firm correctness of Jizi' – shows that the light (of intelligence and virtue) cannot be extinguished.</value>
+  </data>
+  <data name="Line.36.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.36.Sixth.Statement" xml:space="preserve">
+    <value>'At first ascending to heaven' – (so as to) illuminate all the regions. 'Afterwards plunging into the earth' – (because he) lost the proper rule (of conduct).</value>
+  </data>
+  <data name="Line.36.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.41.First.Statement" xml:space="preserve">
+    <value>'He suspends his affairs and quickly goes' – (for) he esteems the harmonizing of wills (above his own affairs).</value>
+  </data>
+  <data name="Line.41.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.41.Second.Statement" xml:space="preserve">
+    <value>'It is advantageous for the second nine to maintain firm correctness' – (for) he makes the central position his aim.</value>
+  </data>
+  <data name="Line.41.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.41.Third.Statement" xml:space="preserve">
+    <value>'When one man walks alone' – (but) with three, doubt arises.</value>
+  </data>
+  <data name="Line.41.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.41.Fourth.Statement" xml:space="preserve">
+    <value>'He diminishes his ailment' – (this) also is a thing to be glad for.</value>
+  </data>
+  <data name="Line.41.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.41.Fifth.Statement" xml:space="preserve">
+    <value>'The supreme good fortune of the sixth five' – comes from the blessing of Heaven above.</value>
+  </data>
+  <data name="Line.41.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.41.Sixth.Statement" xml:space="preserve">
+    <value>'He does not diminish but increases' – (thus) his great aim is attained.</value>
+  </data>
+  <data name="Line.41.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.40.First.Statement" xml:space="preserve">
+    <value>'(This is) at the border of the strong and the weak. In righteousness, there is no blame.'</value>
+  </data>
+  <data name="Line.40.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.40.Second.Statement" xml:space="preserve">
+    <value>'The good fortune of the second nine through perseverance' – (comes from) attaining the central path.</value>
+  </data>
+  <data name="Line.40.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.40.Third.Statement" xml:space="preserve">
+    <value>'Carrying on the back and yet riding' – is also a thing to be ashamed of. 'He himself invites the robbers' – whom should one blame?</value>
+  </data>
+  <data name="Line.40.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.40.Fourth.Statement" xml:space="preserve">
+    <value>'Deliver yourself from your toe' – (because the line) is not in its appropriate place.</value>
+  </data>
+  <data name="Line.40.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.40.Fifth.Statement" xml:space="preserve">
+    <value>'The superior man effects the deliverance' – (and then) small men retire (of themselves).</value>
+  </data>
+  <data name="Line.40.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.40.Sixth.Statement" xml:space="preserve">
+    <value>'The prince shoots the falcon' – thereby removing (the cause of) rebellion.</value>
+  </data>
+  <data name="Line.40.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.53.First.Statement" xml:space="preserve">
+    <value>'The peril for the young man' – (yet) in principle, there is no blame.</value>
+  </data>
+  <data name="Line.53.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.53.Second.Statement" xml:space="preserve">
+    <value>'Food and drink, and contentment' – (he does not enjoy his meal) in vain (i.e., he deserves it).</value>
+  </data>
+  <data name="Line.53.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.53.Third.Statement" xml:space="preserve">
+    <value>'The husband goes to war and does not return' – (he) is separated from his kind. 'The wife is pregnant but does not rear the child' – (she) has lost the proper way. 'Advantageous to resist invaders' – (for by uniting) they protect each other in obedience (to the situation).</value>
+  </data>
+  <data name="Line.53.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.53.Fourth.Statement" xml:space="preserve">
+    <value>'It may alight on the flat branches' – (by being) docile and adaptable.</value>
+  </data>
+  <data name="Line.53.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.53.Fifth.Statement" xml:space="preserve">
+    <value>'In the end, nothing can overcome her, (leading to) good fortune' – (for she) attains her desire.</value>
+  </data>
+  <data name="Line.53.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.53.Sixth.Statement" xml:space="preserve">
+    <value>'Its feathers can be used for ceremonial rites, (leading to) good fortune' – (for this order) cannot be disturbed.</value>
+  </data>
+  <data name="Line.53.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.3.First.Statement" xml:space="preserve">
+    <value>'Though he hesitates and wander' – his will and action are correct. 'In his nobility, he descends to the lowly' – thereby he greatly wins the people.</value>
+  </data>
+  <data name="Line.3.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.3.Second.Statement" xml:space="preserve">
+    <value>'The difficulty of the second six' – (arises from) riding on the strong (line). 'After ten years she then consents' – (for) things then return to their regular course.</value>
+  </data>
+  <data name="Line.3.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.3.Third.Statement" xml:space="preserve">
+    <value>'Pursuing deer without a forester' – (shows he) is following (only) the game. 'The superior man gives it up' – to go forward would lead to regret and exhaustion.</value>
+  </data>
+  <data name="Line.3.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.3.Fourth.Statement" xml:space="preserve">
+    <value>'(Daring to) seek and go forward' – (shows his) intelligence.</value>
+  </data>
+  <data name="Line.3.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.3.Fifth.Statement" xml:space="preserve">
+    <value>'Stores of rich nourishment are blocked up' – (shows that) the grace (of the ruler) is not yet widely diffused.</value>
+  </data>
+  <data name="Line.3.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.3.Sixth.Statement" xml:space="preserve">
+    <value>'Weeping tears of blood in streams' – how can this state last long?</value>
+  </data>
+  <data name="Line.3.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.59.First.Statement" xml:space="preserve">
+    <value>The good fortune of the first six – (comes from) docility.</value>
+  </data>
+  <data name="Line.59.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.59.Second.Statement" xml:space="preserve">
+    <value>'Amidst dispersion, he hastens to his resting place' – (thus) he attains his desire (of security).</value>
+  </data>
+  <data name="Line.59.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.59.Third.Statement" xml:space="preserve">
+    <value>'He dissipates his self' – (for) his aim is directed outward (to the general good).</value>
+  </data>
+  <data name="Line.59.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.59.Fourth.Statement" xml:space="preserve">
+    <value>'He dissipates the crowd, (leading to) great good fortune' – (for his virtue) is great and brilliant.</value>
+  </data>
+  <data name="Line.59.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.59.Fifth.Statement" xml:space="preserve">
+    <value>'No blame in dissipating the royal stores' – (for the king) is in the correct position.</value>
+  </data>
+  <data name="Line.59.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.59.Sixth.Statement" xml:space="preserve">
+    <value>'He dissipates the fear of bloodshed' – (thus) he keeps harm at a distance.</value>
+  </data>
+  <data name="Line.59.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.32.First.Statement" xml:space="preserve">
+    <value>The evil of deepening duration - because he seeks for depth at the beginning.</value>
+  </data>
+  <data name="Line.32.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.32.Second.Statement" xml:space="preserve">
+    <value>The second nine, 'regret disappears' - because he can maintain his central position.</value>
+  </data>
+  <data name="Line.32.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.32.Third.Statement" xml:space="preserve">
+    <value>'He does not maintain his virtue' - he cannot be contained anywhere.</value>
+  </data>
+  <data name="Line.32.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.32.Fourth.Statement" xml:space="preserve">
+    <value>Being long in a position that is not his - how can he get game?</value>
+  </data>
+  <data name="Line.32.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.32.Fifth.Statement" xml:space="preserve">
+    <value>For a woman perseverance brings good fortune - because she follows one to the end. For a man to make righteousness his rule - following a woman brings evil.</value>
+  </data>
+  <data name="Line.32.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.32.Sixth.Statement" xml:space="preserve">
+    <value>Shaking the duration in the highest place - great without merit.</value>
+  </data>
+  <data name="Line.32.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.16.First.Statement" xml:space="preserve">
+    <value>'Boasting of enthusiasm' - his will has reached its limit, and there will be evil.</value>
+  </data>
+  <data name="Line.16.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.16.Second.Statement" xml:space="preserve">
+    <value>'He does not complete the day' - perseverance brings good fortune because he is central and correct.</value>
+  </data>
+  <data name="Line.16.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.16.Third.Statement" xml:space="preserve">
+    <value>'Looking with eyes for enthusiasm' brings regret because his position is not appropriate.</value>
+  </data>
+  <data name="Line.16.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.16.Fourth.Statement" xml:space="preserve">
+    <value>'The source of enthusiasm' brings great possessions - his will is greatly carried out.</value>
+  </data>
+  <data name="Line.16.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.16.Fifth.Statement" xml:space="preserve">
+    <value>The fifth line, 'persevering in what is sick' - because he is mounted on the strong. He constantly does not die - his central position has not perished.</value>
+  </data>
+  <data name="Line.16.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.16.Sixth.Statement" xml:space="preserve">
+    <value>Dark enthusiasm is in the highest place - how can it be long continued?</value>
+  </data>
+  <data name="Line.16.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.13.First.Statement" xml:space="preserve">
+    <value>'Fellowship with men at the gate' - going out to associate with others, who can find fault with that?</value>
+  </data>
+  <data name="Line.13.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.13.Second.Statement" xml:space="preserve">
+    <value>'Fellowship with men within his own clan' - this is the path of disadvantage.</value>
+  </data>
+  <data name="Line.13.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.13.Third.Statement" xml:space="preserve">
+    <value>'He hides his arms in the thick grass' - he is opposed by the strong. 'For three years he does not show himself' - he is secure in his position.</value>
+  </data>
+  <data name="Line.13.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.13.Fourth.Statement" xml:space="preserve">
+    <value>'He mounts the wall' - but by righteousness he cannot attack. The good fortune is due to his returning to the correct rule.</value>
+  </data>
+  <data name="Line.13.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.13.Fifth.Statement" xml:space="preserve">
+    <value>'Men first weep and lament' - because they are central and correct. 'Great armies are victorious, and they meet' - means they overcome one another.</value>
+  </data>
+  <data name="Line.13.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.13.Sixth.Statement" xml:space="preserve">
+    <value>'Fellowship with men in the suburbs' - his will has not yet been realized.</value>
+  </data>
+  <data name="Line.13.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.17.First.Statement" xml:space="preserve">
+    <value>'The official receives his badge of office' - because he follows the correct path and obtains recognition.</value>
+  </data>
+  <data name="Line.17.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.17.Second.Statement" xml:space="preserve">
+    <value>'He follows what is tied to him' - because he cannot serve both the weak and the strong.</value>
+  </data>
+  <data name="Line.17.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.17.Third.Statement" xml:space="preserve">
+    <value>'Following what is tied to him' - there is shame in leaving the proper course.</value>
+  </data>
+  <data name="Line.17.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.17.Fourth.Statement" xml:space="preserve">
+    <value>'Following and obtaining' - because his will is set on the brightness of understanding.</value>
+  </data>
+  <data name="Line.17.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.17.Fifth.Statement" xml:space="preserve">
+    <value>'Sincere attachment to excellence' - because he holds to the middle course.</value>
+  </data>
+  <data name="Line.17.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.17.Sixth.Statement" xml:space="preserve">
+    <value>'Tied and detained, thus he follows' - because he is at the top and exhausted.</value>
+  </data>
+  <data name="Line.17.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.45.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.45.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.45.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.45.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.45.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.45.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.45.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.45.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.45.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.45.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.45.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.45.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.22.First.Statement" xml:space="preserve">
+    <value>'He adorns his toes' - because the purpose (of his action) is proper.</value>
+  </data>
+  <data name="Line.22.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.22.Second.Statement" xml:space="preserve">
+    <value>'He adorns his beard' - because he follows (the one above) to whom he is attached.</value>
+  </data>
+  <data name="Line.22.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.22.Third.Statement" xml:space="preserve">
+    <value>'Graceful and moist' - because he is correct (in his position) and obtains what he desires.</value>
+  </data>
+  <data name="Line.22.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.22.Fourth.Statement" xml:space="preserve">
+    <value>The top and bottom lines move in harmony. This is not a case of robbery.</value>
+  </data>
+  <data name="Line.22.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.22.Fifth.Statement" xml:space="preserve">
+    <value>The good fortune of the fifth five comes from the joy (in the gifts).</value>
+  </data>
+  <data name="Line.22.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.22.Sixth.Statement" xml:space="preserve">
+    <value>'White grace' - because he is at the top, and obtains the place of his desire.</value>
+  </data>
+  <data name="Line.22.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.8.First.Statement" xml:space="preserve">
+    <value>The first six, 'be united' - others coming brings good fortune.</value>
+  </data>
+  <data name="Line.8.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.8.Second.Statement" xml:space="preserve">
+    <value>'Be united from within' - you do not lose yourself.</value>
+  </data>
+  <data name="Line.8.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.8.Third.Statement" xml:space="preserve">
+    <value>'Be united with those who are not the right men' - is this not also hurtful!</value>
+  </data>
+  <data name="Line.8.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.8.Fourth.Statement" xml:space="preserve">
+    <value>'Be united externally with the worthy' - by following those above.</value>
+  </data>
+  <data name="Line.8.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.8.Fifth.Statement" xml:space="preserve">
+    <value>The good fortune of 'manifest union' - the position is correct and central. He rejects the contrary and takes the compliant, thereby losing the former game.</value>
+  </data>
+  <data name="Line.8.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.8.Sixth.Statement" xml:space="preserve">
+    <value>'Be united without a head' - there is no conclusion.</value>
+  </data>
+  <data name="Line.8.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.42.First.Statement" xml:space="preserve">
+    <value>'It is advantageous to perform great deeds' - because help from below responds to the call.</value>
+  </data>
+  <data name="Line.42.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.42.Second.Statement" xml:space="preserve">
+    <value>'One may increase and be faithful' - because the will is set on eternal principles.</value>
+  </data>
+  <data name="Line.42.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.42.Third.Statement" xml:space="preserve">
+    <value>'One increases and is met with sincere confidence' - because this is a way to express gratitude.</value>
+  </data>
+  <data name="Line.42.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.42.Fourth.Statement" xml:space="preserve">
+    <value>'Follow the middle course and tell your plans' - because you act in harmony with those above.</value>
+  </data>
+  <data name="Line.42.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.42.Fifth.Statement" xml:space="preserve">
+    <value>'Be sincere and have true confidence' - because there is no need to ask about blessings.</value>
+  </data>
+  <data name="Line.42.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.42.Sixth.Statement" xml:space="preserve">
+    <value>'No one adds to his increase' - because his position is exhausted and without help.</value>
+  </data>
+  <data name="Line.42.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.31.First.Statement" xml:space="preserve">
+    <value>'The influence shows itself in the big toe' - his will is directed outward.</value>
+  </data>
+  <data name="Line.31.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.31.Second.Statement" xml:space="preserve">
+    <value>'Though there is evil, yet good fortune comes from abiding in correct position' - because compliance will do no harm.</value>
+  </data>
+  <data name="Line.31.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.31.Third.Statement" xml:space="preserve">
+    <value>'The influence shows itself in the thighs, and he holds to what he follows' - he does not remain in his position. His will is set on following others, and what he holds is low.</value>
+  </data>
+  <data name="Line.31.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.31.Fourth.Statement" xml:space="preserve">
+    <value>'Perseverance brings good fortune. Removal of regret' - there is no failure of the influence. 'Friends come as one thinks of them' - the influence is not yet brilliant.</value>
+  </data>
+  <data name="Line.31.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.31.Fifth.Statement" xml:space="preserve">
+    <value>'The influence shows itself in the jaws and cheeks' - the will is set on what is external.</value>
+  </data>
+  <data name="Line.31.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.31.Sixth.Statement" xml:space="preserve">
+    <value>'The influence shows itself in the jaws, cheeks, and tongue' - it shows itself by opening the mouth.</value>
+  </data>
+  <data name="Line.31.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.61.First.Statement" xml:space="preserve">
+    <value>'Being prepared brings good fortune' - because his will is not yet affected (by others).</value>
+  </data>
+  <data name="Line.61.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.61.Second.Statement" xml:space="preserve">
+    <value>Her young ones respond to her - because they share the same will.</value>
+  </data>
+  <data name="Line.61.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.61.Third.Statement" xml:space="preserve">
+    <value>The position of the third six is not suitable (for striking or weeping).</value>
+  </data>
+  <data name="Line.61.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.61.Fourth.Statement" xml:space="preserve">
+    <value>The position of the fourth six is not suitable (for the team of horses).</value>
+  </data>
+  <data name="Line.61.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.61.Fifth.Statement" xml:space="preserve">
+    <value>The fifth nine possesses sincerity and is uniting others - because his position is correct and central.</value>
+  </data>
+  <data name="Line.61.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.61.Sixth.Statement" xml:space="preserve">
+    <value>The cock's voice rises to heaven - how can it remain long?</value>
+  </data>
+  <data name="Line.61.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.25.First.Statement" xml:space="preserve">
+    <value>'Innocent action brings good fortune' - because will follows correct path without deviation.</value>
+  </data>
+  <data name="Line.25.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.25.Second.Statement" xml:space="preserve">
+    <value>'If one does not count on the harvest' - because one is not thinking of gain.</value>
+  </data>
+  <data name="Line.25.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.25.Third.Statement" xml:space="preserve">
+    <value>'Following what is not proper brings misfortune' - because position is not central and proper.</value>
+  </data>
+  <data name="Line.25.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.25.Fourth.Statement" xml:space="preserve">
+    <value>'One can be innocent' - because one is in proper position and has support.</value>
+  </data>
+  <data name="Line.25.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.25.Fifth.Statement" xml:space="preserve">
+    <value>'One suffers from innocent illness' - because innocence is maintained despite circumstances.</value>
+  </data>
+  <data name="Line.25.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.25.Sixth.Statement" xml:space="preserve">
+    <value>'Innocent action brings misfortune' - because one is at the top and exhausted.</value>
+  </data>
+  <data name="Line.25.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.52.First.Statement" xml:space="preserve">
+    <value>'Keeping his toes still' - because he stops at the beginning, thus preserving his purity.</value>
+  </data>
+  <data name="Line.52.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.52.Second.Statement" xml:space="preserve">
+    <value>'Keeping his calves still' - because he does not keep his heart (in proper control).</value>
+  </data>
+  <data name="Line.52.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.52.Third.Statement" xml:space="preserve">
+    <value>'Keeping his loins still' - because the urgency (of the situation) is dangerous.</value>
+  </data>
+  <data name="Line.52.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.52.Fourth.Statement" xml:space="preserve">
+    <value>'Keeping his trunk still' - because he is correct (in his position).</value>
+  </data>
+  <data name="Line.52.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.52.Fifth.Statement" xml:space="preserve">
+    <value>'Keeping his jawbones still' - because he is in the central (position) and correct.</value>
+  </data>
+  <data name="Line.52.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.52.Sixth.Statement" xml:space="preserve">
+    <value>The good fortune of 'keeping still with sincerity' - comes from the thickness (of his virtue).</value>
+  </data>
+  <data name="Line.52.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.60.First.Statement" xml:space="preserve">
+    <value>'One goes forth without leaving the gate' - because one leaves the proper path.</value>
+  </data>
+  <data name="Line.60.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.60.Second.Statement" xml:space="preserve">
+    <value>'One does not leave the gate' - because one is too rigid.</value>
+  </data>
+  <data name="Line.60.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.60.Third.Statement" xml:space="preserve">
+    <value>'One leaves no gate and has remorse' - because one is exhausted.</value>
+  </data>
+  <data name="Line.60.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.60.Fourth.Statement" xml:space="preserve">
+    <value>'One is content with limitation' - because one is in correct position.</value>
+  </data>
+  <data name="Line.60.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.60.Fifth.Statement" xml:space="preserve">
+    <value>'Central limitation brings good fortune' - because one is central and correct.</value>
+  </data>
+  <data name="Line.60.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.60.Sixth.Statement" xml:space="preserve">
+    <value>'Harsh limitation brings misfortune' - because one is at the top and without guidance.</value>
+  </data>
+  <data name="Line.60.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.15.First.Statement" xml:space="preserve">
+    <value>'A superior man modest and humbling himself' - he shows humility to those below.</value>
+  </data>
+  <data name="Line.15.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.15.Second.Statement" xml:space="preserve">
+    <value>'Modesty and harmony' - because he follows the middle course.</value>
+  </data>
+  <data name="Line.15.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.15.Third.Statement" xml:space="preserve">
+    <value>The merit comes from his meritorious modesty, showing his ability.</value>
+  </data>
+  <data name="Line.15.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.15.Fourth.Statement" xml:space="preserve">
+    <value>'Nothing that would not be advantageous to modesty' - because he does not dare to display his ability.</value>
+  </data>
+  <data name="Line.15.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.15.Fifth.Statement" xml:space="preserve">
+    <value>'Not enriching your neighbor through modesty' - because he applies his humility.</value>
+  </data>
+  <data name="Line.15.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.15.Sixth.Statement" xml:space="preserve">
+    <value>'Modesty that sounds forth' - because his will cannot yet be directed.</value>
+  </data>
+  <data name="Line.15.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.39.First.Statement" xml:space="preserve">
+    <value>'Going forward brings praise, coming back brings disgrace' - it is right to wait.</value>
+  </data>
+  <data name="Line.39.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.39.Second.Statement" xml:space="preserve">
+    <value>'The royal servant relieves the difficulty with great strength' - because he is central and correct.</value>
+  </data>
+  <data name="Line.39.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.39.Third.Statement" xml:space="preserve">
+    <value>The difficulty arises from his position not being appropriate for the task.</value>
+  </data>
+  <data name="Line.39.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.39.Fourth.Statement" xml:space="preserve">
+    <value>'Going forward brings union, coming back brings fame' - because he holds to the right course.</value>
+  </data>
+  <data name="Line.39.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.39.Fifth.Statement" xml:space="preserve">
+    <value>'Great difficulty, friends come to help' - because he holds to the middle course.</value>
+  </data>
+  <data name="Line.39.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.39.Sixth.Statement" xml:space="preserve">
+    <value>'Going forward brings difficulty, coming back brings great good fortune' - because his course is exhausted. 'Advantageous to see great men' - because his conduct is right.</value>
+  </data>
+  <data name="Line.39.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.38.First.Statement" xml:space="preserve">
+    <value>'If you see evil people' - because you are avoiding their fault.</value>
+  </data>
+  <data name="Line.38.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.38.Second.Statement" xml:space="preserve">
+    <value>'You meet your master in a narrow street' - because you have not gone against your proper course.</value>
+  </data>
+  <data name="Line.38.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.38.Third.Statement" xml:space="preserve">
+    <value>'You see your master in a carriage' - because you are not at peace (with yourself).</value>
+  </data>
+  <data name="Line.38.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.38.Fourth.Statement" xml:space="preserve">
+    <value>'You meet your master, though you are separated' - because your will is set on union.</value>
+  </data>
+  <data name="Line.38.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.38.Fifth.Statement" xml:space="preserve">
+    <value>'You eat what was hunted in the pit' - because you are not in the proper position.</value>
+  </data>
+  <data name="Line.38.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.38.Sixth.Statement" xml:space="preserve">
+    <value>The dragging of the sack - because he is at the top. He has not yet attained his purpose.</value>
+  </data>
+  <data name="Line.38.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.47.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.47.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.47.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.47.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.47.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.47.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.47.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.47.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.47.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.47.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.47.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.47.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.11.First.Statement" xml:space="preserve">
+    <value>'Pulling up the grass and going forward will be good fortune' - his will is directed outward.</value>
+  </data>
+  <data name="Line.11.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.11.Second.Statement" xml:space="preserve">
+    <value>'Bearing with the uncultivated' - he gets the middle way, by which his virtue is made great and bright.</value>
+  </data>
+  <data name="Line.11.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.11.Third.Statement" xml:space="preserve">
+    <value>'No going not returning' - because this is the border of heaven and earth.</value>
+  </data>
+  <data name="Line.11.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.11.Fourth.Statement" xml:space="preserve">
+    <value>'Fluttering, not wealthy' - all lose their substance. 'Not using warning because of sincerity' - the will of the heart is directed to it.</value>
+  </data>
+  <data name="Line.11.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.11.Fifth.Statement" xml:space="preserve">
+    <value>'With blessings, great good fortune' - because his will is carried out by the middle path.</value>
+  </data>
+  <data name="Line.11.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.11.Sixth.Statement" xml:space="preserve">
+    <value>'The city walls return to moats' - his commands are confused.</value>
+  </data>
+  <data name="Line.11.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.14.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.14.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.14.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.14.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.14.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.14.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.14.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.14.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.14.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.14.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.14.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.14.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.28.First.Statement" xml:space="preserve">
+    <value>'One must spread white rushes beneath the mat' - because he prepares carefully for the great burden.</value>
+  </data>
+  <data name="Line.28.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.28.Second.Statement" xml:space="preserve">
+    <value>'A withered poplar sprouts' - because the old and young are in harmony.</value>
+  </data>
+  <data name="Line.28.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.28.Third.Statement" xml:space="preserve">
+    <value>'The ridge-beam is bent' - because there is no one to help bear the burden.</value>
+  </data>
+  <data name="Line.28.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.28.Fourth.Statement" xml:space="preserve">
+    <value>'The ridge-beam is majestic' - because it is strong and cannot be broken.</value>
+  </data>
+  <data name="Line.28.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.28.Fifth.Statement" xml:space="preserve">
+    <value>'A withered poplar puts forth flowers' - because this is a weak foundation for bearing fruit.</value>
+  </data>
+  <data name="Line.28.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.28.Sixth.Statement" xml:space="preserve">
+    <value>'One must wade through the water' - because he is exhausted but cannot be harmed.</value>
+  </data>
+  <data name="Line.28.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.62.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.62.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.62.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.62.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.62.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.62.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.62.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.62.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.62.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.62.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.62.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.62.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.35.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.35.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.35.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.35.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.35.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.35.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.35.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.35.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.35.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.35.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.35.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.35.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.46.First.Statement" xml:space="preserve">
+    <value>'He pushes upward with sincerity' brings great good fortune - his will is in harmony with those above.</value>
+  </data>
+  <data name="Line.46.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.46.Second.Statement" xml:space="preserve">
+    <value>The sincerity of the second nine - there will be good fortune.</value>
+  </data>
+  <data name="Line.46.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.46.Third.Statement" xml:space="preserve">
+    <value>'He pushes upward into an empty city' - there is nothing to cause doubt.</value>
+  </data>
+  <data name="Line.46.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.46.Fourth.Statement" xml:space="preserve">
+    <value>'The king makes an offering on Mount Qi' - he acts in accordance with the proper ceremony.</value>
+  </data>
+  <data name="Line.46.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.46.Fifth.Statement" xml:space="preserve">
+    <value>'Perseverance brings good fortune, pushing upward by steps' - his will is greatly fulfilled.</value>
+  </data>
+  <data name="Line.46.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.46.Sixth.Statement" xml:space="preserve">
+    <value>Pushing upward in darkness at the top - leads to decrease and not to wealth.</value>
+  </data>
+  <data name="Line.46.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.33.First.Statement" xml:space="preserve">
+    <value>'At the commencement of retreat, there is danger' – (because) the strong (line) is close (to the weak one).</value>
+  </data>
+  <data name="Line.33.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.33.Second.Statement" xml:space="preserve">
+    <value>'He holds (his purpose) fast as if bound' – (because) he is in the central position, and is obedient.</value>
+  </data>
+  <data name="Line.33.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.33.Third.Statement" xml:space="preserve">
+    <value>'He nourishes (his) excellence as with rich food' – (because) he is in the central position, and responds to (the ruler above).</value>
+  </data>
+  <data name="Line.33.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.33.Fourth.Statement" xml:space="preserve">
+    <value>'To remain where he is would be right' – (because) he cannot be in the central position.</value>
+  </data>
+  <data name="Line.33.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.33.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.33.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.33.Sixth.Statement" xml:space="preserve">
+    <value>'To remain where he is would be right' – (because) he cannot be in the central position.</value>
+  </data>
+  <data name="Line.33.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.24.First.Statement" xml:space="preserve">
+    <value>'Return from a short distance' - by this he cultivates his person.</value>
+  </data>
+  <data name="Line.24.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.24.Second.Statement" xml:space="preserve">
+    <value>The good fortune of 'excellent return' - because he is benevolent to those below.</value>
+  </data>
+  <data name="Line.24.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.24.Third.Statement" xml:space="preserve">
+    <value>The danger of frequent returns - but there is no blame in righteousness.</value>
+  </data>
+  <data name="Line.24.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.24.Fourth.Statement" xml:space="preserve">
+    <value>'Walking the middle path and returning alone' - by following the way.</value>
+  </data>
+  <data name="Line.24.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.24.Fifth.Statement" xml:space="preserve">
+    <value>'Sincere return, no regret' - by examining himself with the mean.</value>
+  </data>
+  <data name="Line.24.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.24.Sixth.Statement" xml:space="preserve">
+    <value>The misfortune of 'mistaken return' - is contrary to the way of the ruler.</value>
+  </data>
+  <data name="Line.24.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.49.First.Statement" xml:space="preserve">
+    <value>'One wraps oneself in oxhide' - because the time is not yet ripe for change.</value>
+  </data>
+  <data name="Line.49.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.49.Second.Statement" xml:space="preserve">
+    <value>'One makes revolution on the day of spring' - because one acts according to the season.</value>
+  </data>
+  <data name="Line.49.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.49.Third.Statement" xml:space="preserve">
+    <value>'Revolution brings misfortune' - because one acts recklessly without proper consideration.</value>
+  </data>
+  <data name="Line.49.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.49.Fourth.Statement" xml:space="preserve">
+    <value>'Remorse disappears' - because one has changed according to proper principles.</value>
+  </data>
+  <data name="Line.49.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.49.Fifth.Statement" xml:space="preserve">
+    <value>'The great man changes like a tiger' - because his transformation is awe-inspiring.</value>
+  </data>
+  <data name="Line.49.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.49.Sixth.Statement" xml:space="preserve">
+    <value>'The superior man changes like a leopard' - because his transformation follows proper principles.</value>
+  </data>
+  <data name="Line.49.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.23.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.23.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.23.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.23.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.23.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.23.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.23.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.23.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.23.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.23.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.23.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.23.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.12.First.Statement" xml:space="preserve">
+    <value>'When ribbon grass is pulled up, the sod comes with it' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.12.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.12.Second.Statement" xml:space="preserve">
+    <value>'The superior man has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.12.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.12.Third.Statement" xml:space="preserve">
+    <value>'He hides his light' – (because) his brightness is obscured.</value>
+  </data>
+  <data name="Line.12.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.12.Fourth.Statement" xml:space="preserve">
+    <value>'He wraps (his light) as with sackcloth' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.12.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.12.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.12.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.12.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.12.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.29.First.Statement" xml:space="preserve">
+    <value>'One falls into the abyss' - because one loses the proper way.</value>
+  </data>
+  <data name="Line.29.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.29.Second.Statement" xml:space="preserve">
+    <value>'One seeks but obtains only small advantages' - because one is in central position but still in danger.</value>
+  </data>
+  <data name="Line.29.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.29.Third.Statement" xml:space="preserve">
+    <value>'One enters the abyss, both front and back' - because one is exhausted but still has some advantage.</value>
+  </data>
+  <data name="Line.29.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.29.Fourth.Statement" xml:space="preserve">
+    <value>'One is filled with a sacrificial vessel' - because one chooses the correct position.</value>
+  </data>
+  <data name="Line.29.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.29.Fifth.Statement" xml:space="preserve">
+    <value>'The abyss is not yet filled' - because one is central and correct.</value>
+  </data>
+  <data name="Line.29.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.29.Sixth.Statement" xml:space="preserve">
+    <value>'One is bound with cords and ropes' - because one loses the way and faces calamity.</value>
+  </data>
+  <data name="Line.29.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.7.First.Statement" xml:space="preserve">
+    <value>'The army should set forth in accordance with the rules' - because discipline is essential.</value>
+  </data>
+  <data name="Line.7.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.7.Second.Statement" xml:space="preserve">
+    <value>'One is in the midst of the army' - because one has taken central position but still faces danger.</value>
+  </data>
+  <data name="Line.7.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.7.Third.Statement" xml:space="preserve">
+    <value>'One may encounter misfortune in the army' - because one's position is not ideal.</value>
+  </data>
+  <data name="Line.7.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.7.Fourth.Statement" xml:space="preserve">
+    <value>'One retreats from the army' - because one is not attached to position.</value>
+  </data>
+  <data name="Line.7.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.7.Fifth.Statement" xml:space="preserve">
+    <value>'There are wild beasts in the field' - because central position brings advantage.</value>
+  </data>
+  <data name="Line.7.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.7.Sixth.Statement" xml:space="preserve">
+    <value>'The great prince issues commands' - because his authority comes from proper position.</value>
+  </data>
+  <data name="Line.7.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.51.First.Statement" xml:space="preserve">
+    <value>'The shock comes - oh, oh!' - fear leads to blessings. 'After it, laughing and talking - ha, ha!' - there will be rule thereafter.</value>
+  </data>
+  <data name="Line.51.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.51.Second.Statement" xml:space="preserve">
+    <value>'The shock comes with danger' - because he is mounted on the strong.</value>
+  </data>
+  <data name="Line.51.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.51.Third.Statement" xml:space="preserve">
+    <value>'The shock comes, and makes one uneasy' - his position is not appropriate.</value>
+  </data>
+  <data name="Line.51.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.51.Fourth.Statement" xml:space="preserve">
+    <value>'The shock plunges one in the mud' - his light has not yet been displayed.</value>
+  </data>
+  <data name="Line.51.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.51.Fifth.Statement" xml:space="preserve">
+    <value>'The shock comes, moving to and fro' - he walks in perilous paths. His affair is in the center, so there will be no great loss.</value>
+  </data>
+  <data name="Line.51.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.51.Sixth.Statement" xml:space="preserve">
+    <value>'The shock comes, and makes one look about with fear and trembling' - he has not obtained the middle position. Though the movement be unfortunate, there will be no blame, for he fears his neighbor and gives warning.</value>
+  </data>
+  <data name="Line.51.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.50.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.50.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.50.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.50.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.50.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.50.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.50.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.50.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.50.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.50.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.50.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.50.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.30.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.30.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.30.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.30.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.30.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.30.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.30.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.30.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.30.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.30.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.30.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.30.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.27.First.Statement" xml:space="preserve">
+    <value>'You guard your jaws and are still' - because one knows to be content with little.</value>
+  </data>
+  <data name="Line.27.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.27.Second.Statement" xml:space="preserve">
+    <value>'You guard your jaws and are still' - because one retreats from the proper path.</value>
+  </data>
+  <data name="Line.27.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.27.Third.Statement" xml:space="preserve">
+    <value>'You guard your jaws but are not still' - because one loses proper conduct.</value>
+  </data>
+  <data name="Line.27.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.27.Fourth.Statement" xml:space="preserve">
+    <value>'You guard your jaws' - because one is in proper position. 'The dripping nourishes' - because it brings brilliance.</value>
+  </data>
+  <data name="Line.27.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.27.Fifth.Statement" xml:space="preserve">
+    <value>'You retreat from guarding your jaws' - because one is supported by central position.</value>
+  </data>
+  <data name="Line.27.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.27.Sixth.Statement" xml:space="preserve">
+    <value>'You guard your jaws and are still' - because one is at the top and without support.</value>
+  </data>
+  <data name="Line.27.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.37.First.Statement" xml:space="preserve">
+    <value>'Establish order within the family' - because one's will is directed toward correcting relationships.</value>
+  </data>
+  <data name="Line.37.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.37.Second.Statement" xml:space="preserve">
+    <value>'There is no need to go outside the family' - because the proper focus is on household matters.</value>
+  </data>
+  <data name="Line.37.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.37.Third.Statement" xml:space="preserve">
+    <value>'When family members are severe' - because the position is not central, requiring balance.</value>
+  </data>
+  <data name="Line.37.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.37.Fourth.Statement" xml:space="preserve">
+    <value>'Enrich the family' - because harmony makes relationships prosperous.</value>
+  </data>
+  <data name="Line.37.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.37.Fifth.Statement" xml:space="preserve">
+    <value>'The king approaches his family' - because love and harmony bring mutual affection.</value>
+  </data>
+  <data name="Line.37.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.37.Sixth.Statement" xml:space="preserve">
+    <value>'Be sincere and trustworthy' - because this principle establishes order throughout family.</value>
+  </data>
+  <data name="Line.37.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.57.First.Statement" xml:space="preserve">
+    <value>'Advancing and retreating' - because the will is in doubt. 'Perseverance of a military man' - because the will is set on bringing order.</value>
+  </data>
+  <data name="Line.57.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.57.Second.Statement" xml:space="preserve">
+    <value>'The good fortune of employing multitudes of shamans and wizards' - because he has obtained the middle course.</value>
+  </data>
+  <data name="Line.57.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.57.Third.Statement" xml:space="preserve">
+    <value>The humiliation of 'repeated gentleness' - because the will is exhausted.</value>
+  </data>
+  <data name="Line.57.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.57.Fourth.Statement" xml:space="preserve">
+    <value>'Taking the field and getting three kinds of game' - because he has done what is right.</value>
+  </data>
+  <data name="Line.57.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.57.Fifth.Statement" xml:space="preserve">
+    <value>'Perseverance brings good fortune and remorse disappears' - because he is in the central and correct position.</value>
+  </data>
+  <data name="Line.57.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.57.Sixth.Statement" xml:space="preserve">
+    <value>'Gentleness under the bed' - because he is at the top and exhausted. 'Losing his property and axe' - though correct, it is evil.</value>
+  </data>
+  <data name="Line.57.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.58.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.58.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.58.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.58.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.58.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.58.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.58.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.58.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.58.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.58.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.58.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.58.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.54.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.54.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.54.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.54.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.54.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.54.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.54.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.54.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.54.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.54.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.54.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.54.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.34.First.Statement" xml:space="preserve">
+    <value>'Power in the toes' - his sincerity will come to an end.</value>
+  </data>
+  <data name="Line.34.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.34.Second.Statement" xml:space="preserve">
+    <value>The second nine, 'perseverance brings good fortune' - because he is in the center.</value>
+  </data>
+  <data name="Line.34.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.34.Third.Statement" xml:space="preserve">
+    <value>'The inferior man uses power' - the superior man does not act thus.</value>
+  </data>
+  <data name="Line.34.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.34.Fourth.Statement" xml:space="preserve">
+    <value>'The fence is broken' - it is advantageous to go forward.</value>
+  </data>
+  <data name="Line.34.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.34.Fifth.Statement" xml:space="preserve">
+    <value>'He loses his ram in the easy place' - his position is not appropriate.</value>
+  </data>
+  <data name="Line.34.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.34.Sixth.Statement" xml:space="preserve">
+    <value>'Cannot retreat' and 'cannot accomplish' - this is inauspicious. 'When difficult, good fortune' - the blame will not be long-lasting.</value>
+  </data>
+  <data name="Line.34.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.2.First.Statement" xml:space="preserve">
+    <value>'Hoar-frost underfoot, solid ice not far off' - the cold air begins to congeal, leading to solid ice.</value>
+  </data>
+  <data name="Line.2.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.2.Second.Statement" xml:space="preserve">
+    <value>'Straight, square, and great' - because the movement is correct and proper. 'Practice nothing, yet no disadvantage' - because the virtue of the earth is brilliant.</value>
+  </data>
+  <data name="Line.2.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.2.Third.Statement" xml:space="preserve">
+    <value>'Hidden excellence, yet you may be correct' - because you can manifest it at the proper time. 'If you serve the king, though you accomplish nothing, there will be a good end' - because your wisdom is great and bright.</value>
+  </data>
+  <data name="Line.2.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.2.Fourth.Statement" xml:space="preserve">
+    <value>'A tied-up bag, no blame' - because of caution there is no harm.</value>
+  </data>
+  <data name="Line.2.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.2.Fifth.Statement" xml:space="preserve">
+    <value>'Yellow lower garment and supreme good fortune' - because the beauty is internal.</value>
+  </data>
+  <data name="Line.2.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.2.Sixth.Statement" xml:space="preserve">
+    <value>'Dragons fight in the wilderness' - because their course is exhausted.</value>
+  </data>
+  <data name="Line.2.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.26.First.Statement" xml:space="preserve">
+    <value>'Danger is at hand' - because the danger is not yet past.</value>
+  </data>
+  <data name="Line.26.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.26.Second.Statement" xml:space="preserve">
+    <value>'The axletrees are taken from the carriage' - because he is in the central (position) and does not lose himself.</value>
+  </data>
+  <data name="Line.26.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.26.Third.Statement" xml:space="preserve">
+    <value>'The practice of defensive warfare' - because he is following what is proper.</value>
+  </data>
+  <data name="Line.26.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.26.Fourth.Statement" xml:space="preserve">
+    <value>The good fortune of the fourth six comes from her being cheerful (in her taming).</value>
+  </data>
+  <data name="Line.26.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.26.Fifth.Statement" xml:space="preserve">
+    <value>The good fortune of the fifth nine comes from having the reward (of his position).</value>
+  </data>
+  <data name="Line.26.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.26.Sixth.Statement" xml:space="preserve">
+    <value>The good fortune of 'attaining the way of heaven' comes from his fulfilling his great purpose.</value>
+  </data>
+  <data name="Line.26.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.9.First.Statement" xml:space="preserve">
+    <value>'Returning from the path' - his course is correct and advantageous.</value>
+  </data>
+  <data name="Line.9.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.9.Second.Statement" xml:space="preserve">
+    <value>'The restraints one draws are like the leather thong of a chariot' - because he is central and correct.</value>
+  </data>
+  <data name="Line.9.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.9.Third.Statement" xml:space="preserve">
+    <value>'The husband turning back his carriage' - position is not appropriate.</value>
+  </data>
+  <data name="Line.9.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.9.Fourth.Statement" xml:space="preserve">
+    <value>'The truth and sincerity of the restraints' - because he has help.</value>
+  </data>
+  <data name="Line.9.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.9.Fifth.Statement" xml:space="preserve">
+    <value>'The rich and affectionate restraint' - because he is central and correct.</value>
+  </data>
+  <data name="Line.9.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.9.Sixth.Statement" xml:space="preserve">
+    <value>'The restraints come from heaven' - though his will is set on restraint, it leads to evil.</value>
+  </data>
+  <data name="Line.9.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.56.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.56.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.56.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.56.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.56.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.56.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.56.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.56.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.56.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.56.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.56.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.56.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.48.First.Statement" xml:space="preserve">
+    <value>'One does not drink the mud from the well' - because the well is abandoned and without water.</value>
+  </data>
+  <data name="Line.48.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.48.Second.Statement" xml:space="preserve">
+    <value>'At the mouth of the well, fish and turtles are shot' - because the well is not properly maintained.</value>
+  </data>
+  <data name="Line.48.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.48.Third.Statement" xml:space="preserve">
+    <value>'The well is cleaned, but not used' - because there is sorrow that the well's potential is wasted.</value>
+  </data>
+  <data name="Line.48.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.48.Fourth.Statement" xml:space="preserve">
+    <value>'The well is lined with bricks' - because repairs are being made.</value>
+  </data>
+  <data name="Line.48.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.48.Fifth.Statement" xml:space="preserve">
+    <value>'The well has clear, cold water' - because its central and correct position provides pure sustenance.</value>
+  </data>
+  <data name="Line.48.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.48.Sixth.Statement" xml:space="preserve">
+    <value>'One draws from the well without hindrance' - because its achievements are great and complete.</value>
+  </data>
+  <data name="Line.48.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.10.First.Statement" xml:space="preserve">
+    <value>'Treading with simple conduct' - because he is following the proper path.</value>
+  </data>
+  <data name="Line.10.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.10.Second.Statement" xml:space="preserve">
+    <value>The good fortune of 'treading a smooth path' - because he is in the central position.</value>
+  </data>
+  <data name="Line.10.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.10.Third.Statement" xml:space="preserve">
+    <value>'A one-eyed man is able to see' - this is not enough to see clearly.</value>
+  </data>
+  <data name="Line.10.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.10.Fourth.Statement" xml:space="preserve">
+    <value>The anxiety and fear - because he is in the proper position.</value>
+  </data>
+  <data name="Line.10.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.10.Fifth.Statement" xml:space="preserve">
+    <value>The good fortune of 'resolute treading' - because he is in the central position and correct.</value>
+  </data>
+  <data name="Line.10.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.10.Sixth.Statement" xml:space="preserve">
+    <value>The supreme good fortune of the top line - because his achievement is complete.</value>
+  </data>
+  <data name="Line.10.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.5.First.Statement" xml:space="preserve">
+    <value>'Waiting in the meadow' - because he does not act rashly.</value>
+  </data>
+  <data name="Line.5.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.5.Second.Statement" xml:space="preserve">
+    <value>The whispering and defamation come from being too relaxed (in the position).</value>
+  </data>
+  <data name="Line.5.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.5.Third.Statement" xml:space="preserve">
+    <value>'Waiting in the mud brings robbers' - because disaster comes from without.</value>
+  </data>
+  <data name="Line.5.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.5.Fourth.Statement" xml:space="preserve">
+    <value>'Waiting in blood' - because he is following what is proper.</value>
+  </data>
+  <data name="Line.5.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.5.Fifth.Statement" xml:space="preserve">
+    <value>The good fortune of the fifth nine comes from his being in the central position and correct.</value>
+  </data>
+  <data name="Line.5.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.5.Sixth.Statement" xml:space="preserve">
+    <value>The arrival of unexpected guests - although not at the proper time, one should treat them respectfully.</value>
+  </data>
+  <data name="Line.5.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.18.First.Statement" xml:space="preserve">
+    <value>'One's father is involved in setting things right' - because the father is central and firm in his purpose.</value>
+  </data>
+  <data name="Line.18.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.18.Second.Statement" xml:space="preserve">
+    <value>'One's mother is involved in setting things right' - because she is central and yielding.</value>
+  </data>
+  <data name="Line.18.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.18.Third.Statement" xml:space="preserve">
+    <value>'One's father has some remorse' - because the father is too strong.</value>
+  </data>
+  <data name="Line.18.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.18.Fourth.Statement" xml:space="preserve">
+    <value>'One father is involved in continuing the work' - because he goes beyond what is proper.</value>
+  </data>
+  <data name="Line.18.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.18.Fifth.Statement" xml:space="preserve">
+    <value>'One's father uses transformation and praise' - because one is central and correct.</value>
+  </data>
+  <data name="Line.18.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.18.Sixth.Statement" xml:space="preserve">
+    <value>'One does not serve king' - because one is at the top and exhausted.</value>
+  </data>
+  <data name="Line.18.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.4.First.Statement" xml:space="preserve">
+    <value>'He meets with his mate' – (because) corresponding (elements) are moved together.</value>
+  </data>
+  <data name="Line.4.First.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.4.Second.Statement" xml:space="preserve">
+    <value>'He meets his equal' – (because) he is in the central position.</value>
+  </data>
+  <data name="Line.4.Second.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.4.Third.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.4.Third.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.4.Fourth.Statement" xml:space="preserve">
+    <value>'He separates himself from his associates' – (because) he cannot help (the ruler).</value>
+  </data>
+  <data name="Line.4.Fourth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.4.Fifth.Statement" xml:space="preserve">
+    <value>'He rightly obtains the praise (due to him)' – (because) he is in the central position, and is correct.</value>
+  </data>
+  <data name="Line.4.Fifth.Image" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Line.4.Sixth.Statement" xml:space="preserve">
+    <value>'He has (the happiness of) a (simple) cottage' – (because) his will is set on what is great.</value>
+  </data>
+  <data name="Line.4.Sixth.Image" xml:space="preserve">
+    <value />
+  </data>
+
+<data name="Position.Worldly" xml:space="preserve"><value>Worldly</value></data><data name="Position.Corresponding" xml:space="preserve"><value>Corresponding</value></data><data name="SixKin.Parent" xml:space="preserve"><value>Parent</value></data><data name="SixKin.Sibling" xml:space="preserve"><value>Sibling</value></data><data name="SixKin.Wealth" xml:space="preserve"><value>Wealth</value></data><data name="SixKin.Officer" xml:space="preserve"><value>Officer</value></data><data name="SixKin.Offspring" xml:space="preserve"><value>Offspring</value></data><data name="SixSpirit.AzureDragon" xml:space="preserve"><value>Azure Dragon</value></data><data name="SixSpirit.VermilionBird" xml:space="preserve"><value>Vermilion Bird</value></data><data name="SixSpirit.HookChen" xml:space="preserve"><value>Hook Chen</value></data><data name="SixSpirit.CoiledSnake" xml:space="preserve"><value>Coiled Snake</value></data><data name="SixSpirit.WhiteTiger" xml:space="preserve"><value>White Tiger</value></data><data name="SixSpirit.BlackTortoise" xml:space="preserve"><value>Black Tortoise</value></data><data name="LinePosition.First" xml:space="preserve"><value>First</value></data><data name="LinePosition.Second" xml:space="preserve"><value>Second</value></data><data name="LinePosition.Third" xml:space="preserve"><value>Third</value></data><data name="LinePosition.Fourth" xml:space="preserve"><value>Fourth</value></data><data name="LinePosition.Fifth" xml:space="preserve"><value>Fifth</value></data><data name="LinePosition.Sixth" xml:space="preserve"><value>Sixth</value></data><data name="SymbolicStar.Nobleman" xml:space="preserve"><value>Nobleman</value></data><data name="SymbolicStar.SalarySpirit" xml:space="preserve"><value>Salary Spirit</value></data><data name="SymbolicStar.CultureFlourish" xml:space="preserve"><value>Culture Flourish</value></data><data name="SymbolicStar.YangBlade" xml:space="preserve"><value>Yang Blade</value></data><data name="SymbolicStar.PostHorse" xml:space="preserve"><value>Post Horse</value></data><data name="SymbolicStar.PeachBlossom" xml:space="preserve"><value>Peach Blossom</value></data><data name="SymbolicStar.GeneralsStar" xml:space="preserve"><value>Generals Star</value></data><data name="SymbolicStar.Canopy" xml:space="preserve"><value>Canopy</value></data><data name="SymbolicStar.StarOfStrategy" xml:space="preserve"><value>Star of Strategy</value></data><data name="SymbolicStar.DisasterMalignity" xml:space="preserve"><value>Disaster Malignity</value></data><data name="SymbolicStar.RobberyMalignity" xml:space="preserve"><value>Robbery Malignity</value></data><data name="SymbolicStar.DeathSpirit" xml:space="preserve"><value>Death Spirit</value></data><data name="SymbolicStar.CelestialPhysician" xml:space="preserve"><value>Celestial Physician</value></data><data name="SymbolicStar.HeavenlyJoy" xml:space="preserve"><value>Heavenly Joy</value></data><data name="SymbolicStar.MarriageBed" xml:space="preserve"><value>Marriage Bed</value></data><data name="SymbolicStar.BridalChamber" xml:space="preserve"><value>Bridal Chamber</value></data></root>

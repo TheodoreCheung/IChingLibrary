@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d0bed51a_002D79a5_002D4b99_002D8875_002De7adaa7e1f6b/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="EarthlyBranch_Generates_ShouldWorkThroughFivePhase" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::A28CB0B9-B883-EDFD-5DC6-41037F2A0880::net10.0::IChingLibrary.Core.Test.EarthlyBranchTests.EarthlyBranch_Generates_ShouldWorkThroughFivePhase&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::A28CB0B9-B883-EDFD-5DC6-41037F2A0880::net10.0::IChingLibrary.Core.Test.StemBranchTests.StemBranch_EmptyBranches_ShouldCalculateCorrectly&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

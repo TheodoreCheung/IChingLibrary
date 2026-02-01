@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/IChingLibrary.Core/IChingLibrary.Core.csproj" />
+    <Project Path="src/IChingLibrary.Generators/IChingLibrary.Generators.csproj" />
+    <Project Path="src/IChingLibrary.SixLines/IChingLibrary.SixLines.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/IChingLibrary.Core.Test/IChingLibrary.Core.Test.csproj" />
+    <Project Path="test/IChingLibrary.SixLines.Test/IChingLibrary.SixLines.Test.csproj" />
+  </Folder>
+</Solution>
