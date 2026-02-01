@@ -2,10 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="lunar-csharp" Version="1.6.8" />
+      <PackageReference Include="lunar-csharp" />
     </ItemGroup>
 
 </Project>

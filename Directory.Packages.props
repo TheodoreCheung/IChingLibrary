@@ -1,0 +1,20 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Roslyn 代码分析 -->
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
+
+        <!-- 农历库 -->
+        <PackageVersion Include="lunar-csharp" Version="1.6.8" />
+
+        <!-- 测试框架 -->
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+        <PackageVersion Include="Xunit" Version="2.9.3" />
+        <PackageVersion Include="Xunit.Runner.VisualStudio" Version="3.1.4" />
+        <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    </ItemGroup>
+</Project>

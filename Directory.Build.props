@@ -1,0 +1,47 @@
+<Project>
+    <PropertyGroup>
+        <!-- 项目版本号 -->
+        <Version>0.1.0-alpha.1</Version>
+        <AssemblyVersion>0.1.0.0</AssemblyVersion>
+        <FileVersion>0.1.0.0</FileVersion>
+
+        <!-- 预发布版本信息 -->
+        <PreReleaseAlphaSuffix>alpha</PreReleaseAlphaSuffix>
+        <PreReleaseBetaSuffix>beta</PreReleaseBetaSuffix>
+        <PreReleaseRCSuffix>rc</PreReleaseRCSuffix>
+
+        <!-- 作者信息 -->
+        <Authors>Theodore Cheung</Authors>
+        <Company>Theodore Cheung</Company>
+        <Product>IChingLibrary</Product>
+        <Copyright>Copyright (c) Theodore Cheung</Copyright>
+
+        <!-- 项目信息 -->
+        <Description>易学库 - .NET 易学占卜核心库，包含八卦、五行、六爻等易学元素的完整实现</Description>
+        <RepositoryUrl>https://github.com/TheodoreCheung/IChingLibrary</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>https://github.com/TheodoreCheung/IChingLibrary</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>iching;yijing;divination;chinese;metaphysics;sixlines;trigram;hexagram</PackageTags>
+
+        <!-- 通用编译设置 -->
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Deterministic>true</Deterministic>
+
+        <!-- 生成设置 -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- 缺少 XML 注释警告 -->
+
+        <!-- 源代码生成器相关设置（仅对需要的项目生效） -->
+        <EmitCompilerGeneratedFiles Condition="'$(EmitCompilerGeneratedFiles)'==''">true</EmitCompilerGeneratedFiles>
+        <CompilerGeneratedFilesOutputPath Condition="'$(CompilerGeneratedFilesOutputPath)'==''">$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
+    </PropertyGroup>
+
+    <!-- 测试项目特定设置 -->
+    <PropertyGroup Condition="'$(IsTestProject)'=='true' or $(MSBuildProjectName.EndsWith('.Test'))">
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+</Project>

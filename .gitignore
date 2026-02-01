@@ -319,3 +319,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Project-specific
+.claude/
+.idea/
+docs/
+old_resx/
+scripts/
+CLAUDE.md
