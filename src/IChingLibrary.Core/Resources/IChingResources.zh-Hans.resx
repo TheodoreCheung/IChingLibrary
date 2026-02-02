@@ -1,51 +1,110 @@
-<?xml version='1.0' encoding='utf-8'?>
-<root xmlns:ns1="urn:schemas-microsoft-com:xml-msdata" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:schema id="root">
-    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xs:element name="root" ns1:IsDataSet="true">
-      <xs:complexType>
-        <xs:choice maxOccurs="unbounded">
-          <xs:element name="metadata">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" />
-              </xs:sequence>
-              <xs:attribute name="name" use="required" type="xsd:string" />
-              <xs:attribute name="type" type="xsd:string" />
-              <xs:attribute name="mimetype" type="xsd:string" />
-              <xs:attribute ref="xml:space" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="assembly">
-            <xs:complexType>
-              <xs:attribute name="alias" type="xsd:string" />
-              <xs:attribute name="name" type="xsd:string" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="data">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-                <xs:element name="comment" type="xsd:string" minOccurs="0" ns1:Ordinal="2" />
-              </xs:sequence>
-              <xs:attribute name="name" type="xsd:string" use="required" ns1:Ordinal="1" />
-              <xs:attribute name="type" type="xsd:string" ns1:Ordinal="3" />
-              <xs:attribute name="mimetype" type="xsd:string" ns1:Ordinal="4" />
-              <xs:attribute ref="xml:space" ns1:Ordinal="5" />
-            </xs:complexType>
-          </xs:element>
-          <xs:element name="resheader">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:element name="value" type="xsd:string" minOccurs="0" ns1:Ordinal="1" />
-              </xs:sequence>
-              <xs:attribute name="name" type="xsd:string" use="required" />
-            </xs:complexType>
-          </xs:element>
-        </xs:choice>
-      </xs:complexType>
-    </xs:element>
-  </xs:schema>
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
   </resheader>
@@ -58,16 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-
-  
   <data name="YinYang.Yin" xml:space="preserve">
     <value>阴</value>
   </data>
   <data name="YinYang.Yang" xml:space="preserve">
     <value>阳</value>
   </data>
-
-  
   <data name="FourSymbol.OldYin" xml:space="preserve">
     <value>老阴</value>
   </data>
@@ -80,8 +135,6 @@
   <data name="FourSymbol.OldYang" xml:space="preserve">
     <value>老阳</value>
   </data>
-
-  
   <data name="FivePhase.Metal" xml:space="preserve">
     <value>金</value>
   </data>
@@ -97,8 +150,6 @@
   <data name="FivePhase.Earth" xml:space="preserve">
     <value>土</value>
   </data>
-
-  
   <data name="HeavenlyStem.Jia" xml:space="preserve">
     <value>甲</value>
   </data>
@@ -129,8 +180,6 @@
   <data name="HeavenlyStem.Gui" xml:space="preserve">
     <value>癸</value>
   </data>
-
-  
   <data name="EarthlyBranch.Zi" xml:space="preserve">
     <value>子</value>
   </data>
@@ -167,8 +216,6 @@
   <data name="EarthlyBranch.Hai" xml:space="preserve">
     <value>亥</value>
   </data>
-
-  
   <data name="Trigram.Qian" xml:space="preserve">
     <value>乾</value>
   </data>
@@ -193,8 +240,6 @@
   <data name="Trigram.Kun" xml:space="preserve">
     <value>坤</value>
   </data>
-
-  
   <data name="Hexagram.TheCreative" xml:space="preserve">
     <value>乾为天</value>
   </data>
@@ -387,8 +432,6 @@
   <data name="Hexagram.HoldingTogether" xml:space="preserve">
     <value>水地比</value>
   </data>
-
-  
   <data name="Hexagram.1.Statement" xml:space="preserve">
     <value>元，亨，利，贞。</value>
   </data>
@@ -398,8 +441,6 @@
   <data name="Hexagram.1.Image" xml:space="preserve">
     <value>天行健，君子以自强不息。</value>
   </data>
-
-  
   <data name="Line.1.First.Statement" xml:space="preserve">
     <value>潜龙，勿用。</value>
   </data>
@@ -436,7 +477,7 @@
   <data name="Line.1.Sixth.Image" xml:space="preserve">
     <value>亢龙有悔，盈不可久也。</value>
   </data>
-<data name="Line.55.First.Statement" xml:space="preserve">
+  <data name="Line.55.First.Statement" xml:space="preserve">
     <value>遇其配主，虽旬无咎，往有尚。</value>
   </data>
   <data name="Line.55.First.Image" xml:space="preserve">
@@ -1016,7 +1057,7 @@
     <value>鸣豫，凶。象 曰：初六鸣豫，志穷凶也。</value>
   </data>
   <data name="Line.16.First.Image" xml:space="preserve">
-    <value />
+    <value>初六鸣豫，志穷凶也。</value>
   </data>
   <data name="Line.16.Second.Statement" xml:space="preserve">
     <value>介于石，不终日，贞吉。</value>
@@ -1556,7 +1597,7 @@
     <value>臀困于株木，入于幽谷，三岁不见。象 曰：入于幽谷，幽不明也。</value>
   </data>
   <data name="Line.47.First.Image" xml:space="preserve">
-    <value />
+    <value>入于幽谷，幽不明也。</value>
   </data>
   <data name="Line.47.Second.Statement" xml:space="preserve">
     <value>困于酒食，朱绂方来，利用亨祀，征凶，无咎。</value>
@@ -1736,7 +1777,7 @@
     <value>晋如，摧如，贞吉。罔孚，裕无咎。象 曰：晋如，摧如；独行正也。裕无咎；未受命也。</value>
   </data>
   <data name="Line.35.First.Image" xml:space="preserve">
-    <value />
+    <value>晋如，摧如；独行正也。裕无咎；未受命也。</value>
   </data>
   <data name="Line.35.Second.Statement" xml:space="preserve">
     <value>晋如，愁如，贞吉。受兹介福，于其王母。</value>
@@ -2704,5 +2745,109 @@
   <data name="Line.4.Sixth.Image" xml:space="preserve">
     <value>利用御寇，上下顺也。</value>
   </data>
-
-<data name="Position.Worldly" xml:space="preserve"><value>世</value></data><data name="Position.Corresponding" xml:space="preserve"><value>应</value></data><data name="SixKin.Parent" xml:space="preserve"><value>父母</value></data><data name="SixKin.Sibling" xml:space="preserve"><value>兄弟</value></data><data name="SixKin.Wealth" xml:space="preserve"><value>妻财</value></data><data name="SixKin.Officer" xml:space="preserve"><value>官鬼</value></data><data name="SixKin.Offspring" xml:space="preserve"><value>子孙</value></data><data name="SixSpirit.AzureDragon" xml:space="preserve"><value>青龙</value></data><data name="SixSpirit.VermilionBird" xml:space="preserve"><value>朱雀</value></data><data name="SixSpirit.HookChen" xml:space="preserve"><value>勾陈</value></data><data name="SixSpirit.CoiledSnake" xml:space="preserve"><value>螣蛇</value></data><data name="SixSpirit.WhiteTiger" xml:space="preserve"><value>白虎</value></data><data name="SixSpirit.BlackTortoise" xml:space="preserve"><value>玄武</value></data><data name="LinePosition.First" xml:space="preserve"><value>初爻</value></data><data name="LinePosition.Second" xml:space="preserve"><value>二爻</value></data><data name="LinePosition.Third" xml:space="preserve"><value>三爻</value></data><data name="LinePosition.Fourth" xml:space="preserve"><value>四爻</value></data><data name="LinePosition.Fifth" xml:space="preserve"><value>五爻</value></data><data name="LinePosition.Sixth" xml:space="preserve"><value>上爻</value></data><data name="SymbolicStar.Nobleman" xml:space="preserve"><value>贵人</value></data><data name="SymbolicStar.SalarySpirit" xml:space="preserve"><value>禄神</value></data><data name="SymbolicStar.CultureFlourish" xml:space="preserve"><value>文昌</value></data><data name="SymbolicStar.YangBlade" xml:space="preserve"><value>羊刃</value></data><data name="SymbolicStar.PostHorse" xml:space="preserve"><value>驿马</value></data><data name="SymbolicStar.PeachBlossom" xml:space="preserve"><value>桃花</value></data><data name="SymbolicStar.GeneralsStar" xml:space="preserve"><value>将星</value></data><data name="SymbolicStar.Canopy" xml:space="preserve"><value>华盖</value></data><data name="SymbolicStar.StarOfStrategy" xml:space="preserve"><value>谋星</value></data><data name="SymbolicStar.DisasterMalignity" xml:space="preserve"><value>灾煞</value></data><data name="SymbolicStar.RobberyMalignity" xml:space="preserve"><value>劫煞</value></data><data name="SymbolicStar.DeathSpirit" xml:space="preserve"><value>亡神</value></data><data name="SymbolicStar.CelestialPhysician" xml:space="preserve"><value>天医</value></data><data name="SymbolicStar.HeavenlyJoy" xml:space="preserve"><value>天喜</value></data><data name="SymbolicStar.MarriageBed" xml:space="preserve"><value>床帐</value></data><data name="SymbolicStar.BridalChamber" xml:space="preserve"><value>香闺</value></data></root>
+  <data name="Position.Worldly" xml:space="preserve">
+    <value>世</value>
+  </data>
+  <data name="Position.Corresponding" xml:space="preserve">
+    <value>应</value>
+  </data>
+  <data name="SixKin.Parent" xml:space="preserve">
+    <value>父母</value>
+  </data>
+  <data name="SixKin.Sibling" xml:space="preserve">
+    <value>兄弟</value>
+  </data>
+  <data name="SixKin.Wealth" xml:space="preserve">
+    <value>妻财</value>
+  </data>
+  <data name="SixKin.Officer" xml:space="preserve">
+    <value>官鬼</value>
+  </data>
+  <data name="SixKin.Offspring" xml:space="preserve">
+    <value>子孙</value>
+  </data>
+  <data name="SixSpirit.AzureDragon" xml:space="preserve">
+    <value>青龙</value>
+  </data>
+  <data name="SixSpirit.VermilionBird" xml:space="preserve">
+    <value>朱雀</value>
+  </data>
+  <data name="SixSpirit.HookChen" xml:space="preserve">
+    <value>勾陈</value>
+  </data>
+  <data name="SixSpirit.CoiledSnake" xml:space="preserve">
+    <value>螣蛇</value>
+  </data>
+  <data name="SixSpirit.WhiteTiger" xml:space="preserve">
+    <value>白虎</value>
+  </data>
+  <data name="SixSpirit.BlackTortoise" xml:space="preserve">
+    <value>玄武</value>
+  </data>
+  <data name="LinePosition.First" xml:space="preserve">
+    <value>初爻</value>
+  </data>
+  <data name="LinePosition.Second" xml:space="preserve">
+    <value>二爻</value>
+  </data>
+  <data name="LinePosition.Third" xml:space="preserve">
+    <value>三爻</value>
+  </data>
+  <data name="LinePosition.Fourth" xml:space="preserve">
+    <value>四爻</value>
+  </data>
+  <data name="LinePosition.Fifth" xml:space="preserve">
+    <value>五爻</value>
+  </data>
+  <data name="LinePosition.Sixth" xml:space="preserve">
+    <value>上爻</value>
+  </data>
+  <data name="SymbolicStar.Nobleman" xml:space="preserve">
+    <value>贵人</value>
+  </data>
+  <data name="SymbolicStar.SalarySpirit" xml:space="preserve">
+    <value>禄神</value>
+  </data>
+  <data name="SymbolicStar.CultureFlourish" xml:space="preserve">
+    <value>文昌</value>
+  </data>
+  <data name="SymbolicStar.YangBlade" xml:space="preserve">
+    <value>羊刃</value>
+  </data>
+  <data name="SymbolicStar.PostHorse" xml:space="preserve">
+    <value>驿马</value>
+  </data>
+  <data name="SymbolicStar.PeachBlossom" xml:space="preserve">
+    <value>桃花</value>
+  </data>
+  <data name="SymbolicStar.GeneralsStar" xml:space="preserve">
+    <value>将星</value>
+  </data>
+  <data name="SymbolicStar.Canopy" xml:space="preserve">
+    <value>华盖</value>
+  </data>
+  <data name="SymbolicStar.StarOfStrategy" xml:space="preserve">
+    <value>谋星</value>
+  </data>
+  <data name="SymbolicStar.DisasterMalignity" xml:space="preserve">
+    <value>灾煞</value>
+  </data>
+  <data name="SymbolicStar.RobberyMalignity" xml:space="preserve">
+    <value>劫煞</value>
+  </data>
+  <data name="SymbolicStar.DeathSpirit" xml:space="preserve">
+    <value>亡神</value>
+  </data>
+  <data name="SymbolicStar.CelestialPhysician" xml:space="preserve">
+    <value>天医</value>
+  </data>
+  <data name="SymbolicStar.HeavenlyJoy" xml:space="preserve">
+    <value>天喜</value>
+  </data>
+  <data name="SymbolicStar.MarriageBed" xml:space="preserve">
+    <value>床帐</value>
+  </data>
+  <data name="SymbolicStar.BridalChamber" xml:space="preserve">
+    <value>香闺</value>
+  </data>
+</root>

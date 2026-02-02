@@ -325,5 +325,6 @@ FodyWeavers.xsd
 .idea/
 docs/
 old_resx/
-scripts/
+scripts/__pycache__/
+scripts/*.pyc
 CLAUDE.md
