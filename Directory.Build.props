@@ -37,7 +37,7 @@
 
         <!-- 源代码生成器相关设置（仅对需要的项目生效） -->
         <EmitCompilerGeneratedFiles Condition="'$(EmitCompilerGeneratedFiles)'==''">true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath Condition="'$(CompilerGeneratedFilesOutputPath)'==''">$(BaseIntermediateOutputPath)\GeneratedFiles</CompilerGeneratedFilesOutputPath>
+        <CompilerGeneratedFilesOutputPath Condition="'$(CompilerGeneratedFilesOutputPath)'==''">$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)GeneratedFiles</CompilerGeneratedFilesOutputPath>
     </PropertyGroup>
 
     <!-- 测试项目特定设置 -->
