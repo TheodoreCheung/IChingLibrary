@@ -461,7 +461,7 @@ var divination = SixLineDivination
 | 天医 | CelestialPhysician | 月支（退一位） |
 | 天喜 | HeavenlyJoy | 月支（寅卯辰→戌，巳午未→丑，申酉戌→辰，亥子丑→未） |
 | 床帐 | MarriageBed | 卦身五行（火→辰戌丑未，金→寅卯，水→巳午，木→申酉，土→亥子） |
-| 香闺 | BridalChamber | 卦身五行（火→寅卯，金→辰戌丑未，水→申酉，木→亥子，土→巳午） |
+| 香闺 | BridalChamber | 卦身五行（火→申酉，金→寅卯，水→巳午，木→辰戌丑未，土→亥子） |
 
 ### 10. 卦属特性
 
