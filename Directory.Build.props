@@ -1,9 +1,9 @@
 <Project>
     <PropertyGroup>
         <!-- 项目版本号 -->
-        <Version>0.1.7-alpha.1</Version>
-        <AssemblyVersion>0.1.7.0</AssemblyVersion>
-        <FileVersion>0.1.7.0</FileVersion>
+        <Version>1.0.0</Version>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
 
         <!-- 预发布版本信息 -->
         <PreReleaseAlphaSuffix>alpha</PreReleaseAlphaSuffix>
@@ -23,7 +23,8 @@
         <PackageProjectUrl>https://github.com/TheodoreCheung/IChingLibrary</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageTags>iching;yijing;divination;chinese;metaphysics;sixlines;trigram;hexagram</PackageTags>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>iching;yijing;divination;chinese;metaphysics;sixlines;trigram;hexagram;易经;六爻;八卦;六十四卦;阴阳;五行;金钱卦</PackageTags>
 
         <!-- 通用编译设置 -->
         <LangVersion>latest</LangVersion>
@@ -37,6 +38,10 @@
 
         <!-- Nuget 包输出路径 -->
         <PackageOutputPath>$(MSBuildThisFileDirectory)nupkgs</PackageOutputPath>
+
+        <!-- 符号包配置 -->
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     </PropertyGroup>
 
     <!-- 测试项目特定设置 -->
@@ -46,5 +51,6 @@
 
     <ItemGroup>
         <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" />
+        <None Include="$(MSBuildThisFileDirectory)icon.png" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>
