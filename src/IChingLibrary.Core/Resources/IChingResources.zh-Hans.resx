@@ -2850,4 +2850,88 @@
   <data name="SymbolicStar.BridalChamber" xml:space="preserve">
     <value>香闺</value>
   </data>
+  <data name="HexagramNature.SixClashes" xml:space="preserve">
+    <value>六冲</value>
+  </data>
+  <data name="HexagramNature.SixHarmonies" xml:space="preserve">
+    <value>六合</value>
+  </data>
+  <data name="HexagramNature.WanderingSoul" xml:space="preserve">
+    <value>游魂</value>
+  </data>
+  <data name="HexagramNature.ReturningSoul" xml:space="preserve">
+    <value>归魂</value>
+  </data>
+  <data name="SixLineDivination.To" xml:space="preserve">
+    <value>之</value>
+  </data>
+  <data name="SixLineDivination.Hexagram" xml:space="preserve">
+    <value>卦</value>
+  </data>
+  <data name="SixLineDivination.InquiryTime" xml:space="preserve">
+    <value>起卦时间</value>
+  </data>
+  <data name="SixLineDivination.GregorianCalendar" xml:space="preserve">
+    <value>公历</value>
+  </data>
+  <data name="SixLineDivination.DateFormat" xml:space="preserve">
+    <value>yyyy年M月d日H时</value>
+  </data>
+  <data name="SixLineDivination.LunarStemBranch" xml:space="preserve">
+    <value>农历干支</value>
+  </data>
+  <data name="SixLineDivination.DayEmptiness" xml:space="preserve">
+    <value>日旬空</value>
+  </data>
+  <data name="SixLineDivination.OriginalHexagram" xml:space="preserve">
+    <value>本卦</value>
+  </data>
+  <data name="SixLineDivination.HexagramName" xml:space="preserve">
+    <value>卦名</value>
+  </data>
+  <data name="SixLineDivination.HexagramPalace" xml:space="preserve">
+    <value>卦宫</value>
+  </data>
+  <data name="SixLineDivination.Palace" xml:space="preserve">
+    <value>宫</value>
+  </data>
+  <data name="SixLineDivination.PalaceFivePhases" xml:space="preserve">
+    <value>卦宫五行</value>
+  </data>
+  <data name="SixLineDivination.LinePosition" xml:space="preserve">
+    <value>爻位</value>
+  </data>
+  <data name="SixLineDivination.StemBranch" xml:space="preserve">
+    <value>干支</value>
+  </data>
+  <data name="SixLineDivination.SixKin" xml:space="preserve">
+    <value>六亲</value>
+  </data>
+  <data name="SixLineDivination.FourSymbols" xml:space="preserve">
+    <value>四象</value>
+  </data>
+  <data name="SixLineDivination.SixSpirits" xml:space="preserve">
+    <value>六神</value>
+  </data>
+  <data name="SixLineDivination.Position" xml:space="preserve">
+    <value>世应</value>
+  </data>
+  <data name="SixLineDivination.HiddenDeity" xml:space="preserve">
+    <value>伏神</value>
+  </data>
+  <data name="SixLineDivination.HiddenDeityStemBranch" xml:space="preserve">
+    <value>伏神干支</value>
+  </data>
+  <data name="SixLineDivination.ChangedHexagram" xml:space="preserve">
+    <value>变卦</value>
+  </data>
+  <data name="SixLineDivination.SymbolicStar" xml:space="preserve">
+    <value>神煞</value>
+  </data>
+  <data name="SixLineDivination.SymbolicStarName" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="SixLineDivination.SymbolicStarBranch" xml:space="preserve">
+    <value>地支</value>
+  </data>
 </root>

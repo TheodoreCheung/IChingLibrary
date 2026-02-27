@@ -20,6 +20,11 @@ public partial class FourSymbol : IChingElement<FourSymbol>
     }
 
     /// <summary>
+    /// 是否为变爻（老阴或老阳）
+    /// </summary>
+    public bool IsChanging => Value is 6 or 9;
+
+    /// <summary>
     /// 老阴（值为 6）
     /// </summary>
     public static readonly FourSymbol OldYin = new(6, nameof(OldYin), YinYang.Yin);

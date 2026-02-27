@@ -156,6 +156,7 @@ ScaffoldingReadMe.txt
 *.coveragexml
 
 # NuGet Packages
+nupkgs/
 *.nupkg
 *.snupkg
 **/[Pp]ackages/*

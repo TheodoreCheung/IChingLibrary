@@ -26,61 +26,54 @@ internal class DefaultNajiaProvider : INajiaProvider
     private static readonly Dictionary<Trigram, EarthlyBranch[]> YangBranchMap = new()
     {
         // 乾：子寅辰午申戌
-        { Trigram.Qian, new[] { EarthlyBranch.Zi, EarthlyBranch.Yin, EarthlyBranch.Chen, EarthlyBranch.Wu, EarthlyBranch.Shen, EarthlyBranch.Xu } },
+        { Trigram.Qian, [EarthlyBranch.Zi, EarthlyBranch.Yin, EarthlyBranch.Chen, EarthlyBranch.Wu, EarthlyBranch.Shen, EarthlyBranch.Xu] },
         // 震：子寅辰午申戌
-        { Trigram.Zhen, new[] { EarthlyBranch.Zi, EarthlyBranch.Yin, EarthlyBranch.Chen, EarthlyBranch.Wu, EarthlyBranch.Shen, EarthlyBranch.Xu } },
+        { Trigram.Zhen, [EarthlyBranch.Zi, EarthlyBranch.Yin, EarthlyBranch.Chen, EarthlyBranch.Wu, EarthlyBranch.Shen, EarthlyBranch.Xu] },
         // 坎：寅辰午申戌子
-        { Trigram.Kan, new[] { EarthlyBranch.Yin, EarthlyBranch.Chen, EarthlyBranch.Wu, EarthlyBranch.Shen, EarthlyBranch.Xu, EarthlyBranch.Zi } },
+        { Trigram.Kan, [EarthlyBranch.Yin, EarthlyBranch.Chen, EarthlyBranch.Wu, EarthlyBranch.Shen, EarthlyBranch.Xu, EarthlyBranch.Zi] },
         // 艮：辰午申戌子寅
-        { Trigram.Gen, new[] { EarthlyBranch.Chen, EarthlyBranch.Wu, EarthlyBranch.Shen, EarthlyBranch.Xu, EarthlyBranch.Zi, EarthlyBranch.Yin } }
+        { Trigram.Gen, [EarthlyBranch.Chen, EarthlyBranch.Wu, EarthlyBranch.Shen, EarthlyBranch.Xu, EarthlyBranch.Zi, EarthlyBranch.Yin] }
     };
 
     // 阴卦纳支表（逆行）：坤、兑、离、巽
     private static readonly Dictionary<Trigram, EarthlyBranch[]> YinBranchMap = new()
     {
         // 坤：未巳卯丑亥酉
-        { Trigram.Kun, new[] { EarthlyBranch.Wei, EarthlyBranch.Si, EarthlyBranch.Mao, EarthlyBranch.Chou, EarthlyBranch.Hai, EarthlyBranch.You } },
+        { Trigram.Kun, [EarthlyBranch.Wei, EarthlyBranch.Si, EarthlyBranch.Mao, EarthlyBranch.Chou, EarthlyBranch.Hai, EarthlyBranch.You] },
         // 兑：巳卯丑亥酉未
-        { Trigram.Dui, new[] { EarthlyBranch.Si, EarthlyBranch.Mao, EarthlyBranch.Chou, EarthlyBranch.Hai, EarthlyBranch.You, EarthlyBranch.Wei } },
+        { Trigram.Dui, [EarthlyBranch.Si, EarthlyBranch.Mao, EarthlyBranch.Chou, EarthlyBranch.Hai, EarthlyBranch.You, EarthlyBranch.Wei] },
         // 离：卯丑亥酉未巳
-        { Trigram.Li, new[] { EarthlyBranch.Mao, EarthlyBranch.Chou, EarthlyBranch.Hai, EarthlyBranch.You, EarthlyBranch.Wei, EarthlyBranch.Si } },
+        { Trigram.Li, [EarthlyBranch.Mao, EarthlyBranch.Chou, EarthlyBranch.Hai, EarthlyBranch.You, EarthlyBranch.Wei, EarthlyBranch.Si] },
         // 巽：丑亥酉未巳卯
-        { Trigram.Xun, new[] { EarthlyBranch.Chou, EarthlyBranch.Hai, EarthlyBranch.You, EarthlyBranch.Wei, EarthlyBranch.Si, EarthlyBranch.Mao } }
+        { Trigram.Xun, [EarthlyBranch.Chou, EarthlyBranch.Hai, EarthlyBranch.You, EarthlyBranch.Wei, EarthlyBranch.Si, EarthlyBranch.Mao] }
     };
 
-    /// <inheritdoc />
-    public void BindStemBranches(HexagramInstance hexagram, InquiryTime inquiryTime)
+    // 预计算的纳甲表，避免运行时重复计算和分配内存
+    // 8个卦，2个位置（内/外），每个位置3个爻
+    private static readonly StemBranch[][] InnerTables = new StemBranch[8][];
+    private static readonly StemBranch[][] OuterTables = new StemBranch[8][];
+
+    static DefaultNajiaProvider()
     {
-        var lowerTable = GetNajiaTable(hexagram.Meta.Lower, true);
-        var upperTable = GetNajiaTable(hexagram.Meta.Upper, false);
-
-        // 内卦（初爻到三爻）使用下卦纳甲
-        for (int i = 0; i < 3; i++)
+        foreach (var trigram in Trigram.GetAll())
         {
-            hexagram.Lines[i].StemBranch = lowerTable[i];
-        }
-
-        // 外卦（四爻到上爻）使用上卦纳甲
-        for (int i = 3; i < 6; i++)
-        {
-            hexagram.Lines[i].StemBranch = upperTable[i];
+            InnerTables[trigram.Value] = PrecalculateTable(trigram, true);
+            OuterTables[trigram.Value] = PrecalculateTable(trigram, false);
         }
     }
 
-    /// <inheritdoc />
-    public StemBranch[] GetNajiaTable(Trigram trigram, bool isInner)
+    private static StemBranch[] PrecalculateTable(Trigram trigram, bool isInner)
     {
         var stem = isInner ? NajiaStemMap[trigram].Inner : NajiaStemMap[trigram].Outer;
         var branches = IsYangTrigram(trigram) ? YangBranchMap[trigram] : YinBranchMap[trigram];
 
-        // 根据内外卦选择对应的地支范围
-        var startIndex = isInner ? 0 : 3;
-        var branchesForTrigram = isInner
-            ? branches.Take(3).ToArray()
-            : branches.Skip(3).Take(3).ToArray();
-
-        // 组合天干和地支
-        return branchesForTrigram.Select(branch => new StemBranch(stem, branch)).ToArray();
+        var result = new StemBranch[3];
+        var offset = isInner ? 0 : 3;
+        for (int i = 0; i < 3; i++)
+        {
+            result[i] = new StemBranch(stem, branches[offset + i]);
+        }
+        return result;
     }
 
     /// <summary>
@@ -92,5 +85,32 @@ internal class DefaultNajiaProvider : INajiaProvider
                trigram == Trigram.Zhen ||
                trigram == Trigram.Kan ||
                trigram == Trigram.Gen;
+    }
+
+    /// <inheritdoc />
+    public void BindStemBranches(BuilderContext context)
+    {
+        if (context.Original is null)
+            throw new InvalidOperationException("未找到主卦");
+        
+        Bind(context.Original);
+        
+        if (context.Changed is not null)
+            Bind(context.Changed);
+
+        return;
+
+        void Bind(HexagramInstance hexagram)
+        {
+            // 直接从预计算表中获取内卦和外卦的干支数组
+            var lowerTable = InnerTables[hexagram.Meta.Lower.Value];
+            var upperTable = OuterTables[hexagram.Meta.Upper.Value];
+
+            for (var i = 0; i < 3; i++)
+            {
+                hexagram.Lines[i].StemBranch = lowerTable[i];
+                hexagram.Lines[i + 3].StemBranch = upperTable[i];
+            }
+        }
     }
 }

@@ -80,9 +80,9 @@ public class HexagramInstanceTests
     }
 
     [Theory]
-    [InlineData(0)]   // 乾为天 - 全阳
-    [InlineData(63)]  // 坤为地 - 全阴
-    [InlineData(38)]  // 火水未济 - 阴阳相间
+    [InlineData(63)]   // 乾为天 - 全阳
+    [InlineData(0)]  // 坤为地 - 全阴
+    [InlineData(42)]  // 火水未济 - 阴阳相间
     public void HexagramInstance_Value_ShouldMatchBinaryPattern(byte hexagramValue)
     {
         // Arrange
@@ -94,7 +94,7 @@ public class HexagramInstanceTests
         // Assert
         for (int i = 0; i < 6; i++)
         {
-            var expectedYinYang = ((hexagramValue << i) & 1) == 1 ? YinYang.Yang : YinYang.Yin;
+            var expectedYinYang = ((hexagramValue >> i) & 1) == 1 ? YinYang.Yang : YinYang.Yin;
             Assert.Equal(expectedYinYang, instance.Lines[i].YinYang);
         }
     }
@@ -118,6 +118,6 @@ public class HexagramInstanceTests
 
         // Assert - 通过 Builder 设置的属性应该是正确的
         Assert.True(divination.Original.Lines[0].IsChanging);
-        Assert.NotNull(divination.Original.Lines[0].Position);  // 通过 WithPosition 设置
+        Assert.NotNull(divination.Original.Lines[5].Position);  // 通过 WithPosition 设置
     }
 }

@@ -7,23 +7,6 @@ namespace IChingLibrary.SixLines.Providers;
 /// </summary>
 internal class DefaultSixKinProvider : ISixKinProvider
 {
-    /// <inheritdoc />
-    public void BindSixKin(HexagramInstance hexagram)
-    {
-        BindSixKin(hexagram, hexagram.Meta.Palace.FivePhase);
-    }
-
-    /// <inheritdoc />
-    public void BindSixKin(HexagramInstance hexagram, FivePhase palacePhase)
-    {
-        for (int i = 0; i < hexagram.Lines.Count; i++)
-        {
-            var line = hexagram.Lines[i];
-            var linePhase = line.StemBranch.Branch.FivePhase;
-            line.SixKin = GetSixKin(palacePhase, linePhase);
-        }
-    }
-
     /// <summary>
     /// 根据卦宫五行和爻五行计算六亲
     /// </summary>
@@ -48,5 +31,23 @@ internal class DefaultSixKinProvider : ISixKinProvider
         // 子孙：我生者（卦宫生爻）
         // 默认返回子孙
         return SixKin.Offspring;
+    }
+
+    /// <inheritdoc />
+    public void BindSixKin(BuilderContext context)
+    {
+        if (context.Original is null)
+            throw new InvalidOperationException("未找到主卦");
+
+        var palaceFivePhase = context.Original.Meta.Palace.FivePhase;
+
+        for (var i = 0; i < 6; i++)
+        {
+            context.Original.Lines[i].SixKin =
+                GetSixKin(palaceFivePhase, context.Original.Lines[i].StemBranch.Branch.FivePhase);
+
+            context.Changed?.Lines[i].SixKin = 
+                GetSixKin(palaceFivePhase, context.Changed.Lines[i].StemBranch.Branch.FivePhase);
+        }
     }
 }

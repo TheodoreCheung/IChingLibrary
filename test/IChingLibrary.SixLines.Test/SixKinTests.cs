@@ -17,11 +17,11 @@ public class SixKinTests
     [Fact]
     public void SixKin_ToString_ShouldReturnLabel()
     {
-        Assert.Equal("Parent", SixKin.Parent.ToString());
-        Assert.Equal("Sibling", SixKin.Sibling.ToString());
-        Assert.Equal("Wealth", SixKin.Wealth.ToString());
-        Assert.Equal("Officer", SixKin.Officer.ToString());
-        Assert.Equal("Offspring", SixKin.Offspring.ToString());
+        Assert.Equal("Parent", SixKin.Parent.Label);
+        Assert.Equal("Sibling", SixKin.Sibling.Label);
+        Assert.Equal("Wealth", SixKin.Wealth.Label);
+        Assert.Equal("Officer", SixKin.Officer.Label);
+        Assert.Equal("Offspring", SixKin.Offspring.Label);
     }
 
     [Fact]

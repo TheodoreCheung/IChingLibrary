@@ -1,62 +1,16 @@
 using IChingLibrary.SixLines.Providers;
 using IChingLibrary.SixLines.Providers.Abstractions;
 
-namespace IChingLibrary.SixLines.Builders;
+namespace IChingLibrary.SixLines;
 
 /// <summary>
 /// 六爻占卜构建器
 /// </summary>
 public sealed class SixLineDivinationBuilder
 {
-    /// <summary>
-    /// 起卦时间
-    /// </summary>
-    private readonly DateTimeOffset _inquiryTime;
+    private readonly List<IBuildStep> _steps = [];
 
-    /// <summary>
-    /// 四象值数组（从初爻到上爻）
-    /// </summary>
-    private FourSymbol[]? _fourSymbols;
-
-    /// <summary>
-    /// 主卦处理步骤列表
-    /// </summary>
-    private readonly List<ISixLineStep> _originalSteps = [];
-
-    /// <summary>
-    /// 变卦处理步骤列表
-    /// </summary>
-    private readonly List<ISixLineStep> _changedSteps = [];
-
-    /// <summary>
-    /// 起卦时间信息转换器
-    /// </summary>
-    private IInquiryTimeProvider? _inquiryTimeProvider;
-
-    /// <summary>
-    /// 纳甲提供器
-    /// </summary>
-    private INajiaProvider? _najiaProvider;
-
-    /// <summary>
-    /// 六亲提供器
-    /// </summary>
-    private ISixKinProvider? _sixKinProvider;
-
-    /// <summary>
-    /// 神煞步骤引用（用于获取计算结果）
-    /// </summary>
-    private SymbolicStarStep? _symbolicStarStep;
-
-    /// <summary>
-    /// 获取纳甲提供器（延迟创建）
-    /// </summary>
-    private INajiaProvider NajiaProvider => _najiaProvider ?? new DefaultNajiaProvider();
-
-    /// <summary>
-    /// 获取六亲提供器（延迟创建）
-    /// </summary>
-    private ISixKinProvider SixKinProvider => _sixKinProvider ?? new DefaultSixKinProvider();
+    private readonly BuilderContext _context;
 
     /// <summary>
     /// 初始化构建器
@@ -64,7 +18,7 @@ public sealed class SixLineDivinationBuilder
     /// <param name="inquiryTime">起卦时间</param>
     public SixLineDivinationBuilder(DateTimeOffset inquiryTime)
     {
-        _inquiryTime = inquiryTime;
+        _context = new BuilderContext(inquiryTime);
     }
 
     /// <summary>
@@ -77,8 +31,8 @@ public sealed class SixLineDivinationBuilder
         if (fourSymbols.Length != 6)
             throw new ArgumentException("必须提供6个四象值", nameof(fourSymbols));
 
-        // 防御性复制，避免外部修改影响内部状态
-        _fourSymbols = [..fourSymbols];
+        _context.FourSymbols = [..fourSymbols];
+        
         return this;
     }
 
@@ -92,11 +46,12 @@ public sealed class SixLineDivinationBuilder
         if (fourSymbolValues.Length != 6)
             throw new ArgumentException("必须提供6个四象值", nameof(fourSymbolValues));
 
-        _fourSymbols = new FourSymbol[6];
+        _context.FourSymbols = new FourSymbol[6];
         for (var i = 0; i < 6; i++)
         {
-            _fourSymbols[i] = FourSymbol.FromValue(fourSymbolValues[i]);
+            _context.FourSymbols[i] = FourSymbol.FromValue(fourSymbolValues[i]);
         }
+        
         return this;
     }
 
@@ -106,7 +61,7 @@ public sealed class SixLineDivinationBuilder
     /// <returns>构建器实例</returns>
     public SixLineDivinationBuilder UseTimeBasedHexagram()
     {
-        _fourSymbols = HexagramGenerator.FromTime(_inquiryTime);
+        _context.FourSymbols = HexagramGenerator.FromTime(_context.SolarInquiryTime);
         return this;
     }
 
@@ -122,8 +77,8 @@ public sealed class SixLineDivinationBuilder
         int lowerTrigramNumber,
         int? changingLineNumber = null)
     {
-        _fourSymbols = HexagramGenerator.FromRandomNumbers(
-            _inquiryTime,
+        _context.FourSymbols = HexagramGenerator.FromRandomNumbers(
+            _context.SolarInquiryTime,
             upperTrigramNumber,
             lowerTrigramNumber,
             changingLineNumber);
@@ -138,103 +93,87 @@ public sealed class SixLineDivinationBuilder
     /// <returns>构建器实例</returns>
     public SixLineDivinationBuilder UseHexagram(Hexagram original, Hexagram? changed = null)
     {
-        _fourSymbols = HexagramGenerator.FromHexagrams(original, changed);
+        _context.FourSymbols = HexagramGenerator.FromHexagrams(original, changed);
         return this;
     }
 
     /// <summary>
-    /// 设置起卦时间信息转换器
+    /// 添加起卦时间转换步骤
     /// </summary>
     /// <param name="provider">问时信息转换器</param>
     /// <returns>构建器实例</returns>
-    public SixLineDivinationBuilder WithInquiryTimeProvider(IInquiryTimeProvider provider)
+    public SixLineDivinationBuilder WithInquiryTimeProvider(IInquiryTimeProvider? provider = null)
     {
-        _inquiryTimeProvider = provider;
+        _steps.Add(new InquiryTimeStep(provider ?? new DefaultInquiryTimeProvider()));
+
         return this;
     }
 
     /// <summary>
-    /// 添加纳甲步骤（主卦）
+    /// 添加纳甲步骤（主卦和变卦）
     /// </summary>
     /// <param name="provider">纳甲提供器（为 null 时使用默认实现）</param>
     /// <returns>构建器实例</returns>
     public SixLineDivinationBuilder WithNajia(INajiaProvider? provider = null)
     {
-        _najiaProvider = provider;
-        _originalSteps.Add(new NajiaStep(NajiaProvider));
+        _steps.Add(new NajiaStep(provider ?? new DefaultNajiaProvider()));
+        
         return this;
     }
 
     /// <summary>
-    /// 添加世应位置步骤（主卦）
+    /// 添加世应位置步骤（仅主卦）
     /// </summary>
     /// <param name="provider">世应位置提供器（为 null 时使用默认实现）</param>
     /// <returns>构建器实例</returns>
     public SixLineDivinationBuilder WithPosition(IPositionProvider? provider = null)
     {
-        _originalSteps.Add(new PositionStep(provider));
+        _steps.Add(new PositionStep(provider ?? new DefaultPositionProvider()));
+        
         return this;
     }
 
     /// <summary>
-    /// 添加六亲步骤（主卦）
+    /// 添加六亲步骤（主卦和变卦）
     /// </summary>
     /// <param name="provider">六亲提供器（为 null 时使用默认实现）</param>
     /// <returns>构建器实例</returns>
     public SixLineDivinationBuilder WithSixKin(ISixKinProvider? provider = null)
     {
-        _sixKinProvider = provider;
-        _originalSteps.Add(new SixKinStep(SixKinProvider, useOriginalPalace: false));
+        _steps.Add(new SixKinStep(provider ?? new DefaultSixKinProvider()));
+        
         return this;
     }
 
     /// <summary>
-    /// 添加六神步骤（主卦）
+    /// 添加六神步骤（仅主卦）
     /// </summary>
     /// <param name="provider">六神提供器（为 null 时使用默认实现）</param>
     /// <returns>构建器实例</returns>
     public SixLineDivinationBuilder WithSixSpirit(ISixSpiritProvider? provider = null)
     {
-        _originalSteps.Add(new SixSpiritStep(provider));
+        _steps.Add(new SixSpiritStep(provider ?? new DefaultSixSpiritProvider()));
         return this;
     }
 
     /// <summary>
-    /// 添加伏神步骤（主卦）
+    /// 添加伏神步骤（仅主卦）
     /// </summary>
     /// <param name="provider">伏神提供器（为 null 时使用默认实现）</param>
+    /// <param name="najiaProvider">纳甲提供器（为 null 时使用默认实现）</param>
+    /// <param name="sixKinProvider">六亲提供器（为 null 时使用默认实现）</param>
     /// <returns>构建器实例</returns>
-    public SixLineDivinationBuilder WithHiddenDeity(IHiddenDeityProvider? provider = null)
+    public SixLineDivinationBuilder WithHiddenDeity(IHiddenDeityProvider? provider = null, INajiaProvider? najiaProvider = null, ISixKinProvider? sixKinProvider = null)
     {
-        // 使用与主卦相同的纳甲和六亲 Provider
-        _originalSteps.Add(new HiddenDeityStep(provider, NajiaProvider, SixKinProvider));
+        _steps.Add(new HiddenDeityStep(
+            provider ?? new DefaultHiddenDeityProvider(),
+            najiaProvider ?? new DefaultNajiaProvider(),
+            sixKinProvider ?? new DefaultSixKinProvider()));
         return this;
     }
 
     /// <summary>
-    /// 添加纳甲步骤（变卦）
-    /// </summary>
-    /// <param name="provider">纳甲提供器（为 null 时使用默认实现）</param>
-    /// <returns>构建器实例</returns>
-    public SixLineDivinationBuilder WithNajiaForChanged(INajiaProvider? provider = null)
-    {
-        _changedSteps.Add(new NajiaStep(provider));
-        return this;
-    }
-
-    /// <summary>
-    /// 添加六亲步骤（变卦，使用主卦卦宫五行）
-    /// </summary>
-    /// <param name="provider">六亲提供器（为 null 时使用默认实现）</param>
-    /// <returns>构建器实例</returns>
-    public SixLineDivinationBuilder WithSixKinForChanged(ISixKinProvider? provider = null)
-    {
-        _changedSteps.Add(new SixKinStep(provider, useOriginalPalace: true));
-        return this;
-    }
-
-    /// <summary>
-    /// 配置神煞计算（主卦）
+    /// 配置神煞计算（仅主卦）
     /// </summary>
     /// <param name="configureProvider">配置神煞提供器的动作（为 null 时使用默认所有神煞）</param>
     /// <returns>构建器实例</returns>
@@ -243,8 +182,7 @@ public sealed class SixLineDivinationBuilder
         var provider = new DefaultSymbolicStarProvider();
         configureProvider?.Invoke(provider);
 
-        _symbolicStarStep = new SymbolicStarStep(provider);
-        _originalSteps.Add(_symbolicStarStep);
+        _steps.Add(new SymbolicStarStep(provider));
 
         return this;
     }
@@ -255,28 +193,23 @@ public sealed class SixLineDivinationBuilder
     /// <returns>构建器实例</returns>
     public SixLineDivinationBuilder WithDefaultSteps()
     {
-        return WithNajia()
+        return WithInquiryTimeProvider()
+            .WithNajia()
             .WithPosition()
             .WithSixKin()
             .WithHiddenDeity()
             .WithSixSpirit()
-            .WithSymbolicStars()
-            .WithNajiaForChanged()
-            .WithSixKinForChanged();
+            .WithSymbolicStars();
     }
 
     /// <summary>
     /// 添加自定义步骤
     /// </summary>
     /// <param name="step">自定义步骤</param>
-    /// <param name="forChanged">是否应用于变卦（false 表示应用于主卦）</param>
     /// <returns>构建器实例</returns>
-    public SixLineDivinationBuilder WithCustomStep(ISixLineStep step, bool forChanged = false)
+    public SixLineDivinationBuilder WithCustomStep(IBuildStep step)
     {
-        if (forChanged)
-            _changedSteps.Add(step);
-        else
-            _originalSteps.Add(step);
+        _steps.Add(step);
         return this;
     }
 
@@ -287,66 +220,44 @@ public sealed class SixLineDivinationBuilder
     /// <exception cref="InvalidOperationException">未调用起卦方法时抛出</exception>
     public SixLineDivination Build()
     {
-        // 0. 验证四象值已设置
-        if (_fourSymbols is null)
-            throw new InvalidOperationException("必须先调用起卦方法（如 UseTimeBasedHexagram、UseRandomHexagram、UseFourSymbols 或 UseHexagram）");
-
-        // 1. 转换起卦时间信息
-        var inquiryTimeProvider = _inquiryTimeProvider ?? new DefaultInquiryTimeProvider();
-        var convertedInquiryTime = inquiryTimeProvider.ConvertFrom(_inquiryTime);
-
-        // 2. 从四象值计算卦值，并标记变爻
-        byte hexagramValue = 0;
-        var isChangingLines = new bool[6];
-
+        if (_context.FourSymbols is null)
+            throw new InvalidOperationException("必须先调用起卦方法（如 UseTimeBasedHexagram 等）");
+        
+        byte originalValue = 0;
+        byte changingMask = 0;
+        
         for (var i = 0; i < 6; i++)
         {
-            var symbol = _fourSymbols[i];
-            var yinYang = symbol.YinYang;
-            var bitValue = yinYang == YinYang.Yang ? 1 : 0;
-            hexagramValue |= (byte)(bitValue << i);
-
-            isChangingLines[i] = symbol.Value == 6 || symbol.Value == 9;
+            var symbol = _context.FourSymbols[i];
+            if (symbol.YinYang == YinYang.Yang)
+                originalValue |= (byte)(1 << i);
+            if (symbol.IsChanging)
+                changingMask |= (byte)(1 << i);
         }
 
-        // 3. 创建主卦实例
-        var originalHexagram = Hexagram.FromValue(hexagramValue);
-        var originalInstance = new HexagramInstance(originalHexagram);
+        var hasChanging = changingMask != 0;
+        var changedValue = (byte)(originalValue ^ changingMask);
 
-        // 4. 标记变爻并计算变卦值（合并遍历）
-        byte changedValue = hexagramValue;
-        var hasChanging = false;
-
+        _context.Original = new HexagramInstance(Hexagram.FromValue(originalValue));
         for (var i = 0; i < 6; i++)
         {
-            if (!isChangingLines[i]) continue;
-            
-            originalInstance.Lines[i].IsChanging = true;
-            changedValue ^= (byte)(1 << i);
-            hasChanging = true;
+            if (_context.FourSymbols[i].IsChanging) 
+                _context.Original.Lines[i].IsChanging = true;
         }
 
-        // 5. 执行主卦步骤
-        foreach (var step in _originalSteps)
-        {
-            step.Execute(originalInstance, convertedInquiryTime, null);
-        }
-
-        // 6. 生成变卦（如有变爻）
-        HexagramInstance? changedInstance = null;
         if (hasChanging)
         {
-            var changedHexagram = Hexagram.FromValue(changedValue);
-            changedInstance = new HexagramInstance(changedHexagram);
-
-            // 执行变卦步骤
-            foreach (var step in _changedSteps)
-            {
-                step.Execute(changedInstance, convertedInquiryTime, originalInstance);
-            }
+            _context.Changed = new HexagramInstance(Hexagram.FromValue(changedValue));
         }
 
-        // 7. 获取神煞集合并创建六爻占卜实例
-        return new SixLineDivination(convertedInquiryTime, originalInstance, changedInstance, _symbolicStarStep?.Result);
+        // 若未显式添加 InquiryTimeStep，则使用默认时间转换
+        _context.InquiryTime ??= new DefaultInquiryTimeProvider().ConvertFrom(_context.SolarInquiryTime);
+
+        foreach (var step in _steps)
+        {
+            step.Execute(_context);
+        }
+
+        return new SixLineDivination(_context.InquiryTime.Value, _context.Original, _context.Changed, _context.SymbolicStars);
     }
 }

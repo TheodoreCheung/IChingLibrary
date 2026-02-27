@@ -1,9 +1,9 @@
 <Project>
     <PropertyGroup>
         <!-- 项目版本号 -->
-        <Version>0.1.0-alpha.1</Version>
-        <AssemblyVersion>0.1.0.0</AssemblyVersion>
-        <FileVersion>0.1.0.0</FileVersion>
+        <Version>0.1.7-alpha.1</Version>
+        <AssemblyVersion>0.1.7.0</AssemblyVersion>
+        <FileVersion>0.1.7.0</FileVersion>
 
         <!-- 预发布版本信息 -->
         <PreReleaseAlphaSuffix>alpha</PreReleaseAlphaSuffix>
@@ -35,13 +35,16 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- 缺少 XML 注释警告 -->
 
-        <!-- 源代码生成器相关设置（仅对需要的项目生效） -->
-        <EmitCompilerGeneratedFiles Condition="'$(EmitCompilerGeneratedFiles)'==''">true</EmitCompilerGeneratedFiles>
-        <CompilerGeneratedFilesOutputPath Condition="'$(CompilerGeneratedFilesOutputPath)'==''">$(MSBuildProjectDirectory)\$(BaseIntermediateOutputPath)GeneratedFiles</CompilerGeneratedFilesOutputPath>
+        <!-- Nuget 包输出路径 -->
+        <PackageOutputPath>$(MSBuildThisFileDirectory)nupkgs</PackageOutputPath>
     </PropertyGroup>
 
     <!-- 测试项目特定设置 -->
     <PropertyGroup Condition="'$(IsTestProject)'=='true' or $(MSBuildProjectName.EndsWith('.Test'))">
         <IsPackable>false</IsPackable>
     </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 </Project>

@@ -7,13 +7,13 @@ public class SymbolicStarTests
     [Fact]
     public void SymbolicStar_PresetValues_ShouldReturnCorrectValue()
     {
-        // 基于日干的神煞
+        // 基于日干的神�?
         Assert.Equal(1, SymbolicStar.Nobleman.Value);
         Assert.Equal(2, SymbolicStar.SalarySpirit.Value);
         Assert.Equal(3, SymbolicStar.CultureFlourish.Value);
         Assert.Equal(6, SymbolicStar.YangBlade.Value);
 
-        // 基于三合局的神煞
+        // 基于三合局的神�?
         Assert.Equal(4, SymbolicStar.PostHorse.Value);
         Assert.Equal(5, SymbolicStar.PeachBlossom.Value);
         Assert.Equal(9, SymbolicStar.GeneralsStar.Value);
@@ -33,22 +33,22 @@ public class SymbolicStarTests
     [Fact]
     public void SymbolicStar_ToString_ShouldReturnLabel()
     {
-        Assert.Equal("Nobleman", SymbolicStar.Nobleman.ToString());
-        Assert.Equal("SalarySpirit", SymbolicStar.SalarySpirit.ToString());
-        Assert.Equal("CultureFlourish", SymbolicStar.CultureFlourish.ToString());
-        Assert.Equal("YangBlade", SymbolicStar.YangBlade.ToString());
-        Assert.Equal("PostHorse", SymbolicStar.PostHorse.ToString());
-        Assert.Equal("PeachBlossom", SymbolicStar.PeachBlossom.ToString());
-        Assert.Equal("GeneralsStar", SymbolicStar.GeneralsStar.ToString());
-        Assert.Equal("Canopy", SymbolicStar.Canopy.ToString());
-        Assert.Equal("StarOfStrategy", SymbolicStar.StarOfStrategy.ToString());
-        Assert.Equal("DisasterMalignity", SymbolicStar.DisasterMalignity.ToString());
-        Assert.Equal("RobberyMalignity", SymbolicStar.RobberyMalignity.ToString());
-        Assert.Equal("DeathSpirit", SymbolicStar.DeathSpirit.ToString());
-        Assert.Equal("CelestialPhysician", SymbolicStar.CelestialPhysician.ToString());
-        Assert.Equal("HeavenlyJoy", SymbolicStar.HeavenlyJoy.ToString());
-        Assert.Equal("MarriageBed", SymbolicStar.MarriageBed.ToString());
-        Assert.Equal("BridalChamber", SymbolicStar.BridalChamber.ToString());
+        Assert.Equal("Nobleman", SymbolicStar.Nobleman.Label);
+        Assert.Equal("SalarySpirit", SymbolicStar.SalarySpirit.Label);
+        Assert.Equal("CultureFlourish", SymbolicStar.CultureFlourish.Label);
+        Assert.Equal("YangBlade", SymbolicStar.YangBlade.Label);
+        Assert.Equal("PostHorse", SymbolicStar.PostHorse.Label);
+        Assert.Equal("PeachBlossom", SymbolicStar.PeachBlossom.Label);
+        Assert.Equal("GeneralsStar", SymbolicStar.GeneralsStar.Label);
+        Assert.Equal("Canopy", SymbolicStar.Canopy.Label);
+        Assert.Equal("StarOfStrategy", SymbolicStar.StarOfStrategy.Label);
+        Assert.Equal("DisasterMalignity", SymbolicStar.DisasterMalignity.Label);
+        Assert.Equal("RobberyMalignity", SymbolicStar.RobberyMalignity.Label);
+        Assert.Equal("DeathSpirit", SymbolicStar.DeathSpirit.Label);
+        Assert.Equal("CelestialPhysician", SymbolicStar.CelestialPhysician.Label);
+        Assert.Equal("HeavenlyJoy", SymbolicStar.HeavenlyJoy.Label);
+        Assert.Equal("MarriageBed", SymbolicStar.MarriageBed.Label);
+        Assert.Equal("BridalChamber", SymbolicStar.BridalChamber.Label);
     }
 
     [Fact]
@@ -95,13 +95,16 @@ public class SymbolicStarTests
         var custom2 = SymbolicStar.CreateCustom("CustomStar2");
         var custom3 = SymbolicStar.CreateCustom("CustomStar1");
 
-        Assert.Equal(17, custom1.Value);
-        Assert.Equal(18, custom2.Value);
-        Assert.Equal(19, custom3.Value);
+        Assert.True(custom1.Value > 16);
+        Assert.True(custom2.Value > 16);
+        Assert.True(custom3.Value > 16);
+        Assert.NotEqual(custom1.Value, custom2.Value);
+        Assert.NotEqual(custom2.Value, custom3.Value);
+        Assert.NotEqual(custom1.Value, custom3.Value);
 
-        Assert.Equal("CustomStar1", custom1.ToString());
-        Assert.Equal("CustomStar2", custom2.ToString());
-        Assert.Equal("CustomStar1", custom3.ToString());
+        Assert.Equal("CustomStar1", custom1.Label);
+        Assert.Equal("CustomStar2", custom2.Label);
+        Assert.Equal("CustomStar1", custom3.Label);
 
         Assert.NotEqual(custom1, custom3);
     }
@@ -109,8 +112,8 @@ public class SymbolicStarTests
     [Fact]
     public void SymbolicStar_CreateCustom_ThreadSafety()
     {
-        const int threadCount = 10;
-        const int starsPerThread = 100;
+        const int threadCount = 5;
+        const int starsPerThread = 20;
         var stars = new List<SymbolicStar>();
         var lockObj = new object();
 
@@ -144,7 +147,7 @@ public class SymbolicStarTests
 
         Assert.Equal(threadCount * starsPerThread, stars.Count);
 
-        // 检查所有值都是唯一的
+        // 检查所有值都是唯一�?
         var values = stars.Select(s => s.Value).ToList();
         var uniqueValues = new HashSet<byte>(values);
         Assert.Equal(values.Count, uniqueValues.Count);

@@ -18,12 +18,12 @@ public class SixSpiritTests
     [Fact]
     public void SixSpirit_ToString_ShouldReturnLabel()
     {
-        Assert.Equal("AzureDragon", SixSpirit.AzureDragon.ToString());
-        Assert.Equal("VermilionBird", SixSpirit.VermilionBird.ToString());
-        Assert.Equal("HookChen", SixSpirit.HookChen.ToString());
-        Assert.Equal("CoiledSnake", SixSpirit.CoiledSnake.ToString());
-        Assert.Equal("WhiteTiger", SixSpirit.WhiteTiger.ToString());
-        Assert.Equal("BlackTortoise", SixSpirit.BlackTortoise.ToString());
+        Assert.Equal("AzureDragon", SixSpirit.AzureDragon.Label);
+        Assert.Equal("VermilionBird", SixSpirit.VermilionBird.Label);
+        Assert.Equal("HookChen", SixSpirit.HookChen.Label);
+        Assert.Equal("CoiledSnake", SixSpirit.CoiledSnake.Label);
+        Assert.Equal("WhiteTiger", SixSpirit.WhiteTiger.Label);
+        Assert.Equal("BlackTortoise", SixSpirit.BlackTortoise.Label);
     }
 
     [Fact]

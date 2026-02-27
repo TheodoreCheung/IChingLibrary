@@ -51,16 +51,6 @@ public sealed class SymbolicStarCollection
     }
 
     /// <summary>
-    /// 获取指定爻上的所有神煞（通过爻的干支地支查找）
-    /// </summary>
-    /// <param name="line">爻</param>
-    /// <returns>该爻上的所有神煞类型</returns>
-    public IEnumerable<SymbolicStar> GetStarsForLine(Line line)
-    {
-        return GetStarsForBranch(line.StemBranch.Branch);
-    }
-
-    /// <summary>
     /// 获取所有神煞
     /// </summary>
     public IReadOnlyDictionary<SymbolicStar, EarthlyBranch[]> AllStars => _symbolicStars;

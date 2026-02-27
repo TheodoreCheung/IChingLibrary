@@ -109,7 +109,7 @@ public class SixLineDivinationTests
     public void Create_WithByteValues_ShouldReturnValidDivination()
     {
         // Arrange
-        const byte originalValue = 0;  // 乾卦
+        const byte originalValue = 63;  // 乾卦
         byte? changedValue = null;
 
         // Act
@@ -124,8 +124,8 @@ public class SixLineDivinationTests
     public void Create_WithByteValuesAndChanged_ShouldReturnValidDivination()
     {
         // Arrange
-        const byte originalValue = 0;  // 乾卦
-        const byte changedValue = 63;  // 坤卦
+        const byte originalValue = 63;  // 乾卦
+        const byte changedValue = 0;  // 坤卦
 
         // Act
         var divination = SixLineDivination.Create(TestInquiryTime, originalValue, changedValue);

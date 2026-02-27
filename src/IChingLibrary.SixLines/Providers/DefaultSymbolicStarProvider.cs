@@ -1,3 +1,5 @@
+using IChingLibrary.SixLines.Providers.Abstractions;
+
 namespace IChingLibrary.SixLines.Providers;
 
 /// <summary>
@@ -14,7 +16,7 @@ public delegate EarthlyBranch[]? SymbolicStarCalculatorDelegate(
 /// 默认神煞提供器
 /// 管理神煞选择和神煞计算器
 /// </summary>
-public sealed class DefaultSymbolicStarProvider
+public sealed class DefaultSymbolicStarProvider : ISymbolicStarProvider
 {
     /// <summary>
     /// 神煞计算器注册表，存储神煞类型与其计算委托的映射关系
@@ -294,15 +296,15 @@ public sealed class DefaultSymbolicStarProvider
     };
 
     /// <summary>
-    /// 香闺映射表：火→寅卯，金→辰戌丑未，水→申酉，木→亥子，土→巳午
+    /// 香闺映射表：火→申酉，金→寅卯，水→巳午，木→辰戌丑未，土→亥子
     /// </summary>
     private static readonly Dictionary<FivePhase, EarthlyBranch[]> BridalChamberMap = new()
     {
-        { FivePhase.Fire, [EarthlyBranch.Yin, EarthlyBranch.Mao] },
-        { FivePhase.Metal, [EarthlyBranch.Chen, EarthlyBranch.Xu, EarthlyBranch.Chou, EarthlyBranch.Wei] },
-        { FivePhase.Water, [EarthlyBranch.Shen, EarthlyBranch.You] },
-        { FivePhase.Wood, [EarthlyBranch.Hai, EarthlyBranch.Zi] },
-        { FivePhase.Earth, [EarthlyBranch.Si, EarthlyBranch.Wu] },
+        { FivePhase.Fire, [EarthlyBranch.Shen, EarthlyBranch.You] },
+        { FivePhase.Metal, [EarthlyBranch.Yin, EarthlyBranch.Mao] },
+        { FivePhase.Water, [EarthlyBranch.Si, EarthlyBranch.Wu] },
+        { FivePhase.Wood, [EarthlyBranch.Chen, EarthlyBranch.Xu, EarthlyBranch.Chou, EarthlyBranch.Wei] },
+        { FivePhase.Earth, [EarthlyBranch.Hai, EarthlyBranch.Zi] },
     };
 
     #endregion
@@ -343,6 +345,27 @@ public sealed class DefaultSymbolicStarProvider
     /// </summary>
     /// <returns>神煞类型到计算委托的只读字典</returns>
     public IReadOnlyDictionary<SymbolicStar, SymbolicStarCalculatorDelegate> Calculators => _calculators;
+
+    /// <inheritdoc/>
+    public SymbolicStarCollection Calculate(BuilderContext context)
+    {
+        if (context.InquiryTime is null)
+            throw new InvalidOperationException("未找到起卦时间");
+        
+        if (context.Original is null)
+            throw new InvalidOperationException("未找到主卦");
+        
+        var stars = new Dictionary<SymbolicStar, EarthlyBranch[]>();
+        foreach (var (symbolicStar, calculator) in _calculators)
+        {
+            var branches = calculator(context.InquiryTime.Value, context.Original);
+            if (branches != null)
+            {
+                stars[symbolicStar] = branches;
+            }
+        }
+        return new SymbolicStarCollection(stars);
+    }
 
     /// <summary>
     /// 注册所有默认神煞计算器

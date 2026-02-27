@@ -17,6 +17,11 @@ public partial class SymbolicStar : IChingElement<SymbolicStar>
     /// <summary>
     /// 贵人（甲戊→牛羊，乙己→鼠猴，丙丁→猪鸡，壬癸→兔蛇，庚辛→马虎）
     /// </summary>
+    /// <remarks>
+    /// 甲戊并牛羊，乙己鼠猴乡，
+    /// 丙丁猪鸡位；壬癸兔蛇藏，
+    /// 庚辛逢马虎，此是贵人方。
+    /// </remarks>
     public static readonly SymbolicStar Nobleman = new(1, nameof(Nobleman));
 
     /// <summary>
@@ -27,6 +32,7 @@ public partial class SymbolicStar : IChingElement<SymbolicStar>
     /// <summary>
     /// 文昌（甲→巳，乙→午，丙戊→申，丁己→酉，庚→亥，辛→子，壬→寅，癸→卯）
     /// </summary>
+    /// <remarks>甲巳乙午丙戊申，丁己属鸡庚猪寻，辛鼠壬虎癸见卯。</remarks>
     public static readonly SymbolicStar CultureFlourish = new(3, nameof(CultureFlourish));
 
     /// <summary>
@@ -90,16 +96,24 @@ public partial class SymbolicStar : IChingElement<SymbolicStar>
     /// <summary>
     /// 天喜（寅卯辰→戌，巳午未→丑，申酉戌→辰，亥子丑→未）
     /// </summary>
+    /// <remarks>
+    /// 春戌夏丑逢天喜，秋辰冬未喜来临
+    /// </remarks>
     public static readonly SymbolicStar HeavenlyJoy = new(14, nameof(HeavenlyJoy));
 
     /// <summary>
     /// 床帐（火→辰戌丑未，金→寅卯，水→巳午，木→申酉，土→亥子）
     /// </summary>
+    /// <remarks>
+    /// 先求卦身：阳世起子阴起午，俱从初爻数到世。
+    /// 卦身所生者为床帐
+    /// </remarks>
     public static readonly SymbolicStar MarriageBed = new(15, nameof(MarriageBed));
 
     /// <summary>
-    /// 香闺（火→寅卯，金→辰戌丑未，水→申酉，木→亥子，土→巳午）
+    /// 香闺（火→申酉，金→寅卯，水→巳午，木→辰戌丑未，土→亥子）
     /// </summary>
+    /// <remarks>卦身所克者为香闺</remarks>
     public static readonly SymbolicStar BridalChamber = new(16, nameof(BridalChamber));
 
     #endregion

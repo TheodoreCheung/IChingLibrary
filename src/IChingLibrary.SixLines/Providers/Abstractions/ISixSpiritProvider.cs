@@ -6,9 +6,8 @@ namespace IChingLibrary.SixLines.Providers.Abstractions;
 public interface ISixSpiritProvider
 {
     /// <summary>
-    /// 计算并绑定每个爻的六神
+    /// 计算并绑定主卦每个爻的六神
     /// </summary>
-    /// <param name="hexagram">卦实例</param>
-    /// <param name="inquiryTime">起卦时间信息</param>
-    void BindSixSpirits(HexagramInstance hexagram, InquiryTime inquiryTime);
+    /// <param name="context">构建器上下文</param>
+    void BindSixSpirits(BuilderContext context);
 }

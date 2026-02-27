@@ -20,20 +20,6 @@ internal class DefaultSixSpiritProvider : ISixSpiritProvider
         SixSpirit.BlackTortoise
     ];
 
-    /// <inheritdoc />
-    public void BindSixSpirits(HexagramInstance hexagram, InquiryTime inquiryTime)
-    {
-        var dayStem = inquiryTime.StemBranch.Day.Stem;
-
-        // 根据日干确定起始六神（初爻）
-        var startIndex = GetStartIndex(dayStem);
-
-        for (int i = 0; i < 6; i++)
-        {
-            hexagram.Lines[i].SixSpirit = SpiritsOrder[(startIndex + i) % 6];
-        }
-    }
-
     /// <summary>
     /// 根据日干获取起始六神索引
     /// 规则：甲/乙日起青龙，丙/丁日起朱雀，戊/己日起勾陈，庚/辛日起螣蛇，壬/癸日起白虎
@@ -44,10 +30,31 @@ internal class DefaultSixSpiritProvider : ISixSpiritProvider
         {
             1 or 2 => 0, // 甲/乙 -> 青龙
             3 or 4 => 1, // 丙/丁 -> 朱雀
-            5 or 6 => 2, // 戊/己 -> 勾陈
-            7 or 8 => 3, // 庚/辛 -> 螣蛇
-            9 or 10 => 4, // 壬/癸 -> 白虎
+            5 => 2, // 戊 -> 勾陈
+            6 => 3, // 己 -> 螣蛇
+            7 or 8 => 4, // 庚/辛 -> 白虎
+            9 or 10 => 5, // 壬/癸 -> 玄武
             _ => 0
         };
+    }
+
+    /// <inheritdoc />
+    public void BindSixSpirits(BuilderContext context)
+    {
+        if (context.InquiryTime is null)
+            throw new InvalidOperationException("未找到起卦时间");
+        
+        if (context.Original is null)
+            throw new InvalidOperationException("未找到主卦");
+        
+        var dayStem = context.InquiryTime.Value.StemBranch.Day.Stem;
+
+        // 根据日干确定起始六神（初爻）
+        var startIndex = GetStartIndex(dayStem);
+
+        for (var i = 0; i < 6; i++)
+        {
+            context.Original.Lines[i].SixSpirit = SpiritsOrder[(startIndex + i) % 6];
+        }
     }
 }

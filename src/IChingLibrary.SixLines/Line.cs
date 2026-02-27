@@ -21,6 +21,15 @@ public class Line
     public bool IsChanging { get; internal set; }
 
     /// <summary>
+    /// 爻的四象，根据<see cref="IsChanging"/>和<see cref="YinYang"/>判断
+    /// </summary>
+    public FourSymbol FourSymbol => IsChanging
+        ? YinYang == YinYang.Yang ? FourSymbol.OldYang : FourSymbol.OldYin
+        : YinYang == YinYang.Yang
+            ? FourSymbol.YoungYang
+            : FourSymbol.YoungYin;
+
+    /// <summary>
     /// 干支（纳甲），通过纳甲法设置
     /// </summary>
     /// <exception cref="InvalidOperationException">访问时尚未通过纳甲法设置</exception>

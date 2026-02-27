@@ -6,15 +6,8 @@ namespace IChingLibrary.SixLines.Providers.Abstractions;
 public interface ISixKinProvider
 {
     /// <summary>
-    /// 计算并绑定每个爻的六亲
+    /// 计算并绑定主卦、变卦（如有）每个爻的六亲
     /// </summary>
-    /// <param name="hexagram">卦实例</param>
-    void BindSixKin(HexagramInstance hexagram);
-
-    /// <summary>
-    /// 使用指定的卦宫五行计算并绑定每个爻的六亲
-    /// </summary>
-    /// <param name="hexagram">卦实例</param>
-    /// <param name="palacePhase">卦宫五行</param>
-    void BindSixKin(HexagramInstance hexagram, FivePhase palacePhase);
+    /// <param name="context">构建器上下文</param>
+    void BindSixKin(BuilderContext context);
 }

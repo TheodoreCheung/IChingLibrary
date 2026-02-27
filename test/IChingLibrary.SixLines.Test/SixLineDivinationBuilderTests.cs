@@ -374,7 +374,6 @@ public class SixLineDivinationBuilderTests
         var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
             .UseFourSymbols(fourSymbols)
             .WithNajia()
-            .WithNajiaForChanged()
             .Build();
 
         // Assert
@@ -406,8 +405,6 @@ public class SixLineDivinationBuilderTests
             .UseFourSymbols(fourSymbols)
             .WithNajia()
             .WithSixKin()
-            .WithNajiaForChanged()
-            .WithSixKinForChanged()
             .Build();
 
         // Assert

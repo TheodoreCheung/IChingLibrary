@@ -1,5 +1,4 @@
 using IChingLibrary.Core;
-using IChingLibrary.SixLines.Builders;
 
 namespace IChingLibrary.SixLines.Test;
 

@@ -18,12 +18,12 @@ public class LinePositionTests
     [Fact]
     public void LinePosition_ToString_ShouldReturnLabel()
     {
-        Assert.Equal("First", LinePosition.First.ToString());
-        Assert.Equal("Second", LinePosition.Second.ToString());
-        Assert.Equal("Third", LinePosition.Third.ToString());
-        Assert.Equal("Fourth", LinePosition.Fourth.ToString());
-        Assert.Equal("Fifth", LinePosition.Fifth.ToString());
-        Assert.Equal("Sixth", LinePosition.Sixth.ToString());
+        Assert.Equal("First", LinePosition.First.Label);
+        Assert.Equal("Second", LinePosition.Second.Label);
+        Assert.Equal("Third", LinePosition.Third.Label);
+        Assert.Equal("Fourth", LinePosition.Fourth.Label);
+        Assert.Equal("Fifth", LinePosition.Fifth.Label);
+        Assert.Equal("Sixth", LinePosition.Sixth.Label);
     }
 
     [Fact]

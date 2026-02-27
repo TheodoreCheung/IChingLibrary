@@ -8,6 +8,6 @@ public interface IPositionProvider
     /// <summary>
     /// 计算并绑定世爻和应爻位置
     /// </summary>
-    /// <param name="hexagram">卦实例</param>
-    void BindPositions(HexagramInstance hexagram);
+    /// <param name="context">构建器上下文</param>
+    void BindPositions(BuilderContext context);
 }

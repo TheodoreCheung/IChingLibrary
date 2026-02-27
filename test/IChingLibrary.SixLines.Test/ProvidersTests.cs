@@ -1,5 +1,4 @@
 using IChingLibrary.Core;
-using IChingLibrary.SixLines.Builders;
 
 namespace IChingLibrary.SixLines.Test;
 
@@ -116,16 +115,16 @@ public class ProvidersTests
         // Assert - 乾卦六亲（金卦宫）：
         // 初爻甲子（水）→ 子孙
         // 二爻甲寅（木）→ 妻财
-        // 三爻甲辰（土）→ 兄弟
+        // 三爻甲辰（土）→ 父母
         // 四爻壬午（火）→ 官鬼
         // 五爻壬申（金）→ 兄弟
-        // 上爻壬戌（土）→ 兄弟
+        // 上爻壬戌（土）→ 父母
         Assert.Equal(SixKin.Offspring, divination.Original.Lines[0].SixKin);
         Assert.Equal(SixKin.Wealth, divination.Original.Lines[1].SixKin);
-        Assert.Equal(SixKin.Sibling, divination.Original.Lines[2].SixKin);
+        Assert.Equal(SixKin.Parent, divination.Original.Lines[2].SixKin);
         Assert.Equal(SixKin.Officer, divination.Original.Lines[3].SixKin);
         Assert.Equal(SixKin.Sibling, divination.Original.Lines[4].SixKin);
-        Assert.Equal(SixKin.Sibling, divination.Original.Lines[5].SixKin);
+        Assert.Equal(SixKin.Parent, divination.Original.Lines[5].SixKin);
     }
 
     [Fact]
@@ -260,19 +259,5 @@ public class ProvidersTests
 
         // Assert - 子日应有一些神煞
         Assert.NotEmpty(starsForZi);
-    }
-
-    [Fact]
-    public void SymbolicStarProvider_GetStarsForLine_ShouldWork()
-    {
-        // Arrange
-        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
-
-        // Act
-        var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
-        var starsForFirstLine = divination.SymbolicStars!.GetStarsForLine(divination.Original.Lines[0]).ToList();
-
-        // Assert - 初爻（甲子）应有一些神煞
-        Assert.NotEmpty(starsForFirstLine);
     }
 }

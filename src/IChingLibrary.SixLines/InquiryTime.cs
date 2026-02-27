@@ -49,6 +49,6 @@ public readonly struct LunarStemBranch(StemBranch year, StemBranch month, StemBr
     /// <inheritdoc />
     public override string ToString()
     {
-        return $"{Year}-{Month}-{Day}-{Hour}";
+        return $"{Year} {Month} {Day} {Hour}";
     }
 }

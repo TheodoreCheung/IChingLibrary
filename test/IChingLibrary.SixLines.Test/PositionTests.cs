@@ -14,8 +14,8 @@ public class PositionTests
     [Fact]
     public void Position_ToString_ShouldReturnLabel()
     {
-        Assert.Equal("Worldly", Position.Worldly.ToString());
-        Assert.Equal("Corresponding", Position.Corresponding.ToString());
+        Assert.Equal("Worldly", Position.Worldly.Label);
+        Assert.Equal("Corresponding", Position.Corresponding.Label);
     }
 
     [Fact]
