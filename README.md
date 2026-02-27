@@ -11,6 +11,7 @@
 - **六亲计算**：根据五行生克关系计算六亲（父母、兄弟、妻财、官鬼、子孙）
 - **六神起法**：根据日干自动起六神（青龙、朱雀、勾陈、螣蛇、白虎、玄武）
 - **神煞系统（Symbolic Stars）**：支持16 种神煞计算（贵人、禄神、文昌、驿马、桃花等），支持自定义神煞扩展
+- **卦属特性**：支持六冲卦、六合卦、游魂卦、归魂卦的识别
 - **灵活的构建器模式**：可自定义占卜流程，选择需要的计算步骤
 - **SOLID 设计原则**：清晰的接口抽象，易于扩展和测试
 
@@ -47,24 +48,28 @@ IChingLibrary/
 │   │
 │   └── IChingLibrary.SixLines/           # 六爻占卜实现
 │       ├── Core/                         # 核心枚举类型
+│       │   ├── HexagramNature            # 卦属特性（六冲、六合、游魂、归魂）
 │       │   ├── LinePosition              # 爻位置（初爻到上爻）
 │       │   ├── Position                  # 位置（世爻、应爻）
 │       │   ├── SixKin                    # 六亲
 │       │   ├── SixSpirit                 # 六神
 │       │   └── SymbolicStar              # 神煞类型
 │       ├── Extensions/                   # 扩展方法
-│       │   └── HexagramInstanceExtensions # 卦实例扩展（卦身查找等）
+│       │   ├── HexagramExtensions        # 卦扩展（卦属特性查询）
+│       │   ├── HexagramInstanceExtensions # 卦实例扩展（卦身查找等）
+│       │   └── LineExtensions            # 爻扩展（爻辞获取）
 │       ├── SixLineDivination             # 六爻占卜主类
 │       ├── SymbolicStarCollection        # 神煞集合
 │       ├── SymbolicStarSelection         # 神煞选择器
-│       ├── HexagramGenerator             # 卦生成器（internal）
 │       ├── HexagramInstance              # 卦实例
 │       ├── Line                          # 爻
 │       ├── InquiryTime                   # 问时信息
 │       ├── Builders/                     # 构建器模式
 │       │   ├── SixLineDivinationBuilder  # 构建器
-│       │   ├── ISixLineStep              # 步骤接口
-│       │   └── DefaultSteps              # 默认步骤实现
+│       │   ├── BuilderContext            # 构建器上下文
+│       │   ├── IBuildStep                # 步骤接口
+│       │   ├── DefaultSteps              # 默认步骤实现
+│       │   └── HexagramGenerator         # 卦生成器（internal）
 │       └── Providers/                    # Provider 模式
 │           ├── Abstractions/             # 接口定义
 │           │   ├── IInquiryTimeProvider
@@ -72,7 +77,8 @@ IChingLibrary/
 │           │   ├── IPositionProvider
 │           │   ├── ISixKinProvider
 │           │   ├── ISixSpiritProvider
-│           │   └── IHiddenDeityProvider
+│           │   ├── IHiddenDeityProvider
+│           │   └── ISymbolicStarProvider
 │           └── Default*.cs               # 默认实现
 └── test/                                 # 测试项目
     ├── IChingLibrary.Core.Test/          # 核心库测试
@@ -263,14 +269,10 @@ using IChingLibrary.SixLines.Providers.Abstractions;
 // 自定义纳甲法 Provider
 public class MyCustomNajiaProvider : INajiaProvider
 {
-    public void BindStemBranches(HexagramInstance hexagram, InquiryTime inquiryTime)
+    public void BindStemBranches(BuilderContext context)
     {
         // 自定义纳甲法实现
-    }
-
-    public StemBranch[] GetNajiaTable(Trigram trigram, bool isInner)
-    {
-        // 返回自定义纳甲表
+        // 可访问 context.Original、context.Changed、context.InquiryTime 等
     }
 }
 
@@ -285,17 +287,21 @@ var divination = SixLineDivination
 
 ### 7. 完全自定义步骤
 
-实现 `ISixLineStep` 接口创建自定义步骤：
+实现 `IBuildStep` 接口创建自定义步骤：
 
 ```csharp
-using IChingLibrary.SixLines.Builders;
+using IChingLibrary.SixLines;
 
 // 自定义步骤
-public class MyCustomStep : ISixLineStep
+public class MyCustomStep : IBuildStep
 {
-    public void Execute(HexagramInstance hexagram, InquiryTime inquiryTime, HexagramInstance? originalHexagram)
+    public void Execute(BuilderContext context)
     {
-        // 自定义处理逻辑
+        // 通过 context 访问和修改数据
+        // context.Original - 主卦
+        // context.Changed - 变卦
+        // context.InquiryTime - 问时信息
+        // context.SymbolicStars - 神煞集合
     }
 }
 
@@ -457,11 +463,44 @@ var divination = SixLineDivination
 | 床帐 | MarriageBed | 卦身五行（火→辰戌丑未，金→寅卯，水→巳午，木→申酉，土→亥子） |
 | 香闺 | BridalChamber | 卦身五行（火→寅卯，金→辰戌丑未，水→申酉，木→亥子，土→巳午） |
 
-### 10. 获取卦辞、彖辞、象辞
+### 10. 卦属特性
+
+支持识别卦的特殊属性（六冲、六合、游魂、归魂）：
+
+```csharp
+using IChingLibrary.Core;
+using IChingLibrary.SixLines;
+
+var divination = SixLineDivination.Create(DateTimeOffset.Now);
+var hexagram = divination.Original.Meta;
+
+// 获取卦属特性
+var nature = hexagram.GetNature();
+if (nature != null)
+{
+    Console.WriteLine($"卦属：{nature.Label}");
+    // 输出可能是：六冲卦、六合卦、游魂卦、归魂卦
+}
+else
+{
+    Console.WriteLine("此卦无特殊卦属");
+}
+```
+
+#### 卦属特性说明
+
+| 卦属 | 英文名 | 说明 |
+|------|--------|------|
+| 六冲卦 | SixClashes | 纯卦（8个）+ 无妄、大壮，共10个 |
+| 六合卦 | SixHarmonies | 否、泰、节、困、旅、贲、豫、复，共8个 |
+| 游魂卦 | WanderingSoul | 各宫第7卦，共8个 |
+| 归魂卦 | ReturningSoul | 各宫第8卦，共8个 |
+
+### 11. 获取卦辞、彖辞、象辞
 
 IChingLibrary 支持获取六十四卦的卦辞、彖辞、象辞（大象），以及每个爻的爻辞和小象辞。
 
-#### 10.1 基础用法
+#### 11.1 基础用法
 
 通过扩展方法获取卦的辞文：
 
@@ -565,6 +604,12 @@ Console.WriteLine(lineStatementEn);  // 输出：Hidden dragon. Do not act.
 | `GetCommentary(CultureInfo? culture = null)` | 获取彖辞 | `string` |
 | `GetImage(CultureInfo? culture = null)` | 获取象辞（大象） | `string` |
 
+**HexagramExtensions** (位于 `IChingLibrary.SixLines.Extensions`)：
+
+| 方法 | 说明 | 返回类型 |
+|------|------|---------|
+| `GetNature(this Hexagram hexagram)` | 获取卦属特性 | `HexagramNature?` |
+
 **LineExtensions** (位于 `IChingLibrary.SixLines.Extensions`)：
 
 | 方法 | 说明 | 返回类型 |
@@ -592,6 +637,13 @@ Console.WriteLine($"卦名：{hexagram.Label}");
 Console.WriteLine($"卦辞：{hexagram.GetStatement()}");
 Console.WriteLine($"彖辞：{hexagram.GetCommentary()}");
 Console.WriteLine($"象辞：{hexagram.GetImage()}");
+
+// 显示卦属特性
+var nature = hexagram.GetNature();
+if (nature != null)
+{
+    Console.WriteLine($"卦属：{nature.Label}");
+}
 Console.WriteLine();
 
 // 显示每个爻的信息
@@ -606,11 +658,11 @@ foreach (var line in divination.Original.Lines)
 }
 ```
 
-### 11. 多语言国际化支持
+### 12. 多语言国际化支持
 
 IChingLibrary 内置了完整的多语言支持，默认提供简体中文和英文两种语言。所有易学元素（YinYang、FivePhase、Trigram、Hexagram、HeavenlyStem、EarthlyBranch 等）都支持本地化显示。
 
-#### 11.1 基础用法
+#### 12.1 基础用法
 
 所有易学元素都提供了 `ToString()` 方法，会根据当前文化设置返回对应的翻译：
 
@@ -638,7 +690,7 @@ Console.WriteLine(Trigram.Qian);     // 输出：Qian
 Console.WriteLine(Hexagram.TheCreative);  // 输出：The Creative
 ```
 
-#### 11.2 干支组合翻译
+#### 12.2 干支组合翻译
 
 `StemBranch` 类也会根据文化设置返回正确的翻译：
 
@@ -653,7 +705,7 @@ IChingTranslationManager.DefaultCulture = new CultureInfo("en");
 Console.WriteLine(stemBranch);  // 输出：JiaZi
 ```
 
-#### 11.3 指定文化参数
+#### 12.3 指定文化参数
 
 如果不想使用全局的 `DefaultCulture`，可以为每个 `ToString()` 调用指定文化参数：
 
@@ -668,7 +720,7 @@ Console.WriteLine(YinYang.Yin.ToString(zh));  // 输出：阴
 Console.WriteLine(YinYang.Yin.ToString(en));  // 输出：Yin
 ```
 
-#### 11.4 应用启动时设置语言
+#### 12.4 应用启动时设置语言
 
 在应用程序启动时设置易学库的默认语言：
 
@@ -702,7 +754,7 @@ public static class Program
 }
 ```
 
-#### 11.5 运行时切换语言
+#### 12.5 运行时切换语言
 
 支持在应用程序运行时动态切换语言，不影响系统其他本地化设置：
 
@@ -723,7 +775,7 @@ ChangeLanguage("zh-Hans");
 ChangeLanguage("en");
 ```
 
-#### 11.6 文化解析优先级
+#### 12.6 文化解析优先级
 
 当获取翻译时，系统按以下优先级解析文化：
 
@@ -753,7 +805,7 @@ IChingTranslationManager.DefaultCulture = null;
 element.ToString();  // 输出：Yin
 ```
 
-#### 11.7 自定义翻译提供者
+#### 12.7 自定义翻译提供者
 
 如果需要支持更多语言或自定义翻译，可以实现 `IIChingTranslationProvider` 接口：
 
@@ -825,7 +877,7 @@ public class DatabaseTranslationProvider : IIChingTranslationProvider
 IChingTranslationManager.Provider = new DatabaseTranslationProvider(dbConnection);
 ```
 
-#### 11.8 重置为默认设置
+#### 12.8 重置为默认设置
 
 如果需要恢复到默认的 RESX 翻译提供者和文化设置：
 
@@ -838,7 +890,7 @@ IChingTranslationManager.ResetToDefault();
 // - DefaultCulture: null（使用系统 CurrentUICulture）
 ```
 
-#### 11.9 与系统本地化的隔离
+#### 12.9 与系统本地化的隔离
 
 `IChingTranslationManager.DefaultCulture` 只影响易学库的翻译，不会影响应用程序的其他本地化（如日期、货币格式等）：
 
@@ -857,7 +909,7 @@ var date = DateTime.Now;
 Console.WriteLine(date.ToString("d"));  // 输出：M/D/YYYY（英语格式）
 ```
 
-#### 11.10 支持的语言
+#### 12.10 支持的语言
 
 目前内置支持的语言：
 
@@ -871,7 +923,7 @@ Console.WriteLine(date.ToString("d"));  // 输出：M/D/YYYY（英语格式）
 1. 创建新的 RESX 文件（如 `IChingResources.ja.resx` 用于日语）
 2. 或实现自定义 `IIChingTranslationProvider`
 
-#### 11.11 唯一键（UniqueKey）
+#### 12.11 唯一键（UniqueKey）
 
 每个易学元素都有 `UniqueKey` 属性，格式为 `{TypeName}.{Label}`，用于资源查找和调试：
 
@@ -933,17 +985,54 @@ Console.WriteLine(Hexagram.TheCreative.UniqueKey);  // 输出：Hexagram.TheCrea
 | 方法 | 说明 |
 |------|------|
 | `WithInquiryTimeProvider(IInquiryTimeProvider)` | 设置问时转换器 |
-| `WithNajia(INajiaProvider?)` | 添加纳甲步骤（主卦） |
-| `WithPosition(IPositionProvider?)` | 添加世应位置步骤（主卦） |
-| `WithSixKin(ISixKinProvider?)` | 添加六亲步骤（主卦） |
-| `WithSixSpirit(ISixSpiritProvider?)` | 添加六神步骤（主卦） |
-| `WithHiddenDeity(IHiddenDeityProvider?)` | 添加伏神步骤（主卦） |
-| `WithNajiaForChanged(INajiaProvider?)` | 添加纳甲步骤（变卦） |
-| `WithSixKinForChanged(ISixKinProvider?)` | 添加六亲步骤（变卦） |
+| `WithNajia(INajiaProvider?)` | 添加纳甲步骤（主卦和变卦） |
+| `WithPosition(IPositionProvider?)` | 添加世应位置步骤（仅主卦） |
+| `WithSixKin(ISixKinProvider?)` | 添加六亲步骤（主卦和变卦） |
+| `WithSixSpirit(ISixSpiritProvider?)` | 添加六神步骤（仅主卦） |
+| `WithHiddenDeity(IHiddenDeityProvider?)` | 添加伏神步骤（仅主卦） |
 | `WithSymbolicStars(Action<DefaultSymbolicStarProvider>?)` | 配置神煞计算器 |
 | `WithDefaultSteps()` | 添加默认完整流程 |
-| `WithCustomStep(ISixLineStep, bool)` | 添加自定义步骤 |
+| `WithCustomStep(IBuildStep)` | 添加自定义步骤 |
 | `Build()` | 构建占卜实例 |
+
+### BuilderContext
+
+构建器上下文，在步骤之间传递数据。
+
+#### 属性
+
+| 属性 | 类型 | 说明 |
+|------|------|------|
+| `SolarInquiryTime` | `DateTimeOffset` | 公历起卦时间（只读） |
+| `InquiryTime` | `InquiryTime?` | 问时信息（阴历、干支等） |
+| `FourSymbols` | `FourSymbol[]?` | 起卦六个爻的四象（从初爻到上爻） |
+| `Original` | `HexagramInstance?` | 主卦实例 |
+| `Changed` | `HexagramInstance?` | 变卦实例 |
+| `SymbolicStars` | `SymbolicStarCollection?` | 神煞集合 |
+
+### IBuildStep
+
+构建步骤接口，用于实现自定义步骤。
+
+```csharp
+public interface IBuildStep
+{
+    void Execute(BuilderContext context);
+}
+```
+
+### Provider 接口
+
+所有 Provider 接口现在都使用 `BuilderContext` 作为参数：
+
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `INajiaProvider` | `BindStemBranches(BuilderContext)` | 纳甲法 |
+| `IPositionProvider` | `BindPositions(BuilderContext)` | 世应位置 |
+| `ISixKinProvider` | `BindSixKin(BuilderContext)` | 六亲 |
+| `ISixSpiritProvider` | `BindSixSpirits(BuilderContext)` | 六神 |
+| `IHiddenDeityProvider` | `BindHiddenDeity(BuilderContext, INajiaProvider, ISixKinProvider)` | 伏神 |
+| `ISymbolicStarProvider` | `Calculate(BuilderContext)` | 神煞 |
 
 ### IChingTranslationManager
 
@@ -991,20 +1080,6 @@ IChingTranslationManager.ResetToDefault();
 | 方法 | 返回类型 | 说明 |
 |------|---------|------|
 | `GetTranslation(string typeName, string label, CultureInfo culture)` | `string?` | 获取指定元素和文化的翻译，找不到时返回 null |
-
-#### 实现示例
-
-```csharp
-public class CustomTranslationProvider : IIChingTranslationProvider
-{
-    public string? GetTranslation(string typeName, string label, CultureInfo culture)
-    {
-        // 自定义翻译逻辑
-        // 返回翻译文本，或 null 表示使用默认的 Label
-        return null;
-    }
-}
-```
 
 ### IChingElement<T>
 
@@ -1085,7 +1160,7 @@ public class CustomTranslationProvider : IIChingTranslationProvider
 
 - **开闭原则（OCP）**：通过接口扩展，无需修改现有代码
   - 添加新起卦方式：只需扩展 `HexagramGenerator`
-  - 添加新计算步骤：实现 `ISixLineStep` 接口
+  - 添加新计算步骤：实现 `IBuildStep` 接口
   - 添加新 Provider：实现相应的 Provider 接口
 
 - **里氏替换原则（LSP）**：所有 Provider 实现可互相替换
@@ -1114,14 +1189,23 @@ public class CustomTranslationProvider : IIChingTranslationProvider
 │  - FromFourSymbols()             │  │  - WithSixSpirit()           │
 │  → 返回 FourSymbol[]             │  │  - Build()                   │
 └──────────────────────────────────┘  └──────────────────────────────┘
+                                                │
+                                                ▼
+                                    ┌──────────────────────────────┐
+                                    │       BuilderContext         │
+                                    │  - SolarInquiryTime          │
+                                    │  - InquiryTime               │
+                                    │  - Original / Changed        │
+                                    │  - SymbolicStars             │
+                                    └──────────────────────────────┘
 ```
 
 ## 技术栈
 
 - **目标框架**: .NET 10.0
 - **语言版本**: C# 12.0
-- **外部依赖**: lunar-csharp 1.6.8（阴历转换）
-- **代码生成器**: Microsoft.CodeAnalysis.CSharp 5.0.0
+- **外部依赖**: lunar-csharp（阴历转换）
+- **代码生成器**: Microsoft.CodeAnalysis.CSharp
 
 ## 贡献
 
