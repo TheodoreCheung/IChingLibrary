@@ -89,7 +89,7 @@ public class LunarStemBranchTests
         var result = lunarStemBranch.ToString();
 
         // Assert
-        Assert.Equal("JiaZi-YiChou-BingYin-DingMao", result);
+        Assert.Equal("JiaZi YiChou BingYin DingMao", result);
     }
 
     [Fact]
