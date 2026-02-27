@@ -1,4 +1,3 @@
-using IChingLibrary.SixLines.Providers;
 using IChingLibrary.SixLines.Providers.Abstractions;
 
 namespace IChingLibrary.SixLines;
@@ -7,7 +6,7 @@ namespace IChingLibrary.SixLines;
 /// 起卦时间步骤
 /// </summary>
 /// <param name="provider">问时信息转换器</param>
-public sealed class InquiryTimeStep(IInquiryTimeProvider provider) : IBuildStep
+internal sealed class InquiryTimeStep(IInquiryTimeProvider provider) : IBuildStep
 {
     /// <inheritdoc />
     public void Execute(BuilderContext context)
@@ -19,7 +18,7 @@ public sealed class InquiryTimeStep(IInquiryTimeProvider provider) : IBuildStep
 /// <summary>
 /// 纳甲步骤
 /// </summary>
-public sealed class NajiaStep(INajiaProvider provider) : IBuildStep
+internal sealed class NajiaStep(INajiaProvider provider) : IBuildStep
 {
     /// <inheritdoc />
     public void Execute(BuilderContext context)
@@ -31,7 +30,7 @@ public sealed class NajiaStep(INajiaProvider provider) : IBuildStep
 /// <summary>
 /// 世应位置步骤
 /// </summary>
-public sealed class PositionStep(IPositionProvider provider) : IBuildStep
+internal sealed class PositionStep(IPositionProvider provider) : IBuildStep
 {
     /// <inheritdoc />
     public void Execute(BuilderContext context)
@@ -43,7 +42,7 @@ public sealed class PositionStep(IPositionProvider provider) : IBuildStep
 /// <summary>
 /// 六亲步骤
 /// </summary>
-public sealed class SixKinStep(ISixKinProvider provider) : IBuildStep
+internal sealed class SixKinStep(ISixKinProvider provider) : IBuildStep
 {
     /// <inheritdoc />
     public void Execute(BuilderContext context)
@@ -55,7 +54,7 @@ public sealed class SixKinStep(ISixKinProvider provider) : IBuildStep
 /// <summary>
 /// 六神步骤
 /// </summary>
-public sealed class SixSpiritStep(ISixSpiritProvider provider) : IBuildStep
+internal sealed class SixSpiritStep(ISixSpiritProvider provider) : IBuildStep
 {
     /// <inheritdoc />
     public void Execute(BuilderContext context)
@@ -67,7 +66,7 @@ public sealed class SixSpiritStep(ISixSpiritProvider provider) : IBuildStep
 /// <summary>
 /// 伏神步骤
 /// </summary>
-public sealed class HiddenDeityStep(IHiddenDeityProvider hiddenDeityProvider, INajiaProvider najiaProvider, ISixKinProvider sixKinProvider) : IBuildStep
+internal sealed class HiddenDeityStep(IHiddenDeityProvider hiddenDeityProvider, INajiaProvider najiaProvider, ISixKinProvider sixKinProvider) : IBuildStep
 {
     /// <inheritdoc />
     public void Execute(BuilderContext context)
@@ -79,7 +78,7 @@ public sealed class HiddenDeityStep(IHiddenDeityProvider hiddenDeityProvider, IN
 /// <summary>
 /// 神煞步骤（Symbolic Star Step）
 /// </summary>
-public sealed class SymbolicStarStep(ISymbolicStarProvider provider) : IBuildStep
+internal sealed class SymbolicStarStep(ISymbolicStarProvider provider) : IBuildStep
 {
     /// <summary>
     /// 执行神煞步骤
