@@ -1,9 +1,9 @@
 <Project>
     <PropertyGroup>
         <!-- 项目版本号 -->
-        <Version>1.1.0</Version>
-        <AssemblyVersion>1.1.0.0</AssemblyVersion>
-        <FileVersion>1.1.0.0</FileVersion>
+        <Version>1.1.1</Version>
+        <AssemblyVersion>1.1.1.0</AssemblyVersion>
+        <FileVersion>1.1.1.0</FileVersion>
 
         <!-- 预发布版本信息 -->
         <PreReleaseAlphaSuffix>alpha</PreReleaseAlphaSuffix>
