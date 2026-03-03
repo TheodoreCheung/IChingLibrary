@@ -212,22 +212,26 @@ public class SixLineDivination
             }
         }
 
-        if (Changed is null)
-            return sb.ToString();
-        
-        sb.AppendLine($"\n## {IChingTranslationManager.GetTranslation(tName, "ChangedHexagram")}");
-        var changedNature = Changed.Meta.GetNature();
-        sb.AppendLine($"**{IChingTranslationManager.GetTranslation(tName, "HexagramName")}**: _{Changed.Meta}{(changedNature is null ? "" : $"（{changedNature}{IChingTranslationManager.GetTranslation(tName, "Hexagram")}）")}_  ");
-        sb.AppendLine($"**{IChingTranslationManager.GetTranslation(tName, "HexagramPalace")}**: _{Changed.Meta.Palace}{IChingTranslationManager.GetTranslation(tName, "Palace")}_  ");
-        sb.AppendLine($"**{IChingTranslationManager.GetTranslation(tName, "PalaceFivePhases")}**: _{Changed.Meta.Palace.FivePhase}_  \n");
-
-        sb.AppendLine($"|{IChingTranslationManager.GetTranslation(tName, "LinePosition")}|{IChingTranslationManager.GetTranslation(tName, "StemBranch")}|{IChingTranslationManager.GetTranslation(tName, "SixKin")}|");
-        sb.AppendLine("|---|---|---|");
-        for (var i = 5; i >= 0; i--)
+        if (Changed is not null)
         {
-            sb.AppendLine($"|{Changed[i].LinePosition}|{Changed[i].StemBranch}|{Changed[i].SixKin}|");
+            sb.AppendLine($"\n## {IChingTranslationManager.GetTranslation(tName, "ChangedHexagram")}");
+            var changedNature = Changed.Meta.GetNature();
+            sb.AppendLine(
+                $"**{IChingTranslationManager.GetTranslation(tName, "HexagramName")}**: _{Changed.Meta}{(changedNature is null ? "" : $"（{changedNature}{IChingTranslationManager.GetTranslation(tName, "Hexagram")}）")}_  ");
+            sb.AppendLine(
+                $"**{IChingTranslationManager.GetTranslation(tName, "HexagramPalace")}**: _{Changed.Meta.Palace}{IChingTranslationManager.GetTranslation(tName, "Palace")}_  ");
+            sb.AppendLine(
+                $"**{IChingTranslationManager.GetTranslation(tName, "PalaceFivePhases")}**: _{Changed.Meta.Palace.FivePhase}_  \n");
+
+            sb.AppendLine(
+                $"|{IChingTranslationManager.GetTranslation(tName, "LinePosition")}|{IChingTranslationManager.GetTranslation(tName, "StemBranch")}|{IChingTranslationManager.GetTranslation(tName, "SixKin")}|");
+            sb.AppendLine("|---|---|---|");
+            for (var i = 5; i >= 0; i--)
+            {
+                sb.AppendLine($"|{Changed[i].LinePosition}|{Changed[i].StemBranch}|{Changed[i].SixKin}|");
+            }
         }
-        
+
         if (SymbolicStars is null)
             return sb.ToString();
         
