@@ -14,7 +14,7 @@ internal class DefaultInquiryTimeProvider : IInquiryTimeProvider
         var solar = new Solar(dateTime.LocalDateTime);
         var lunar = solar.Lunar;
 
-        var lunarDt = new DateTimeOffset(lunar.Year, lunar.Month, lunar.Day, lunar.Hour, lunar.Minute, lunar.Second, dateTime.Offset);
+        var lunarDt = new DateTimeOffset(lunar.Year, Math.Abs(lunar.Month), lunar.Day, lunar.Hour, lunar.Minute, lunar.Second, dateTime.Offset);
         
         var stemBranch = new LunarStemBranch(
             new StemBranch(HeavenlyStem.FromValue((byte)(lunar.YearGanIndex + 1)),

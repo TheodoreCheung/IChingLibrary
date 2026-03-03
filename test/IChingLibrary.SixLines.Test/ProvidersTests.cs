@@ -260,4 +260,17 @@ public class ProvidersTests
         // Assert - 子日应有一些神煞
         Assert.NotEmpty(starsForZi);
     }
+
+    [Fact]
+    public void InquiryTimeProvider_LeapMonth_ShouldBePositiveInteger()
+    {
+        // Arrange
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+        
+        // Act
+        var divination = SixLineDivination.Create(new DateTimeOffset(2025, 8, 7, 21, 0, 0, TimeSpan.FromHours(8)), fourSymbols);
+        
+        // Assert - 润六月
+        Assert.Equal(6, divination.InquiryTime.Lunar.Month);
+    }
 }
