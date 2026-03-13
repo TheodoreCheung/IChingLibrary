@@ -1,10 +1,27 @@
 using IChingLibrary.Core;
+using IChingLibrary.SixLines.Providers.Abstractions;
 
 namespace IChingLibrary.SixLines.Test;
 
 public class SixLineDivinationBuilderTests
 {
     private static DateTimeOffset TestInquiryTime => new(2024, 1, 1, 12, 0, 0, TimeSpan.Zero);
+
+    private sealed class FixedInquiryTimeProvider : IInquiryTimeProvider
+    {
+        public InquiryTime ConvertFrom(DateTimeOffset dateTime)
+        {
+            var lunar = new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            var stemBranch = new LunarStemBranch(
+                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi),
+                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi),
+                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi),
+                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi)
+            );
+
+            return new InquiryTime(dateTime, lunar, stemBranch);
+        }
+    }
 
     [Fact]
     public void Builder_UseFourSymbols_ShouldAcceptValidArray()
@@ -96,6 +113,24 @@ public class SixLineDivinationBuilderTests
     }
 
     [Fact]
+    public void Builder_UseTimeBasedHexagram_ShouldUseInquiryTimeProvider()
+    {
+        var provider = new FixedInquiryTimeProvider();
+
+        var defaultDivination = SixLineDivination.CreateBuilder(TestInquiryTime)
+            .UseTimeBasedHexagram()
+            .Build();
+
+        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
+            .UseTimeBasedHexagram()
+            .WithInquiryTimeProvider(provider)
+            .Build();
+
+        Assert.Equal(Hexagram.Create(Trigram.Li, Trigram.Zhen), divination.Original.Meta);
+        Assert.NotEqual(defaultDivination.Original.Meta, divination.Original.Meta);
+    }
+
+    [Fact]
     public void Builder_UseRandomHexagram_ShouldCreateValidDivination()
     {
         // Arrange
@@ -112,6 +147,16 @@ public class SixLineDivinationBuilderTests
         // Assert
         Assert.NotNull(divination);
         Assert.NotNull(divination.Original);
+    }
+
+    [Fact]
+    public void Builder_UseRandomHexagram_NegativeInput_ShouldThrow()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            SixLineDivination.CreateBuilder(TestInquiryTime)
+                .UseRandomHexagram(-1, 1, 1);
+        });
     }
 
     [Fact]
