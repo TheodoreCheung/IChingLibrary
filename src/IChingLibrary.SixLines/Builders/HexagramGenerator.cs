@@ -144,7 +144,6 @@ internal static class HexagramGenerator
     private static FourSymbol[] GenerateFourSymbols(Hexagram hexagram, int changingLinePosition)
     {
         var fourSymbols = new FourSymbol[6];
-        var linePositions = LinePosition.GetAll().OrderBy(p => p.Value).ToList();
 
         for (int i = 0; i < 6; i++)
         {
@@ -152,7 +151,7 @@ internal static class HexagramGenerator
             var yinYang = ((hexagram.Value >> i) & 1) == 1 ? YinYang.Yang : YinYang.Yin;
 
             // 如果是动爻位置，使用老阴或老阳
-            if (linePositions[i].Value == changingLinePosition)
+            if (i + 1 == changingLinePosition)
             {
                 fourSymbols[i] = yinYang == YinYang.Yang ? FourSymbol.OldYang : FourSymbol.OldYin;
             }

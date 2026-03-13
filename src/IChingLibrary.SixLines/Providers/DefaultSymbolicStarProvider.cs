@@ -318,7 +318,7 @@ public sealed class DefaultSymbolicStarProvider : ISymbolicStarProvider
     }
 
     /// <summary>
-    /// 添加或覆盖神煞计算器
+    /// 添加神煞计算器（不覆盖已存在的计算器）
     /// </summary>
     /// <param name="symbolicStar">神煞类型</param>
     /// <param name="calculator">神煞计算委托</param>

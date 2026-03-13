@@ -36,8 +36,8 @@ public class StemBranch(HeavenlyStem stem, EarthlyBranch branch)
 
             return
             [
-                EarthlyBranch.GetAll().First(b => b.Value == empty1Index),
-                EarthlyBranch.GetAll().First(b => b.Value == empty2Index)
+                EarthlyBranch.FromValue((byte)empty1Index),
+                EarthlyBranch.FromValue((byte)empty2Index)
             ];
         }
     }
