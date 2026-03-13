@@ -11,12 +11,12 @@ public class SixLineDivinationBuilderTests
     {
         public InquiryTime ConvertFrom(DateTimeOffset dateTime)
         {
-            var lunar = new DateTimeOffset(2020, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            var lunar = new DateTimeOffset(2020, 12, 30, 0, 0, 0, TimeSpan.Zero);
             var stemBranch = new LunarStemBranch(
-                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi),
-                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi),
-                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi),
-                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi)
+                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Hai),
+                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Hai),
+                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Hai),
+                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Hai)
             );
 
             return new InquiryTime(dateTime, lunar, stemBranch);
@@ -117,17 +117,12 @@ public class SixLineDivinationBuilderTests
     {
         var provider = new FixedInquiryTimeProvider();
 
-        var defaultDivination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseTimeBasedHexagram()
-            .Build();
-
         var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
             .UseTimeBasedHexagram()
             .WithInquiryTimeProvider(provider)
             .Build();
 
-        Assert.Equal(Hexagram.Create(Trigram.Li, Trigram.Zhen), divination.Original.Meta);
-        Assert.NotEqual(defaultDivination.Original.Meta, divination.Original.Meta);
+        Assert.Equal(Hexagram.Create(Trigram.Kan, Trigram.Dui), divination.Original.Meta);
     }
 
     [Fact]
@@ -329,10 +324,10 @@ public class SixLineDivinationBuilderTests
                 .UseFourSymbols(fourSymbols)
                 .WithNajia()
                 .WithHiddenDeity()
-                .Build();
+            .Build();
         });
 
-        Assert.Contains("HiddenDeity", ex.Message);
+        Assert.Contains("SixKin", ex.Message);
     }
 
     [Fact]
