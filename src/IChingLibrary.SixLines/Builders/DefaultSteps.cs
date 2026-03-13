@@ -11,6 +11,9 @@ internal sealed class InquiryTimeStep(IInquiryTimeProvider provider) : IBuildSte
     /// <inheritdoc />
     public void Execute(BuilderContext context)
     {
+        if (context.InquiryTime is not null)
+            return;
+
         context.InquiryTime = provider.ConvertFrom(context.SolarInquiryTime);
     }
 }

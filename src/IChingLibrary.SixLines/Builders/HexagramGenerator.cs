@@ -18,18 +18,23 @@ internal static class HexagramGenerator
         var inquiryTimeProvider = new DefaultInquiryTimeProvider();
         var convertedInquiryTime = inquiryTimeProvider.ConvertFrom(inquiryTime);
 
+        return FromTime(convertedInquiryTime);
+    }
+
+    internal static FourSymbol[] FromTime(InquiryTime inquiryTime)
+    {
         // 获取年地支值、时地支值和阴历月日
-        var yearBranchValue = convertedInquiryTime.StemBranch.Year.Branch.Value;
-        var hourBranchValue = convertedInquiryTime.StemBranch.Hour.Branch.Value;
-        var lunarMonth = convertedInquiryTime.Lunar.Month;
-        var lunarDay = convertedInquiryTime.Lunar.Day;
+        var yearBranchValue = inquiryTime.StemBranch.Year.Branch.Value;
+        var hourBranchValue = inquiryTime.StemBranch.Hour.Branch.Value;
+        var lunarMonth = inquiryTime.Lunar.Month;
+        var lunarDay = inquiryTime.Lunar.Day;
 
         // 计算上下卦和动爻
         var upperTrigramNumber = yearBranchValue + lunarMonth + lunarDay;
         var lowerTrigramNumber = yearBranchValue + lunarMonth + lunarDay + hourBranchValue;
         var changingLineNumber = yearBranchValue + lunarMonth + lunarDay + hourBranchValue;
 
-        return FromRandomNumbers(inquiryTime, upperTrigramNumber, lowerTrigramNumber, changingLineNumber);
+        return FromRandomNumbers(upperTrigramNumber, lowerTrigramNumber, changingLineNumber, inquiryTime);
     }
 
     /// <summary>
@@ -45,6 +50,18 @@ internal static class HexagramGenerator
         int upperTrigramNumber,
         int lowerTrigramNumber,
         int? changingLineNumber = null)
+    {
+        var inquiryTimeProvider = new DefaultInquiryTimeProvider();
+        var convertedInquiryTime = inquiryTimeProvider.ConvertFrom(inquiryTime);
+
+        return FromRandomNumbers(upperTrigramNumber, lowerTrigramNumber, changingLineNumber, convertedInquiryTime);
+    }
+
+    internal static FourSymbol[] FromRandomNumbers(
+        int upperTrigramNumber,
+        int lowerTrigramNumber,
+        int? changingLineNumber,
+        InquiryTime inquiryTime)
     {
         // 通过随机数获取上下卦
         var upperTrigram = GetTrigramByNumber(upperTrigramNumber);
@@ -62,9 +79,7 @@ internal static class HexagramGenerator
         else
         {
             // 如果没有提供动爻随机数，则使用公式：(上卦数 + 下卦数 + 日支) % 6
-            var inquiryTimeProvider = new DefaultInquiryTimeProvider();
-            var convertedInquiryTime = inquiryTimeProvider.ConvertFrom(inquiryTime);
-            var dayBranchValue = convertedInquiryTime.StemBranch.Day.Branch.Value;
+            var dayBranchValue = inquiryTime.StemBranch.Day.Branch.Value;
             changingLinePosition = GetChangingLinePosition(upperTrigramNumber + lowerTrigramNumber + dayBranchValue);
         }
 

@@ -8,9 +8,24 @@ namespace IChingLibrary.SixLines;
 /// </summary>
 public sealed class SixLineDivinationBuilder
 {
+    private enum HexagramSource
+    {
+        None,
+        FourSymbols,
+        TimeBased,
+        RandomNumbers,
+        Hexagrams
+    }
+
     private readonly List<IBuildStep> _steps = [];
 
     private readonly BuilderContext _context;
+
+    private HexagramSource _source = HexagramSource.None;
+    private FourSymbol[]? _sourceFourSymbols;
+    private (int upper, int lower, int? changing)? _randomNumbers;
+    private (Hexagram original, Hexagram? changed)? _hexagrams;
+    private IInquiryTimeProvider? _inquiryTimeProvider;
 
     /// <summary>
     /// 初始化构建器
@@ -31,8 +46,9 @@ public sealed class SixLineDivinationBuilder
         if (fourSymbols.Length != 6)
             throw new ArgumentException("必须提供6个四象值", nameof(fourSymbols));
 
-        _context.FourSymbols = [..fourSymbols];
-        
+        _source = HexagramSource.FourSymbols;
+        _sourceFourSymbols = [..fourSymbols];
+
         return this;
     }
 
@@ -46,12 +62,15 @@ public sealed class SixLineDivinationBuilder
         if (fourSymbolValues.Length != 6)
             throw new ArgumentException("必须提供6个四象值", nameof(fourSymbolValues));
 
-        _context.FourSymbols = new FourSymbol[6];
+        var symbols = new FourSymbol[6];
         for (var i = 0; i < 6; i++)
         {
-            _context.FourSymbols[i] = FourSymbol.FromValue(fourSymbolValues[i]);
+            symbols[i] = FourSymbol.FromValue(fourSymbolValues[i]);
         }
-        
+
+        _source = HexagramSource.FourSymbols;
+        _sourceFourSymbols = symbols;
+
         return this;
     }
 
@@ -61,7 +80,7 @@ public sealed class SixLineDivinationBuilder
     /// <returns>构建器实例</returns>
     public SixLineDivinationBuilder UseTimeBasedHexagram()
     {
-        _context.FourSymbols = HexagramGenerator.FromTime(_context.SolarInquiryTime);
+        _source = HexagramSource.TimeBased;
         return this;
     }
 
@@ -77,11 +96,15 @@ public sealed class SixLineDivinationBuilder
         int lowerTrigramNumber,
         int? changingLineNumber = null)
     {
-        _context.FourSymbols = HexagramGenerator.FromRandomNumbers(
-            _context.SolarInquiryTime,
-            upperTrigramNumber,
-            lowerTrigramNumber,
-            changingLineNumber);
+        if (upperTrigramNumber < 0)
+            throw new ArgumentOutOfRangeException(nameof(upperTrigramNumber));
+        if (lowerTrigramNumber < 0)
+            throw new ArgumentOutOfRangeException(nameof(lowerTrigramNumber));
+        if (changingLineNumber.HasValue && changingLineNumber.Value < 0)
+            throw new ArgumentOutOfRangeException(nameof(changingLineNumber));
+
+        _source = HexagramSource.RandomNumbers;
+        _randomNumbers = (upperTrigramNumber, lowerTrigramNumber, changingLineNumber);
         return this;
     }
 
@@ -93,7 +116,8 @@ public sealed class SixLineDivinationBuilder
     /// <returns>构建器实例</returns>
     public SixLineDivinationBuilder UseHexagram(Hexagram original, Hexagram? changed = null)
     {
-        _context.FourSymbols = HexagramGenerator.FromHexagrams(original, changed);
+        _source = HexagramSource.Hexagrams;
+        _hexagrams = (original, changed);
         return this;
     }
 
@@ -104,7 +128,8 @@ public sealed class SixLineDivinationBuilder
     /// <returns>构建器实例</returns>
     public SixLineDivinationBuilder WithInquiryTimeProvider(IInquiryTimeProvider? provider = null)
     {
-        _steps.Add(new InquiryTimeStep(provider ?? new DefaultInquiryTimeProvider()));
+        _inquiryTimeProvider = provider ?? new DefaultInquiryTimeProvider();
+        _steps.Add(new InquiryTimeStep(_inquiryTimeProvider));
 
         return this;
     }
@@ -220,9 +245,27 @@ public sealed class SixLineDivinationBuilder
     /// <exception cref="InvalidOperationException">未调用起卦方法时抛出</exception>
     public SixLineDivination Build()
     {
-        if (_context.FourSymbols is null)
+        if (_source == HexagramSource.None && _context.FourSymbols is null)
             throw new InvalidOperationException("必须先调用起卦方法（如 UseTimeBasedHexagram 等）");
-        
+
+        _context.InquiryTime ??= (_inquiryTimeProvider ?? new DefaultInquiryTimeProvider())
+            .ConvertFrom(_context.SolarInquiryTime);
+
+        _context.FourSymbols = _source switch
+        {
+            HexagramSource.FourSymbols => _sourceFourSymbols!,
+            HexagramSource.TimeBased => HexagramGenerator.FromTime(_context.InquiryTime.Value),
+            HexagramSource.RandomNumbers => HexagramGenerator.FromRandomNumbers(
+                _randomNumbers!.Value.upper,
+                _randomNumbers!.Value.lower,
+                _randomNumbers!.Value.changing,
+                _context.InquiryTime.Value),
+            HexagramSource.Hexagrams => HexagramGenerator.FromHexagrams(
+                _hexagrams!.Value.original,
+                _hexagrams!.Value.changed),
+            _ => _context.FourSymbols ?? throw new InvalidOperationException("必须先调用起卦方法（如 UseTimeBasedHexagram 等）")
+        };
+
         byte originalValue = 0;
         byte changingMask = 0;
         
@@ -249,9 +292,6 @@ public sealed class SixLineDivinationBuilder
         {
             _context.Changed = new HexagramInstance(Hexagram.FromValue(changedValue));
         }
-
-        // 若未显式添加 InquiryTimeStep，则使用默认时间转换
-        _context.InquiryTime ??= new DefaultInquiryTimeProvider().ConvertFrom(_context.SolarInquiryTime);
 
         foreach (var step in _steps)
         {
