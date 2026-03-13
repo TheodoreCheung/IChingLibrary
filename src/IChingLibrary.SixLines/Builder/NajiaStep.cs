@@ -1,11 +1,9 @@
-﻿using IChingLibrary.SixLines.Providers.Abstractions;
-
-namespace IChingLibrary.SixLines.Providers;
+﻿namespace IChingLibrary.SixLines.Builder;
 
 /// <summary>
-/// 默认纳甲法提供器
+/// 纳甲步骤
 /// </summary>
-internal class DefaultNajiaProvider : INajiaProvider
+public sealed class NajiaStep : IStructuringStep
 {
     /// <summary>
     /// 八卦纳干表（内卦/外卦对应的天干）
@@ -53,7 +51,7 @@ internal class DefaultNajiaProvider : INajiaProvider
     private static readonly StemBranch[][] InnerTables = new StemBranch[8][];
     private static readonly StemBranch[][] OuterTables = new StemBranch[8][];
 
-    static DefaultNajiaProvider()
+    static NajiaStep()
     {
         foreach (var trigram in Trigram.GetAll())
         {
@@ -62,6 +60,12 @@ internal class DefaultNajiaProvider : INajiaProvider
         }
     }
 
+    /// <summary>
+    /// 预计算内外卦对应的干支表
+    /// </summary>
+    /// <param name="trigram">卦象</param>
+    /// <param name="isInner">是否为内卦</param>
+    /// <returns>三爻干支表</returns>
     private static StemBranch[] PrecalculateTable(Trigram trigram, bool isInner)
     {
         var stem = isInner ? NajiaStemMap[trigram].Inner : NajiaStemMap[trigram].Outer;
@@ -79,6 +83,8 @@ internal class DefaultNajiaProvider : INajiaProvider
     /// <summary>
     /// 判断是否为阳卦（乾、震、坎、艮为阳卦）
     /// </summary>
+    /// <param name="trigram">卦象</param>
+    /// <returns>是否为阳卦</returns>
     private static bool IsYangTrigram(Trigram trigram)
     {
         return trigram == Trigram.Qian ||
@@ -86,17 +92,17 @@ internal class DefaultNajiaProvider : INajiaProvider
                trigram == Trigram.Kan ||
                trigram == Trigram.Gen;
     }
+    
+    /// <inheritdoc />
+    public IEnumerable<Type> RequiredSteps { get; } = [];
 
     /// <inheritdoc />
-    public void BindStemBranches(BuilderContext context)
+    public void Execute(DivinationContext context)
     {
-        if (context.Original is null)
-            throw new InvalidOperationException("未找到主卦");
+        Bind(context.SixLineDivination.Original);
         
-        Bind(context.Original);
-        
-        if (context.Changed is not null)
-            Bind(context.Changed);
+        if (context.SixLineDivination.Changed is not null)
+            Bind(context.SixLineDivination.Changed);
 
         return;
 

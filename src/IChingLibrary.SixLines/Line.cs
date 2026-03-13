@@ -34,28 +34,22 @@ public class Line
     /// <summary>
     /// 干支（纳甲），通过纳甲法设置
     /// </summary>
-    /// <exception cref="InvalidOperationException">访问时尚未通过纳甲法设置</exception>
+    /// <exception cref="InvalidOperationException">未经过纳甲步骤构建</exception>
     public StemBranch StemBranch
     {
-        get => field ?? throw new InvalidOperationException("StemBranch 尚未通过纳甲法设置");
+        get => field ?? throw new InvalidOperationException($"{nameof(StemBranch)} not set in build step");
         internal set;
     }
 
     /// <summary>
     /// 六亲（父母、兄弟、妻财、官鬼、子孙），通过六亲提供器设置
     /// </summary>
-    /// <exception cref="InvalidOperationException">访问时尚未通过六亲提供器设置</exception>
+    /// <exception cref="InvalidOperationException">未经过绑六亲步骤构建</exception>
     public SixKin SixKin
     {
-        get => _sixKin ?? throw new InvalidOperationException("SixKin 尚未通过六亲提供器设置");
-        internal set
-        {
-            _sixKin = value;
-            IsSixKinBound = true;
-        }
+        get => _sixKin ?? throw new InvalidOperationException($"{nameof(SixKin)} not set in build step");
+        internal set => _sixKin = value;
     }
-
-    internal bool IsSixKinBound { get; private set; }
 
     /// <summary>
     /// 世应位置（世爻或应爻）

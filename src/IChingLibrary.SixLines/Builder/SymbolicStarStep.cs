@@ -1,22 +1,19 @@
-using IChingLibrary.SixLines.Providers.Abstractions;
-
-namespace IChingLibrary.SixLines.Providers;
+﻿namespace IChingLibrary.SixLines.Builder;
 
 /// <summary>
 /// 神煞计算委托
 /// </summary>
-/// <param name="inquiryTime">问时信息</param>
+/// <param name="castingTime">起卦时间</param>
 /// <param name="hexagram">主卦实例</param>
 /// <returns>神煞对应的地支数组，返回 null 表示该神煞不适用于当前情况</returns>
-public delegate EarthlyBranch[]? SymbolicStarCalculatorDelegate(
-    InquiryTime inquiryTime,
+internal delegate EarthlyBranch[]? SymbolicStarCalculatorDelegate(
+    CastingTime castingTime,
     HexagramInstance hexagram);
 
 /// <summary>
-/// 默认神煞提供器
-/// 管理神煞选择和神煞计算器
+/// 神煞计算步骤
 /// </summary>
-public sealed class DefaultSymbolicStarProvider : ISymbolicStarProvider
+public sealed class SymbolicStarStep : IStructuringStep
 {
     /// <summary>
     /// 神煞计算器注册表，存储神煞类型与其计算委托的映射关系
@@ -309,64 +306,17 @@ public sealed class DefaultSymbolicStarProvider : ISymbolicStarProvider
 
     #endregion
 
+    /// <inheritdoc />
+    public IEnumerable<Type> RequiredSteps { get; } = [];
+
     /// <summary>
-    /// 初始化默认神煞提供器，自动注册所有默认神煞计算器
+    /// 初始化神煞计算步骤并注册默认计算器
     /// </summary>
-    public DefaultSymbolicStarProvider()
+    public SymbolicStarStep()
     {
         RegisterDefaultCalculators();
     }
-
-    /// <summary>
-    /// 添加神煞计算器（不覆盖已存在的计算器）
-    /// </summary>
-    /// <param name="symbolicStar">神煞类型</param>
-    /// <param name="calculator">神煞计算委托</param>
-    /// <remarks>
-    /// 如果神煞已存在，则不会覆盖原有计算器
-    /// </remarks>
-    public void Add(SymbolicStar symbolicStar, SymbolicStarCalculatorDelegate calculator)
-    {
-        _calculators.TryAdd(symbolicStar, calculator);
-    }
-
-    /// <summary>
-    /// 移除指定神煞的计算器
-    /// </summary>
-    /// <param name="symbolicStar">要移除的神煞类型</param>
-    /// <returns>如果成功移除返回 true，否则返回 false</returns>
-    public bool Remove(SymbolicStar symbolicStar)
-    {
-        return _calculators.Remove(symbolicStar);
-    }
-
-    /// <summary>
-    /// 获取所有已注册的神煞计算器
-    /// </summary>
-    /// <returns>神煞类型到计算委托的只读字典</returns>
-    public IReadOnlyDictionary<SymbolicStar, SymbolicStarCalculatorDelegate> Calculators => _calculators;
-
-    /// <inheritdoc/>
-    public SymbolicStarCollection Calculate(BuilderContext context)
-    {
-        if (context.InquiryTime is null)
-            throw new InvalidOperationException("未找到起卦时间");
-        
-        if (context.Original is null)
-            throw new InvalidOperationException("未找到主卦");
-        
-        var stars = new Dictionary<SymbolicStar, EarthlyBranch[]>();
-        foreach (var (symbolicStar, calculator) in _calculators)
-        {
-            var branches = calculator(context.InquiryTime.Value, context.Original);
-            if (branches != null)
-            {
-                stars[symbolicStar] = branches;
-            }
-        }
-        return new SymbolicStarCollection(stars);
-    }
-
+    
     /// <summary>
     /// 注册所有默认神煞计算器
     /// </summary>
@@ -399,41 +349,70 @@ public sealed class DefaultSymbolicStarProvider : ISymbolicStarProvider
         Add(SymbolicStar.MarriageBed, CalculateMarriageBed);
         Add(SymbolicStar.BridalChamber, CalculateBridalChamber);
     }
-
+    
+    /// <summary>
+    /// 添加神煞计算器（不覆盖已存在的计算器）
+    /// </summary>
+    /// <param name="symbolicStar">神煞类型</param>
+    /// <param name="calculator">神煞计算委托</param>
+    /// <remarks>
+    /// 如果神煞已存在，则不会覆盖原有计算器
+    /// </remarks>
+    private void Add(SymbolicStar symbolicStar, SymbolicStarCalculatorDelegate calculator)
+    {
+        _calculators.TryAdd(symbolicStar, calculator);
+    }
+    
     #region 默认神煞计算方法
 
     /// <summary>
     /// 根据日干查询映射表的神煞计算器
     /// </summary>
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <param name="map">日干映射表</param>
+    /// <returns>神煞对应的地支数组，返回 null 表示不适用</returns>
     private static EarthlyBranch[]? CalculateByDayStem(
-        InquiryTime inquiryTime,
+        CastingTime castingTime,
         HexagramInstance hexagram,
         Dictionary<HeavenlyStem, EarthlyBranch[]> map)
-        => map.GetValueOrDefault(inquiryTime.StemBranch.Day.Stem);
+        => map.GetValueOrDefault(castingTime.StemBranch.Day.Stem);
 
     /// <summary>
     /// 根据日支查询映射表的神煞计算器
     /// </summary>
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <param name="map">日支映射表</param>
+    /// <returns>神煞对应的地支数组，返回 null 表示不适用</returns>
     private static EarthlyBranch[]? CalculateByDayBranch(
-        InquiryTime inquiryTime,
+        CastingTime castingTime,
         HexagramInstance hexagram,
         Dictionary<EarthlyBranch, EarthlyBranch[]> map)
-        => map.GetValueOrDefault(inquiryTime.StemBranch.Day.Branch);
+        => map.GetValueOrDefault(castingTime.StemBranch.Day.Branch);
 
     /// <summary>
     /// 根据月支查询映射表的神煞计算器
     /// </summary>
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <param name="map">月支映射表</param>
+    /// <returns>神煞对应的地支数组，返回 null 表示不适用</returns>
     private static EarthlyBranch[]? CalculateByMonthBranch(
-        InquiryTime inquiryTime,
+        CastingTime castingTime,
         HexagramInstance hexagram,
         Dictionary<EarthlyBranch, EarthlyBranch[]> map)
-        => map.GetValueOrDefault(inquiryTime.StemBranch.Month.Branch);
+        => map.GetValueOrDefault(castingTime.StemBranch.Month.Branch);
 
     /// <summary>
     /// 根据卦身五行查询映射表的神煞计算器
     /// </summary>
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <param name="map">卦身五行映射表</param>
+    /// <returns>神煞对应的地支数组，返回 null 表示不适用</returns>
     private static EarthlyBranch[]? CalculateByHexagramBody(
-        InquiryTime inquiryTime,
+        CastingTime castingTime,
         HexagramInstance hexagram,
         Dictionary<FivePhase, EarthlyBranch[]> map)
     {
@@ -444,98 +423,162 @@ public sealed class DefaultSymbolicStarProvider : ISymbolicStarProvider
     /// <summary>
     /// 计算贵人（甲戊→牛羊，乙己→鼠猴，丙丁→猪鸡，壬癸→兔蛇，庚辛→马虎）
     /// </summary>
-    private static EarthlyBranch[]? CalculateNobleman(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayStem(inquiryTime, hexagram, NoblemanMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>贵人对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateNobleman(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayStem(castingTime, hexagram, NoblemanMap);
 
     /// <summary>
     /// 计算禄神（甲→寅，乙→卯，丙戊→巳，丁己→午，庚→申，辛→酉，壬→亥，癸→子）
     /// </summary>
-    private static EarthlyBranch[]? CalculateSalarySpirit(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayStem(inquiryTime, hexagram, SalarySpiritMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>禄神对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateSalarySpirit(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayStem(castingTime, hexagram, SalarySpiritMap);
 
     /// <summary>
     /// 计算文昌（甲→巳，乙→午，丙戊→申，丁己→酉，庚→亥，辛→子，壬→寅，癸→卯）
     /// </summary>
-    private static EarthlyBranch[]? CalculateCultureFlourish(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayStem(inquiryTime, hexagram, CultureFlourishMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>文昌对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateCultureFlourish(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayStem(castingTime, hexagram, CultureFlourishMap);
 
     /// <summary>
     /// 计算羊刃（甲→卯，乙→寅，丙戊→午，丁己→巳，庚→酉，辛→申，壬→子，癸→亥）
     /// </summary>
-    private static EarthlyBranch[]? CalculateYangBlade(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayStem(inquiryTime, hexagram, YangBladeMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>羊刃对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateYangBlade(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayStem(castingTime, hexagram, YangBladeMap);
 
     /// <summary>
     /// 计算驿马（寅午戌→申，亥卯未→巳，巳酉丑→亥，申子辰→寅）
     /// </summary>
-    private static EarthlyBranch[]? CalculatePostHorse(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(inquiryTime, hexagram, PostHorseMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>驿马对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculatePostHorse(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayBranch(castingTime, hexagram, PostHorseMap);
 
     /// <summary>
     /// 计算桃花（寅午戌→卯，亥卯未→辰，巳酉丑→午，申子辰→酉）
     /// </summary>
-    private static EarthlyBranch[]? CalculatePeachBlossom(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(inquiryTime, hexagram, PeachBlossomMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>桃花对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculatePeachBlossom(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayBranch(castingTime, hexagram, PeachBlossomMap);
 
     /// <summary>
     /// 计算将星（寅午戌→午，亥卯未→卯，巳酉丑→酉，申子辰→子）
     /// </summary>
-    private static EarthlyBranch[]? CalculateGeneralsStar(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(inquiryTime, hexagram, GeneralsStarMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>将星对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateGeneralsStar(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayBranch(castingTime, hexagram, GeneralsStarMap);
 
     /// <summary>
     /// 计算华盖（寅午戌→戌，亥卯未→未，巳酉丑→丑，申子辰→辰）
     /// </summary>
-    private static EarthlyBranch[]? CalculateCanopy(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(inquiryTime, hexagram, CanopyMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>华盖对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateCanopy(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayBranch(castingTime, hexagram, CanopyMap);
 
     /// <summary>
     /// 计算谋星（寅午戌→辰，亥卯未→丑，巳酉丑→未，申子辰→戌）
     /// </summary>
-    private static EarthlyBranch[]? CalculateStarOfStrategy(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(inquiryTime, hexagram, StarOfStrategyMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>谋星对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateStarOfStrategy(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayBranch(castingTime, hexagram, StarOfStrategyMap);
 
     /// <summary>
     /// 计算灾煞（寅午戌→子，亥卯未→酉，巳酉丑→卯，申子辰→午）
     /// </summary>
-    private static EarthlyBranch[]? CalculateDisasterMalignity(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(inquiryTime, hexagram, DisasterMalignityMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>灾煞对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateDisasterMalignity(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayBranch(castingTime, hexagram, DisasterMalignityMap);
 
     /// <summary>
     /// 计算劫煞（寅午戌→亥，亥卯未→申，巳酉丑→寅，申子辰→巳）
     /// </summary>
-    private static EarthlyBranch[]? CalculateRobberyMalignity(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(inquiryTime, hexagram, RobberyMalignityMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>劫煞对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateRobberyMalignity(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayBranch(castingTime, hexagram, RobberyMalignityMap);
 
     /// <summary>
     /// 计算亡神（寅午戌→巳，亥卯未→寅，巳酉丑→申，申子辰→亥）
     /// </summary>
-    private static EarthlyBranch[]? CalculateDeathSpirit(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(inquiryTime, hexagram, DeathSpiritMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>亡神对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateDeathSpirit(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByDayBranch(castingTime, hexagram, DeathSpiritMap);
 
     /// <summary>
     /// 计算天医（月支退一位）
     /// </summary>
-    private static EarthlyBranch[]? CalculateCelestialPhysician(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByMonthBranch(inquiryTime, hexagram, CelestialPhysicianMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>天医对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateCelestialPhysician(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByMonthBranch(castingTime, hexagram, CelestialPhysicianMap);
 
     /// <summary>
     /// 计算天喜（寅卯辰→戌，巳午未→丑，申酉戌→辰，亥子丑→未）
     /// </summary>
-    private static EarthlyBranch[]? CalculateHeavenlyJoy(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByMonthBranch(inquiryTime, hexagram, HeavenlyJoyMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>天喜对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateHeavenlyJoy(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByMonthBranch(castingTime, hexagram, HeavenlyJoyMap);
 
     /// <summary>
     /// 计算床帐（火→辰戌丑未，金→寅卯，水→巳午，木→申酉，土→亥子）
     /// </summary>
-    private static EarthlyBranch[]? CalculateMarriageBed(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByHexagramBody(inquiryTime, hexagram, MarriageBedMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>床帐对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateMarriageBed(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByHexagramBody(castingTime, hexagram, MarriageBedMap);
 
     /// <summary>
     /// 计算香闺（火→寅卯，金→辰戌丑未，水→申酉，木→亥子，土→巳午）
     /// </summary>
-    private static EarthlyBranch[]? CalculateBridalChamber(InquiryTime inquiryTime, HexagramInstance hexagram)
-        => CalculateByHexagramBody(inquiryTime, hexagram, BridalChamberMap);
+    /// <param name="castingTime">起卦时间</param>
+    /// <param name="hexagram">主卦实例</param>
+    /// <returns>香闺对应的地支数组，返回 null 表示不适用</returns>
+    private static EarthlyBranch[]? CalculateBridalChamber(CastingTime castingTime, HexagramInstance hexagram)
+        => CalculateByHexagramBody(castingTime, hexagram, BridalChamberMap);
 
     #endregion
+
+    /// <inheritdoc />
+    public void Execute(DivinationContext context)
+    {
+        var stars = new Dictionary<SymbolicStar, EarthlyBranch[]>();
+        foreach (var (symbolicStar, calculator) in _calculators)
+        {
+            var branches = calculator(context.SixLineDivination.CastingTime, context.SixLineDivination.Original);
+            if (branches != null)
+            {
+                stars[symbolicStar] = branches;
+            }
+        }
+
+        context.SixLineDivination.SymbolicStars = new SymbolicStarCollection(stars);
+    }
 }

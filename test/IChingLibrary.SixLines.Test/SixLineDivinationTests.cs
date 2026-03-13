@@ -26,7 +26,7 @@ public class SixLineDivinationTests
         // Assert
         Assert.NotNull(divination);
         Assert.NotNull(divination.Original);
-        Assert.NotNull(divination.InquiryTime);
+        Assert.NotNull(divination.CastingTime);
         Assert.NotNull(divination.SymbolicStars);
     }
 
@@ -53,7 +53,7 @@ public class SixLineDivinationTests
         // Assert
         Assert.NotNull(divination);
         Assert.NotNull(divination.Original);
-        Assert.NotNull(divination.InquiryTime);
+        Assert.NotNull(divination.CastingTime);
     }
 
     [Fact]
@@ -137,16 +137,6 @@ public class SixLineDivinationTests
     }
 
     [Fact]
-    public void CreateBuilder_ShouldReturnValidBuilder()
-    {
-        // Act
-        var builder = SixLineDivination.CreateBuilder(TestInquiryTime);
-
-        // Assert
-        Assert.NotNull(builder);
-    }
-
-    [Fact]
     public void Create_WithChangingLines_ShouldCreateChangedHexagram()
     {
         // Arrange - 使用老阴老阳创建有变爻的卦
@@ -224,12 +214,12 @@ public class SixLineDivinationTests
         var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
 
         // Assert
-        Assert.NotNull(divination.InquiryTime);
+        Assert.NotNull(divination.CastingTime);
         Assert.NotNull(divination.Original);
         Assert.NotNull(divination.SymbolicStars);
 
-        // 检查 InquiryTime 属性
-        Assert.Equal(TestInquiryTime, divination.InquiryTime.Solar);
+        // 检查 CastingTime 属性
+        Assert.Equal(TestInquiryTime, divination.CastingTime.Solar);
 
         // 检查 Original 属性
         Assert.Equal(6, divination.Original.Lines.Count);

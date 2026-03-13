@@ -1,11 +1,9 @@
-using IChingLibrary.SixLines.Providers.Abstractions;
-
-namespace IChingLibrary.SixLines.Providers;
+﻿namespace IChingLibrary.SixLines.Builder;
 
 /// <summary>
-/// 默认世应位置提供器
+/// 安世应步骤
 /// </summary>
-internal class DefaultPositionProvider : IPositionProvider
+public sealed class PositionStep : IStructuringStep
 {
     /// <summary>
     /// 基于“天同二世天变五，地同四世地变初，本宫六世三世异，人同游魂人变归”口诀的映射表。
@@ -17,6 +15,8 @@ internal class DefaultPositionProvider : IPositionProvider
     /// <summary>
     /// 获取世爻和应爻的索引位置
     /// </summary>
+    /// <param name="hexagram">卦实例</param>
+    /// <returns>世爻索引与应爻索引</returns>
     private static (int worldlyIndex, int correspondingIndex) GetPositionIndices(HexagramInstance hexagram)
     {
         var hexagramValue = hexagram.Meta.Value;
@@ -28,20 +28,20 @@ internal class DefaultPositionProvider : IPositionProvider
         // bit0: 初爻与四爻相同; bit1: 二爻与五爻相同; bit2: 三爻与上爻相同
         var match = (~(lower ^ upper)) & 0b111;
 
-        int worldlyIndex = WorldlyPositions[match];
-        int correspondingIndex = (worldlyIndex + 3) % 6;
+        var worldlyIndex = WorldlyPositions[match];
+        var correspondingIndex = (worldlyIndex + 3) % 6;
 
         return (worldlyIndex, correspondingIndex);
     }
+    
+    /// <inheritdoc />
+    public IEnumerable<Type> RequiredSteps { get; } = [];
 
     /// <inheritdoc />
-    public void BindPositions(BuilderContext context)
+    public void Execute(DivinationContext context)
     {
-        if (context.Original is null)
-            throw new InvalidOperationException("未找到主卦");
-        
-        var (worldlyIndex, correspondingIndex) = GetPositionIndices(context.Original);
-        context.Original.Lines[worldlyIndex].Position = Position.Worldly;
-        context.Original.Lines[correspondingIndex].Position = Position.Corresponding;
+        var (worldlyIndex, correspondingIndex) = GetPositionIndices(context.SixLineDivination.Original);
+        context.SixLineDivination.Original.Lines[worldlyIndex].Position = Position.Worldly;
+        context.SixLineDivination.Original.Lines[correspondingIndex].Position = Position.Corresponding;
     }
 }

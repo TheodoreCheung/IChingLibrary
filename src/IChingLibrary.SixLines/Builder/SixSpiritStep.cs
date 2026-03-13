@@ -1,11 +1,9 @@
-using IChingLibrary.SixLines.Providers.Abstractions;
-
-namespace IChingLibrary.SixLines.Providers;
+﻿namespace IChingLibrary.SixLines.Builder;
 
 /// <summary>
-/// 默认六神提供器
+/// 绑六神步骤
 /// </summary>
-internal class DefaultSixSpiritProvider : ISixSpiritProvider
+public sealed class SixSpiritStep : IStructuringStep
 {
     /// <summary>
     /// 六神顺序：青龙、朱雀、勾陈、螣蛇、白虎、玄武
@@ -24,6 +22,8 @@ internal class DefaultSixSpiritProvider : ISixSpiritProvider
     /// 根据日干获取起始六神索引
     /// 规则：甲/乙日起青龙，丙/丁日起朱雀，戊/己日起勾陈，庚/辛日起螣蛇，壬/癸日起白虎
     /// </summary>
+    /// <param name="dayStem">日干</param>
+    /// <returns>起始六神索引</returns>
     private static int GetStartIndex(HeavenlyStem dayStem)
     {
         return dayStem.Value switch
@@ -37,24 +37,21 @@ internal class DefaultSixSpiritProvider : ISixSpiritProvider
             _ => 0
         };
     }
+    
+    /// <inheritdoc />
+    public IEnumerable<Type> RequiredSteps { get; } = [];
 
     /// <inheritdoc />
-    public void BindSixSpirits(BuilderContext context)
+    public void Execute(DivinationContext context)
     {
-        if (context.InquiryTime is null)
-            throw new InvalidOperationException("未找到起卦时间");
-        
-        if (context.Original is null)
-            throw new InvalidOperationException("未找到主卦");
-        
-        var dayStem = context.InquiryTime.Value.StemBranch.Day.Stem;
+        var dayStem = context.SixLineDivination.CastingTime.StemBranch.Day.Stem;
 
         // 根据日干确定起始六神（初爻）
         var startIndex = GetStartIndex(dayStem);
 
         for (var i = 0; i < 6; i++)
         {
-            context.Original.Lines[i].SixSpirit = SpiritsOrder[(startIndex + i) % 6];
+            context.SixLineDivination.Original.Lines[i].SixSpirit = SpiritsOrder[(startIndex + i) % 6];
         }
     }
 }

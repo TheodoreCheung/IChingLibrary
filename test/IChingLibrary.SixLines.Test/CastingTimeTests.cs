@@ -3,7 +3,7 @@ using IChingLibrary.Core;
 
 namespace IChingLibrary.SixLines.Test;
 
-public class InquiryTimeTests
+public class CastingTimeTests
 {
     public static readonly CultureInfo En = new("en");
 
@@ -21,7 +21,7 @@ public class InquiryTimeTests
         );
 
         // Act
-        var inquiryTime = new InquiryTime(solar, lunar, stemBranch);
+        var inquiryTime = new CastingTime(solar, lunar, stemBranch);
 
         // Assert
         Assert.Equal(solar, inquiryTime.Solar);
@@ -43,7 +43,7 @@ public class InquiryTimeTests
         );
 
         // Act
-        var inquiryTime = new InquiryTime(solar, lunar, stemBranch);
+        var inquiryTime = new CastingTime(solar, lunar, stemBranch);
         var copy = inquiryTime;
 
         // Assert
@@ -85,7 +85,7 @@ public class LunarStemBranchTests
         var lunarStemBranch = new LunarStemBranch(year, month, day, hour);
 
         // Act
-        CultureInfo.CurrentUICulture = InquiryTimeTests.En;
+        CultureInfo.CurrentUICulture = CastingTimeTests.En;
         var result = lunarStemBranch.ToString();
 
         // Assert

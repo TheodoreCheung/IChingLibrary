@@ -1,27 +1,11 @@
 using IChingLibrary.Core;
-using IChingLibrary.SixLines.Providers.Abstractions;
+using IChingLibrary.SixLines.Builder;
 
 namespace IChingLibrary.SixLines.Test;
 
 public class SixLineDivinationBuilderTests
 {
-    private static DateTimeOffset TestInquiryTime => new(2024, 1, 1, 12, 0, 0, TimeSpan.Zero);
-
-    private sealed class FixedInquiryTimeProvider : IInquiryTimeProvider
-    {
-        public InquiryTime ConvertFrom(DateTimeOffset dateTime)
-        {
-            var lunar = new DateTimeOffset(2020, 12, 30, 0, 0, 0, TimeSpan.Zero);
-            var stemBranch = new LunarStemBranch(
-                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Hai),
-                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Hai),
-                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Hai),
-                new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Hai)
-            );
-
-            return new InquiryTime(dateTime, lunar, stemBranch);
-        }
-    }
+    private static DateTimeOffset TestCastingTime => new(2024, 1, 1, 12, 0, 0, TimeSpan.Zero);
 
     [Fact]
     public void Builder_UseFourSymbols_ShouldAcceptValidArray()
@@ -38,10 +22,7 @@ public class SixLineDivinationBuilderTests
         };
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithDefaultSteps()
-            .Build();
+        var divination = SixLineDivination.Create(TestCastingTime, fourSymbols);
 
         // Assert
         Assert.NotNull(divination);
@@ -62,8 +43,9 @@ public class SixLineDivinationBuilderTests
         // Act & Assert
         Assert.Throws<ArgumentException>(() =>
         {
-            SixLineDivination.CreateBuilder(TestInquiryTime)
-                .UseFourSymbols(invalidFourSymbols);
+            SixLineDivination.CreateBuilder()
+                .UseMethod(new CoinCastingMethod(TestCastingTime, invalidFourSymbols))
+                .Build();
         });
     }
 
@@ -74,10 +56,7 @@ public class SixLineDivinationBuilderTests
         var fourSymbolValues = new byte[] { 7, 7, 7, 7, 7, 7 };
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbolValues)
-            .WithDefaultSteps()
-            .Build();
+        var divination = SixLineDivination.Create(TestCastingTime, fourSymbolValues);
 
         // Assert
         Assert.NotNull(divination);
@@ -91,10 +70,9 @@ public class SixLineDivinationBuilderTests
         var invalidValues = new byte[] { 7, 7, 7 };
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() =>
+        Assert.Throws<InvalidOperationException>(() =>
         {
-            SixLineDivination.CreateBuilder(TestInquiryTime)
-                .UseFourSymbols(invalidValues);
+            SixLineDivination.Create(TestCastingTime, invalidValues);
         });
     }
 
@@ -102,27 +80,11 @@ public class SixLineDivinationBuilderTests
     public void Builder_UseTimeBasedHexagram_ShouldCreateValidDivination()
     {
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseTimeBasedHexagram()
-            .WithDefaultSteps()
-            .Build();
+        var divination = SixLineDivination.Create(TestCastingTime);
 
         // Assert
         Assert.NotNull(divination);
         Assert.NotNull(divination.Original);
-    }
-
-    [Fact]
-    public void Builder_UseTimeBasedHexagram_ShouldUseInquiryTimeProvider()
-    {
-        var provider = new FixedInquiryTimeProvider();
-
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseTimeBasedHexagram()
-            .WithInquiryTimeProvider(provider)
-            .Build();
-
-        Assert.Equal(Hexagram.Create(Trigram.Kan, Trigram.Dui), divination.Original.Meta);
     }
 
     [Fact]
@@ -134,10 +96,7 @@ public class SixLineDivinationBuilderTests
         var changingLineNumber = 2;
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseRandomHexagram(upperTrigramNumber, lowerTrigramNumber, changingLineNumber)
-            .WithDefaultSteps()
-            .Build();
+        var divination = SixLineDivination.Create(TestCastingTime, upperTrigramNumber, lowerTrigramNumber, changingLineNumber);
 
         // Assert
         Assert.NotNull(divination);
@@ -149,8 +108,7 @@ public class SixLineDivinationBuilderTests
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
         {
-            SixLineDivination.CreateBuilder(TestInquiryTime)
-                .UseRandomHexagram(-1, 1, 1);
+            SixLineDivination.Create(TestCastingTime, -1, 1, 1);
         });
     }
 
@@ -162,10 +120,7 @@ public class SixLineDivinationBuilderTests
         var lowerTrigramNumber = 3;
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseRandomHexagram(upperTrigramNumber, lowerTrigramNumber)
-            .WithDefaultSteps()
-            .Build();
+        var divination = SixLineDivination.Create(TestCastingTime, upperTrigramNumber, lowerTrigramNumber);
 
         // Assert
         Assert.NotNull(divination);
@@ -180,10 +135,7 @@ public class SixLineDivinationBuilderTests
         Hexagram? changed = null;
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseHexagram(original, changed)
-            .WithDefaultSteps()
-            .Build();
+        var divination = SixLineDivination.Create(TestCastingTime, original, changed);
 
         // Assert
         Assert.NotNull(divination);
@@ -198,10 +150,7 @@ public class SixLineDivinationBuilderTests
         var changed = Hexagram.TheReceptive;
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseHexagram(original, changed)
-            .WithDefaultSteps()
-            .Build();
+        var divination = SixLineDivination.Create(TestCastingTime, original, changed);
 
         // Assert
         Assert.NotNull(divination);
@@ -215,9 +164,9 @@ public class SixLineDivinationBuilderTests
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new NajiaStep())
             .Build();
 
         // Assert
@@ -236,10 +185,10 @@ public class SixLineDivinationBuilderTests
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
-            .WithPosition()
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new NajiaStep())
+            .WithStep(new PositionStep())
             .Build();
 
         // Assert
@@ -258,10 +207,10 @@ public class SixLineDivinationBuilderTests
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
-            .WithSixKin()
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new NajiaStep())
+            .WithStep(new SixKinStep())
             .Build();
 
         // Assert
@@ -280,10 +229,10 @@ public class SixLineDivinationBuilderTests
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
-            .WithSixSpirit()
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new NajiaStep())
+            .WithStep(new SixSpiritStep())
             .Build();
 
         // Assert
@@ -301,11 +250,11 @@ public class SixLineDivinationBuilderTests
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
-            .WithSixKin()
-            .WithHiddenDeity()
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new NajiaStep())
+            .WithStep(new SixKinStep())
+            .WithStep(new HiddenDeityStep())
             .Build();
 
         // Assert
@@ -320,10 +269,10 @@ public class SixLineDivinationBuilderTests
 
         var ex = Assert.Throws<InvalidOperationException>(() =>
         {
-            SixLineDivination.CreateBuilder(TestInquiryTime)
-                .UseFourSymbols(fourSymbols)
-                .WithNajia()
-                .WithHiddenDeity()
+            SixLineDivination.CreateBuilder()
+                .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+                .WithStep(new NajiaStep())
+                .WithStep(new HiddenDeityStep())
             .Build();
         });
 
@@ -337,43 +286,16 @@ public class SixLineDivinationBuilderTests
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
-            .WithSixKin()
-            .WithSymbolicStars()
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new NajiaStep())
+            .WithStep(new SixKinStep())
+            .WithStep(new SymbolicStarStep())
             .Build();
 
         // Assert
         Assert.NotNull(divination.SymbolicStars);
         Assert.NotEmpty(divination.SymbolicStars.AllStars);
-    }
-
-    [Fact]
-    public void Builder_WithSymbolicStars_Configured_ShouldRespectConfiguration()
-    {
-        // Arrange
-        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
-
-        // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
-            .WithSixKin()
-            .WithSymbolicStars(provider =>
-            {
-                // 只保留部分神煞
-                provider.Remove(SymbolicStar.SalarySpirit);
-                provider.Remove(SymbolicStar.CultureFlourish);
-                provider.Remove(SymbolicStar.YangBlade);
-                provider.Remove(SymbolicStar.PostHorse);
-                provider.Remove(SymbolicStar.PeachBlossom);
-            })
-            .Build();
-
-        // Assert
-        Assert.NotNull(divination.SymbolicStars);
-        Assert.True(divination.SymbolicStars.AllStars.Count <= 16);
     }
 
     [Fact]
@@ -383,10 +305,7 @@ public class SixLineDivinationBuilderTests
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithDefaultSteps()
-            .Build();
+        var divination = SixLineDivination.Create(TestCastingTime, fourSymbols);
 
         // Assert
         Assert.NotNull(divination.Original);
@@ -428,9 +347,9 @@ public class SixLineDivinationBuilderTests
         };
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new NajiaStep())
             .Build();
 
         // Assert
@@ -458,10 +377,10 @@ public class SixLineDivinationBuilderTests
         };
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
-            .WithSixKin()
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new NajiaStep())
+            .WithStep(new SixKinStep())
             .Build();
 
         // Assert
@@ -480,7 +399,7 @@ public class SixLineDivinationBuilderTests
         // Act & Assert
         Assert.Throws<InvalidOperationException>(() =>
         {
-            SixLineDivination.CreateBuilder(TestInquiryTime)
+            SixLineDivination.CreateBuilder()
                 .WithDefaultSteps()
                 .Build();
         });
@@ -493,14 +412,14 @@ public class SixLineDivinationBuilderTests
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
 
         // Act
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
-            .WithPosition()
-            .WithSixKin()
-            .WithHiddenDeity()
-            .WithSixSpirit()
-            .WithSymbolicStars()
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new NajiaStep())
+            .WithStep(new PositionStep())
+            .WithStep(new SixKinStep())
+            .WithStep(new HiddenDeityStep())
+            .WithStep(new SixSpiritStep())
+            .WithStep(new SymbolicStarStep())
             .Build();
 
         // Assert
@@ -516,10 +435,10 @@ public class SixLineDivinationBuilderTests
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
 
         // Act - 只添加纳甲和六亲
-        var divination = SixLineDivination.CreateBuilder(TestInquiryTime)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
-            .WithSixKin()
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new NajiaStep())
+            .WithStep(new SixKinStep())
             .Build();
 
         // Assert
@@ -538,11 +457,11 @@ public class SixLineDivinationBuilderTests
     {
         // Arrange
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
-        var builder = SixLineDivination.CreateBuilder(TestInquiryTime);
+        var builder = SixLineDivination.CreateBuilder();
 
         // Act
-        var result1 = builder.UseFourSymbols(fourSymbols);
-        var result2 = builder.WithNajia();
+        var result1 = builder.UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols));
+        var result2 = builder.WithStep(new NajiaStep());
 
         // Assert - 流式 API 应该返回同一个 builder 实例
         Assert.Same(builder, result1);

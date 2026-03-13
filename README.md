@@ -10,7 +10,7 @@
 - **世应位置计算**：根据八宫卦自动计算世爻和应爻位置
 - **六亲计算**：根据五行生克关系计算六亲（父母、兄弟、妻财、官鬼、子孙）
 - **六神起法**：根据日干自动起六神（青龙、朱雀、勾陈、螣蛇、白虎、玄武）
-- **神煞系统（Symbolic Stars）**：支持16 种神煞计算（贵人、禄神、文昌、驿马、桃花等），支持自定义神煞扩展
+- **神煞系统（Symbolic Stars）**：支持16 种神煞计算（贵人、禄神、文昌、驿马、桃花等），可基于源码扩展
 - **卦属特性**：支持六冲卦、六合卦、游魂卦、归魂卦的识别
 - **灵活的构建器模式**：可自定义占卜流程，选择需要的计算步骤
 - **SOLID 设计原则**：清晰的接口抽象，易于扩展和测试
@@ -47,43 +47,39 @@ IChingLibrary/
 │   ├── IChingLibrary.Generators/         # Roslyn 增量源代码生成器
 │   │
 │   └── IChingLibrary.SixLines/           # 六爻占卜实现
-│       ├── Core/                         # 核心枚举类型
+│       ├── Builder/                      # 起卦构建器与结构化步骤
+│       │   ├── ICastingMethod            # 起卦方式接口
+│       │   ├── IStructuringStep          # 结构化步骤接口
+│       │   ├── SixLineDivinationBuilder  # 构建器
+│       │   ├── DivinationContext         # 构建上下文
+│       │   ├── DefaultCastingMethods     # 内置起卦方式
+│       │   ├── NajiaStep                 # 纳甲步骤
+│       │   ├── PositionStep              # 世应步骤
+│       │   ├── SixKinStep                # 六亲步骤
+│       │   ├── SixSpiritStep             # 六神步骤
+│       │   ├── HiddenDeityStep           # 伏神步骤
+│       │   └── SymbolicStarStep          # 神煞步骤
+│       ├── Core/                         # 核心类型
+│       │   ├── CastingTime               # 起卦时间
 │       │   ├── HexagramNature            # 卦属特性（六冲、六合、游魂、归魂）
 │       │   ├── LinePosition              # 爻位置（初爻到上爻）
 │       │   ├── Position                  # 位置（世爻、应爻）
 │       │   ├── SixKin                    # 六亲
 │       │   ├── SixSpirit                 # 六神
-│       │   └── SymbolicStar              # 神煞类型
+│       │   ├── SymbolicStar              # 神煞类型
+│       │   ├── SymbolicStarCollection    # 神煞集合
+│       │   └── SixLineDivination         # 六爻占卜主类
 │       ├── Extensions/                   # 扩展方法
 │       │   ├── HexagramExtensions        # 卦扩展（卦属特性查询）
 │       │   ├── HexagramInstanceExtensions # 卦实例扩展（卦身查找等）
 │       │   └── LineExtensions            # 爻扩展（爻辞获取）
-│       ├── SixLineDivination             # 六爻占卜主类
-│       ├── SymbolicStarCollection        # 神煞集合
-│       ├── SymbolicStarSelection         # 神煞选择器
 │       ├── HexagramInstance              # 卦实例
-│       ├── Line                          # 爻
-│       ├── InquiryTime                   # 问时信息
-│       ├── Builders/                     # 构建器模式
-│       │   ├── SixLineDivinationBuilder  # 构建器
-│       │   ├── BuilderContext            # 构建器上下文
-│       │   ├── IBuildStep                # 步骤接口
-│       │   ├── DefaultSteps              # 默认步骤实现
-│       │   └── HexagramGenerator         # 卦生成器（internal）
-│       └── Providers/                    # Provider 模式
-│           ├── Abstractions/             # 接口定义
-│           │   ├── IInquiryTimeProvider
-│           │   ├── INajiaProvider
-│           │   ├── IPositionProvider
-│           │   ├── ISixKinProvider
-│           │   ├── ISixSpiritProvider
-│           │   ├── IHiddenDeityProvider
-│           │   └── ISymbolicStarProvider
-│           └── Default*.cs               # 默认实现
+│       └── Line                          # 爻
 └── test/                                 # 测试项目
     ├── IChingLibrary.Core.Test/          # 核心库测试
     └── IChingLibrary.SixLines.Test/      # 六爻库测试
 ```
+
 
 ## 快速开始
 
@@ -218,105 +214,78 @@ foreach (var line in divination2.Original.Lines)
 
 ### 5. 自定义流程（构建器模式）
 
-使用构建器自由选择需要的步骤：
+使用构建器自由选择起卦方式与结构化步骤：
 
 ```csharp
+using IChingLibrary.Core;
+using IChingLibrary.SixLines;
+using IChingLibrary.SixLines.Builder;
+
 // 时间起卦 + 自定义步骤组合
 var divination = SixLineDivination
-    .CreateBuilder(DateTimeOffset.Now)
-    .UseTimeBasedHexagram()
-    .WithNajia()           // 纳甲
-    .WithPosition()        // 世应位置
-    .WithSixKin()          // 六亲
+    .CreateBuilder()
+    .UseMethod(new TimeBasedCastingMethod(DateTimeOffset.Now))
+    .WithStep(new NajiaStep())       // 纳甲
+    .WithStep(new PositionStep())    // 世应位置
+    .WithStep(new SixKinStep())      // 六亲
     // 不需要六神
     .Build();
 
 // 随机数起卦 + 只纳甲，不需要其他步骤
-var divination = SixLineDivination
-    .CreateBuilder(DateTimeOffset.Now)
-    .UseRandomHexagram(15, 23)
-    .WithNajia()
+var divination2 = SixLineDivination
+    .CreateBuilder()
+    .UseMethod(new NumberBasedCastingMethod(DateTimeOffset.Now, 15, 23))
+    .WithStep(new NajiaStep())
     .Build();
 
 // 直接指定四象值 + 默认流程
-var divination = SixLineDivination
-    .CreateBuilder(DateTimeOffset.Now)
-    .UseFourSymbols([9, 8, 7, 6, 8, 7])
+var divination3 = SixLineDivination
+    .CreateBuilder()
+    .UseMethod(new CoinCastingMethod(DateTimeOffset.Now,
+    [
+        FourSymbol.OldYang,  // 9
+        FourSymbol.YoungYin, // 8
+        FourSymbol.YoungYang,// 7
+        FourSymbol.OldYin,   // 6
+        FourSymbol.YoungYin, // 8
+        FourSymbol.YoungYang // 7
+    ]))
     .WithDefaultSteps()
     .Build();
 
-// 直接指定卦象 + 自定义流程
-var divination = SixLineDivination
-    .CreateBuilder(DateTimeOffset.Now)
-    .UseHexagram(Hexagram.TheCreative, Hexagram.TheReceptive)
+// 直接指定卦象 + 默认流程
+var divination4 = SixLineDivination
+    .CreateBuilder()
+    .UseMethod(new SpecifyingHexagramCastingMethod(DateTimeOffset.Now, Hexagram.TheCreative, Hexagram.TheReceptive))
     .WithDefaultSteps()
     .Build();
 
 // 只创建卦实例，不执行任何计算步骤
-var divination = SixLineDivination
-    .CreateBuilder(DateTimeOffset.Now)
-    .UseFourSymbols([7, 7, 7, 7, 7, 7])
+var divination5 = SixLineDivination
+    .CreateBuilder()
+    .UseMethod(new CoinCastingMethod(DateTimeOffset.Now,
+    [
+        FourSymbol.YoungYang,
+        FourSymbol.YoungYang,
+        FourSymbol.YoungYang,
+        FourSymbol.YoungYang,
+        FourSymbol.YoungYang,
+        FourSymbol.YoungYang
+    ]))
     .Build();
 ```
 
-### 6. 使用自定义 Provider
+### 6. 自定义结构化步骤
 
-实现 Provider 接口并注入到构建器中：
+`IStructuringStep` 是结构化步骤扩展点，主要用于库内扩展。若需在外部程序集中访问占卜数据并实现自定义步骤，请基于源码进行扩展，或通过 `InternalsVisibleTo` 开放内部访问。
 
-```csharp
-using IChingLibrary.SixLines.Providers.Abstractions;
+### 7. 自定义起卦方式
 
-// 自定义纳甲法 Provider
-public class MyCustomNajiaProvider : INajiaProvider
-{
-    public void BindStemBranches(BuilderContext context)
-    {
-        // 自定义纳甲法实现
-        // 可访问 context.Original、context.Changed、context.InquiryTime 等
-    }
-}
-
-// 使用自定义 Provider
-var divination = SixLineDivination
-    .CreateBuilder(DateTimeOffset.Now)
-    .UseTimeBasedHexagram()
-    .WithNajia(new MyCustomNajiaProvider())
-    .WithSixKin()
-    .Build();
-```
-
-### 7. 完全自定义步骤
-
-实现 `IBuildStep` 接口创建自定义步骤：
-
-```csharp
-using IChingLibrary.SixLines;
-
-// 自定义步骤
-public class MyCustomStep : IBuildStep
-{
-    public void Execute(BuilderContext context)
-    {
-        // 通过 context 访问和修改数据
-        // context.Original - 主卦
-        // context.Changed - 变卦
-        // context.InquiryTime - 问时信息
-        // context.SymbolicStars - 神煞集合
-    }
-}
-
-// 使用自定义步骤
-var divination = SixLineDivination
-    .CreateBuilder(DateTimeOffset.Now)
-    .UseTimeBasedHexagram()
-    .WithNajia()
-    .WithCustomStep(new MyCustomStep())
-    .Build();
-```
+`ICastingMethod` 是起卦方式扩展点，默认用于库内实现。若需自定义起卦方式并返回 `SixLineDivination`，建议基于源码扩展或开放内部构造器访问。
 
 ### 8. 变卦处理
 
-变卦（有变爻的卦）会自动计算，但变卦只计算纳甲和六亲：
+变卦（有变爻的卦）会自动计算。默认流程中，变卦仅进行纳甲与六亲计算，世应、六神、伏神与神煞仅对主卦计算：
 
 ```csharp
 // 老阳（9）和老阴（6）为变爻
@@ -331,7 +300,6 @@ if (divination.Changed != null)
     Console.WriteLine($"主卦：{divination.Original.Meta.Label}");
     Console.WriteLine($"变卦：{divination.Changed.Meta.Label}");
 
-    // 变卦的六亲使用主卦的卦宫五行计算
     foreach (var line in divination.Changed.Lines)
     {
         Console.WriteLine($"{line.LinePosition.Label}: {line.SixKin.Label}");
@@ -340,6 +308,7 @@ if (divination.Changed != null)
 ```
 
 ### 9. 神煞系统（Symbolic Stars）
+神煞系统（Symbolic Stars）
 
 神煞系统提供 16 种预定义神煞的计算，支持自定义扩展：
 
@@ -351,7 +320,8 @@ using IChingLibrary.SixLines;
 var divination = SixLineDivination.Create(DateTimeOffset.Now);
 
 // 查询卦身
-Console.WriteLine($"卦身：{divination.SymbolicStars?.HexagramBody?.Label ?? "无"}");
+var hexagramBody = divination.Original.FindHexagramBody();
+Console.WriteLine($"卦身：{hexagramBody?.Label ?? "无"}");
 
 // 查询贵人（多值神煞）
 var nobleman = divination.SymbolicStars?.GetStars(SymbolicStar.Nobleman);
@@ -361,9 +331,9 @@ Console.WriteLine($"贵人：{string.Join("、", nobleman?.Select(b => b.Label) 
 var salarySpirit = divination.SymbolicStars?.GetStars(SymbolicStar.SalarySpirit);
 Console.WriteLine($"禄神：{salarySpirit?[0].Label ?? "无"}");
 
-// 检查某个爻上的神煞
+// 检查某个爻上的神煞（按地支查询）
 var line = divination.Original.Lines[0];
-var lineStars = divination.SymbolicStars?.GetStarsForLine(line) ?? [];
+var lineStars = divination.SymbolicStars?.GetStarsForBranch(line.StemBranch.Branch) ?? [];
 Console.WriteLine($"{line.LinePosition.Label}神煞：{string.Join("、", lineStars.Select(s => s.Label))}");
 
 // 检查某个地支上的所有神煞
@@ -372,77 +342,12 @@ var branchStars = divination.SymbolicStars?.GetStarsForBranch(branch) ?? [];
 Console.WriteLine($"子神煞：{string.Join("、", branchStars.Select(s => s.Label))}");
 ```
 
-#### 自定义神煞集合
+#### 自定义神煞
 
-```csharp
-// 移除某些神煞
-var divination = SixLineDivination
-    .CreateBuilder(DateTimeOffset.Now)
-    .WithDefaultSteps()
-    .WithSymbolicStars(selection =>
-    {
-        selection.Remove(SymbolicStar.YangBlade);        // 移除羊刃
-        selection.Remove(SymbolicStar.RobberyMalignity); // 移除劫煞
-        selection.Remove(SymbolicStar.DeathSpirit);      // 移除亡神
-    })
-    .Build();
-
-// 只计算特定神煞
-var divination = SixLineDivination
-    .CreateBuilder(DateTimeOffset.Now)
-    .WithDefaultSteps()
-    .WithSymbolicStars(selection =>
-    {
-        selection.Clear();
-        selection.Add(SymbolicStar.Nobleman);
-        selection.Add(SymbolicStar.SalarySpirit);
-        selection.Add(SymbolicStar.PeachBlossom);
-    })
-    .Build();
-```
-
-#### 添加自定义神煞类型
-
-```csharp
-using IChingLibrary.Core;
-using IChingLibrary.SixLines;
-using IChingLibrary.SixLines.Providers;
-
-// 创建自定义神煞类型
-var myCustomStar = SymbolicStar.CreateCustom("MyCustomStar");
-
-// 自定义神煞计算委托
-EarthlyBranch[]? CalculateMyCustomStar(InquiryTime inquiryTime, HexagramInstance hexagram)
-{
-    // 示例：根据日支计算自定义神煞
-    var dayBranch = inquiryTime.StemBranch.Day.Branch;
-    // 返回包含该神煞的地支数组，或 null 表示不适用
-    return [dayBranch];
-}
-
-// 使用 WithSymbolicStars 配置自定义神煞
-var divination = SixLineDivination
-    .CreateBuilder(DateTimeOffset.Now)
-    .WithDefaultSteps()
-    .WithSymbolicStars(provider =>
-    {
-        // 移除某些默认神煞（可选）
-        provider.Remove(SymbolicStar.YangBlade);
-        provider.Remove(SymbolicStar.RobberyMalignity);
-
-        // 添加自定义神煞计算器
-        provider.Add(myCustomStar, CalculateMyCustomStar);
-    })
-    .Build();
-```
-
-**说明**：
-- `DefaultSymbolicStarProvider` 使用委托模式管理神煞计算器
-- 通过 `provider.Add(SymbolicStar, SymbolicStarCalculatorDelegate)` 添加自定义神煞
-- 通过 `provider.Remove(SymbolicStar)` 移除不需要的神煞
-- 默认神煞计算器已自动注册，只需添加或覆盖需要的计算器
+默认流程包含 `SymbolicStarStep`（内置 16 种神煞）。如需扩展神煞计算，请基于源码扩展结构化步骤，或通过 `InternalsVisibleTo` 开放内部访问后进行定制。
 
 #### 预定义神煞类型
+
 
 | 中文名 | 英文名 | 计算依据 |
 |--------|--------|----------|
@@ -955,86 +860,68 @@ Console.WriteLine(Hexagram.TheCreative.UniqueKey);  // 输出：Hexagram.TheCrea
 
 | 方法 | 说明 |
 |------|------|
-| `CreateBuilder(DateTimeOffset)` | 创建构建器（需配合 Use 系列方法选择起卦方式） |
+| `CreateBuilder()` | 创建构建器 |
 
 #### 属性
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| `InquiryTime` | `InquiryTime` | 问时信息 |
+| `CastingTime` | `CastingTime` | 起卦时间 |
 | `Original` | `HexagramInstance` | 主卦 |
 | `Changed` | `HexagramInstance?` | 变卦（如有） |
 | `SymbolicStars` | `SymbolicStarCollection?` | 神煞集合 |
 
 ### SixLineDivinationBuilder
 
-构建器类，用于自定义占卜流程。
+构建器类，用于自定义占卜流程。`ICastingMethod` 与 `IStructuringStep` 为扩展点，默认主要用于库内实现。
 
-#### 起卦方法（Use 系列方法，必须调用其中一个）
-
-| 方法 | 说明 |
-|------|------|
-| `UseTimeBasedHexagram()` | 使用时间起卦法 |
-| `UseRandomHexagram(int, int, int?)` | 使用随机数起卦法（上卦数、下卦数、动爻数可选） |
-| `UseFourSymbols(FourSymbol[])` | 使用指定的四象数组（数组顺序：从初爻到上爻） |
-| `UseFourSymbols(byte[])` | 使用指定的四象值数组（数组顺序：从初爻到上爻） |
-| `UseHexagram(Hexagram, Hexagram?)` | 使用指定的卦象（主卦、变卦可选） |
-
-#### 流程配置方法（With 系列方法）
+#### 起卦方式（必须指定）
 
 | 方法 | 说明 |
 |------|------|
-| `WithInquiryTimeProvider(IInquiryTimeProvider)` | 设置问时转换器 |
-| `WithNajia(INajiaProvider?)` | 添加纳甲步骤（主卦和变卦） |
-| `WithPosition(IPositionProvider?)` | 添加世应位置步骤（仅主卦） |
-| `WithSixKin(ISixKinProvider?)` | 添加六亲步骤（主卦和变卦） |
-| `WithSixSpirit(ISixSpiritProvider?)` | 添加六神步骤（仅主卦） |
-| `WithHiddenDeity(IHiddenDeityProvider?)` | 添加伏神步骤（仅主卦） |
-| `WithSymbolicStars(Action<DefaultSymbolicStarProvider>?)` | 配置神煞计算器 |
-| `WithDefaultSteps()` | 添加默认完整流程 |
-| `WithCustomStep(IBuildStep)` | 添加自定义步骤 |
+| `UseMethod(ICastingMethod)` | 指定起卦方式 | 
+
+#### 流程配置方法
+
+| 方法 | 说明 |
+|------|------|
+| `WithDefaultSteps()` | 添加默认完整流程（纳甲、世应、六亲、六神、伏神、神煞） |
+| `WithStep(IStructuringStep)` | 添加自定义结构化步骤 |
 | `Build()` | 构建占卜实例 |
 
-### BuilderContext
+### ICastingMethod
 
-构建器上下文，在步骤之间传递数据。
-
-#### 属性
-
-| 属性 | 类型 | 说明 |
-|------|------|------|
-| `SolarInquiryTime` | `DateTimeOffset` | 公历起卦时间（只读） |
-| `InquiryTime` | `InquiryTime?` | 问时信息（阴历、干支等） |
-| `FourSymbols` | `FourSymbol[]?` | 起卦六个爻的四象（从初爻到上爻） |
-| `Original` | `HexagramInstance?` | 主卦实例 |
-| `Changed` | `HexagramInstance?` | 变卦实例 |
-| `SymbolicStars` | `SymbolicStarCollection?` | 神煞集合 |
-
-### IBuildStep
-
-构建步骤接口，用于实现自定义步骤。
+起卦方式接口。
 
 ```csharp
-public interface IBuildStep
+public interface ICastingMethod
 {
-    void Execute(BuilderContext context);
+    SixLineDivination Cast();
 }
 ```
 
-### Provider 接口
+### IStructuringStep
 
-所有 Provider 接口现在都使用 `BuilderContext` 作为参数：
+结构化步骤接口。
 
-| 接口 | 方法 | 说明 |
+```csharp
+public interface IStructuringStep
+{
+    IEnumerable<Type> RequiredSteps { get; }
+    void Execute(DivinationContext context);
+}
+```
+
+### DivinationContext
+
+构建器上下文，用于在步骤中访问与写入占卜数据（属性为内部可见）。
+
+| 属性 | 类型 | 说明 |
 |------|------|------|
-| `INajiaProvider` | `BindStemBranches(BuilderContext)` | 纳甲法 |
-| `IPositionProvider` | `BindPositions(BuilderContext)` | 世应位置 |
-| `ISixKinProvider` | `BindSixKin(BuilderContext)` | 六亲 |
-| `ISixSpiritProvider` | `BindSixSpirits(BuilderContext)` | 六神 |
-| `IHiddenDeityProvider` | `BindHiddenDeity(BuilderContext, INajiaProvider, ISixKinProvider)` | 伏神 |
-| `ISymbolicStarProvider` | `Calculate(BuilderContext)` | 神煞 |
+| `SixLineDivination` | `SixLineDivination` | 占卜数据容器（主卦、变卦、起卦时间、神煞等，内部可见） |
 
 ### IChingTranslationManager
+
 
 易学翻译管理器，提供多语言支持的核心 API。
 
@@ -1115,55 +1002,47 @@ IChingTranslationManager.ResetToDefault();
 默认完整流程包含以下步骤：
 
 ```
-1. 选择起卦方式（Use 系列方法）
-   ├── UseTimeBasedHexagram()     - 时间起卦法
-   ├── UseRandomHexagram()        - 随机数起卦法
-   ├── UseFourSymbols()           - 指定四象值
-   └── UseHexagram()              - 指定卦象
+1. 指定起卦方式（ICastingMethod）
+   ├── TimeBasedCastingMethod
+   ├── NumberBasedCastingMethod
+   ├── CoinCastingMethod
+   └── SpecifyingHexagramCastingMethod
    ↓
-2. 参数验证
+2. 执行 Cast() 生成种子数据（CastingTime + 主卦/变卦）
    ↓
-3. 转换问时信息（阳历 → 阴历 → 干支）
+3. 创建 DivinationContext
    ↓
-4. 从四象值计算卦值（确定变爻）
+4. 结构化步骤拓扑排序（基于 RequiredSteps 依赖）
    ↓
-5. 创建主卦实例
+5. 依次执行步骤
+   ├── NajiaStep
+   ├── PositionStep
+   ├── SixKinStep
+   ├── SixSpiritStep
+   ├── HiddenDeityStep
+   └── SymbolicStarStep
    ↓
-6. 纳甲（绑定干支）
-   ↓
-7. 计算世应位置
-   ↓
-8. 计算六亲
-   ↓
-9. 计算伏神
-   ↓
-10. 计算六神
-   ↓
-11. 计算神煞（包含卦身）
-   ↓
-12. 生成变卦（如有变爻）
-   ↓
-13. 返回占卜实例
+6. 返回占卜实例
 ```
 
 ## 设计原则
+
 
 本项目遵循以下设计原则：
 
 ### SOLID 原则
 
 - **单一职责原则（SRP）**：每个类只负责一个功能
-  - `HexagramGenerator`：负责从各种方式生成四象数组
-  - `SixLineDivinationBuilder`：负责步骤配置和实例构建
-  - `SixLineDivination`：负责提供统一的 API 入口
-  - 每个 Provider：负责单一的计算功能
+  - `ICastingMethod` 实现：负责起卦与生成种子数据
+  - `SixLineDivinationBuilder`：负责步骤配置、排序与构建
+  - `IStructuringStep` 实现：负责单一结构化计算
+  - `SixLineDivination`：统一 API 入口
 
 - **开闭原则（OCP）**：通过接口扩展，无需修改现有代码
-  - 添加新起卦方式：只需扩展 `HexagramGenerator`
-  - 添加新计算步骤：实现 `IBuildStep` 接口
-  - 添加新 Provider：实现相应的 Provider 接口
+  - 添加新起卦方式：实现 `ICastingMethod`
+  - 添加新结构化步骤：实现 `IStructuringStep`
 
-- **里氏替换原则（LSP）**：所有 Provider 实现可互相替换
+- **里氏替换原则（LSP）**：不同起卦方式与步骤实现可互相替换
 
 - **接口隔离原则（ISP）**：接口职责明确，不强迫实现不需要的方法
 
@@ -1171,36 +1050,39 @@ IChingTranslationManager.ResetToDefault();
 
 ### 架构设计
 
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                     SixLineDivination                           │
 │  - 统一的 API 入口                                               │
-│  - 委托给 HexagramGenerator 生成四象                             │
-│  - 委托给 SixLineDivinationBuilder 构建                         │
+│  - 提供 Create(...) 与 CreateBuilder()                          │
 └─────────────────────────────────────────────────────────────────┘
                               │
-                ┌─────────────┴─────────────┐
-                ▼                           ▼
-┌──────────────────────────────────┐  ┌──────────────────────────────┐
-│     HexagramGenerator (internal) │  │  SixLineDivinationBuilder   │
-│  - FromTime()                    │  │  - WithNajia()               │
-│  - FromRandomNumbers()           │  │  - WithPosition()            │
-│  - FromHexagrams()               │  │  - WithSixKin()              │
-│  - FromFourSymbols()             │  │  - WithSixSpirit()           │
-│  → 返回 FourSymbol[]             │  │  - Build()                   │
-└──────────────────────────────────┘  └──────────────────────────────┘
-                                                │
-                                                ▼
-                                    ┌──────────────────────────────┐
-                                    │       BuilderContext         │
-                                    │  - SolarInquiryTime          │
-                                    │  - InquiryTime               │
-                                    │  - Original / Changed        │
-                                    │  - SymbolicStars             │
-                                    └──────────────────────────────┘
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                   SixLineDivinationBuilder                       │
+│  - UseMethod(ICastingMethod)                                     │
+│  - WithDefaultSteps()/WithStep(...)                               │
+│  - Build()                                                       │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+          ┌───────────────────┴───────────────────┐
+          ▼                                       ▼
+┌──────────────────────────────┐   ┌──────────────────────────────┐
+│      ICastingMethod           │   │      IStructuringStep        │
+│  - TimeBased/Number/Coin/...  │   │  - RequiredSteps              │
+│  - Cast() 生成种子数据          │   │  - Execute(DivinationContext) │
+└──────────────────────────────┘   └──────────────────────────────┘
+                              │
+                              ▼
+                    ┌──────────────────────────┐
+                    │     DivinationContext     │
+                    │  - SixLineDivination      │
+                    └──────────────────────────┘
 ```
 
 ## 技术栈
+
 
 - **目标框架**: .NET 10.0
 - **语言版本**: C# 12.0

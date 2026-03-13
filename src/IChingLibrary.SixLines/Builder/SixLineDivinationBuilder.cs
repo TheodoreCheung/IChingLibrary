@@ -1,0 +1,115 @@
+﻿namespace IChingLibrary.SixLines.Builder;
+
+/// <summary>
+/// 六爻起卦构建器
+/// </summary>
+public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
+{
+    private ICastingMethod? _castingMethod;
+    
+    private readonly List<IStructuringStep> _steps = [];
+
+    /// <inheritdoc />
+    public ISixLineDivinationBuilder UseMethod(ICastingMethod castingMethod)
+    {
+        _castingMethod = castingMethod;
+        return this;
+    }
+
+    /// <inheritdoc />
+    public ISixLineDivinationBuilder WithDefaultSteps()
+    {
+        return WithStep(new NajiaStep())
+            .WithStep(new PositionStep())
+            .WithStep(new SixKinStep())
+            .WithStep(new SixSpiritStep())
+            .WithStep(new HiddenDeityStep())
+            .WithStep(new SymbolicStarStep());
+    }
+
+    /// <inheritdoc />
+    public ISixLineDivinationBuilder WithStep(IStructuringStep structuringStep)
+    {
+        var stepType = structuringStep.GetType();
+        if (_steps.Any(s => s.GetType() == stepType))
+        {
+            return this;
+        }
+
+        _steps.Add(structuringStep);
+        return this;
+    }
+
+    /// <inheritdoc />
+    public SixLineDivination Build()
+    {
+        if (_castingMethod == null)
+            throw new InvalidOperationException($"起卦方式{nameof(ICastingMethod)}尚未指定。");
+
+        // 1. 执行起卦获得种子数据（包含干支时间、原始爻象）
+        var seed = _castingMethod.Cast();
+
+        // 2. 创建上下文
+        var context = new DivinationContext(seed);
+
+        // 3. 拓扑排序（解决乱序添加问题）
+        var sortedSteps = SortSteps();
+
+        // 4. 依次执行
+        foreach (var step in sortedSteps)
+        {
+            step.Execute(context);
+        }
+
+        return context.SixLineDivination;
+    }
+
+    /// <summary>
+    /// 对结构化步骤进行拓扑排序
+    /// </summary>
+    /// <returns>排序后的步骤列表</returns>
+    private List<IStructuringStep> SortSteps()
+    {
+        // 将步骤转换为字典，便于通过类型快速查找
+        var stepDict = _steps.ToDictionary(s => s.GetType());
+        // 用于记录已访问的类型，防止重复处理和循环依赖
+        var visited = new HashSet<Type>();
+        // 存储排序后的结果列表
+        var sorted = new List<IStructuringStep>();
+
+        // 遍历所有步骤，对每个步骤进行访问
+        foreach (var step in _steps)
+        {
+            Visit(step);
+        }
+
+        return sorted;
+
+        // 深度优先搜索 (DFS) 实现拓扑排序
+        void Visit(IStructuringStep step)
+        {
+            // 获取当前步骤的类型
+            var stepType = step.GetType();
+            // 检查该步骤类型是否已经被访问过，如果是则直接返回
+            if (visited.Contains(stepType)) return;
+
+            // 遍历当前步骤所需的所有依赖步骤类型
+            foreach (var depType in step.RequiredSteps)
+            {
+                // 尝试从步骤字典中获取依赖步骤
+                if (stepDict.TryGetValue(depType, out var depStep))
+                {
+                    // 递归访问依赖步骤
+                    Visit(depStep);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"缺少必要的依赖步骤: {depType}");
+                }
+            }
+
+            visited.Add(stepType);
+            sorted.Add(step);
+        }
+    }
+}

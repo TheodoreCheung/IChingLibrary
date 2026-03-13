@@ -1,3 +1,5 @@
+using IChingLibrary.SixLines.Builder;
+
 namespace IChingLibrary.SixLines;
 
 /// <summary>
@@ -54,4 +56,20 @@ public sealed class SymbolicStarCollection
     /// 获取所有神煞
     /// </summary>
     public IReadOnlyDictionary<SymbolicStar, EarthlyBranch[]> AllStars => _symbolicStars;
+
+    /// <summary>
+    /// 添加神煞
+    /// </summary>
+    /// <param name="symbolicStar">可以通过<see cref="SymbolicStar.CreateCustom"/>方法添加自定义神煞</param>
+    /// <param name="symbolicStarCalculatorDelegate">计算神煞所临地支</param>
+    /// <returns>添加成功与否</returns>
+    public bool Add(SymbolicStar symbolicStar, Func<EarthlyBranch[]> symbolicStarCalculatorDelegate) =>
+        _symbolicStars.TryAdd(symbolicStar, symbolicStarCalculatorDelegate());
+    
+    /// <summary>
+    /// 移除指定神煞
+    /// </summary>
+    /// <param name="symbolicStar"></param>
+    /// <returns></returns>
+    public bool Remove(SymbolicStar symbolicStar) => _symbolicStars.Remove(symbolicStar);
 }

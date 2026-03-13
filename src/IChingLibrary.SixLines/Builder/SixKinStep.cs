@@ -1,15 +1,16 @@
-using IChingLibrary.SixLines.Providers.Abstractions;
-
-namespace IChingLibrary.SixLines.Providers;
+﻿namespace IChingLibrary.SixLines.Builder;
 
 /// <summary>
-/// 默认六亲提供器
+/// 绑六亲步骤
 /// </summary>
-internal class DefaultSixKinProvider : ISixKinProvider
+public sealed class SixKinStep : IStructuringStep
 {
     /// <summary>
     /// 根据卦宫五行和爻五行计算六亲
     /// </summary>
+    /// <param name="palacePhase">卦宫五行</param>
+    /// <param name="linePhase">爻五行</param>
+    /// <returns>六亲</returns>
     private static SixKin GetSixKin(FivePhase palacePhase, FivePhase linePhase)
     {
         // 父母：生我者（爻生卦宫）
@@ -32,22 +33,22 @@ internal class DefaultSixKinProvider : ISixKinProvider
         // 默认返回子孙
         return SixKin.Offspring;
     }
+    
+    /// <inheritdoc />
+    public IEnumerable<Type> RequiredSteps { get; } = [typeof(NajiaStep)];
 
     /// <inheritdoc />
-    public void BindSixKin(BuilderContext context)
+    public void Execute(DivinationContext context)
     {
-        if (context.Original is null)
-            throw new InvalidOperationException("未找到主卦");
-
-        var palaceFivePhase = context.Original.Meta.Palace.FivePhase;
+        var palaceFivePhase = context.SixLineDivination.Original.Meta.Palace.FivePhase;
 
         for (var i = 0; i < 6; i++)
         {
-            context.Original.Lines[i].SixKin =
-                GetSixKin(palaceFivePhase, context.Original.Lines[i].StemBranch.Branch.FivePhase);
+            context.SixLineDivination.Original.Lines[i].SixKin =
+                GetSixKin(palaceFivePhase, context.SixLineDivination.Original.Lines[i].StemBranch.Branch.FivePhase);
 
-            context.Changed?.Lines[i].SixKin = 
-                GetSixKin(palaceFivePhase, context.Changed.Lines[i].StemBranch.Branch.FivePhase);
+            context.SixLineDivination.Changed?.Lines[i].SixKin = 
+                GetSixKin(palaceFivePhase, context.SixLineDivination.Changed.Lines[i].StemBranch.Branch.FivePhase);
         }
     }
 }

@@ -1,4 +1,5 @@
 using IChingLibrary.Core;
+using IChingLibrary.SixLines.Builder;
 
 namespace IChingLibrary.SixLines.Test;
 
@@ -152,11 +153,11 @@ public class ProvidersTests
         var solar = new DateTimeOffset(2024, 1, 1, 12, 0, 0, TimeSpan.Zero);
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
 
-        // Act - 通过 Builder 直接使用 InquiryTime
-        var divination = SixLineDivination.CreateBuilder(solar)
-            .UseFourSymbols(fourSymbols)
-            .WithNajia()
-            .WithSixSpirit()
+        // Act - 通过 Builder 直接使用 CastingTime
+        var divination = new SixLineDivinationBuilder()
+            .UseMethod(new CoinCastingMethod(solar, fourSymbols))
+            .WithStep(new NajiaStep())
+            .WithStep(new SixSpiritStep())
             .Build();
 
         // 注意：由于 DefaultInquiryTimeProvider 的实现，实际日干可能不是丙
@@ -271,6 +272,6 @@ public class ProvidersTests
         var divination = SixLineDivination.Create(new DateTimeOffset(2025, 8, 7, 21, 0, 0, TimeSpan.FromHours(8)), fourSymbols);
         
         // Assert - 润六月
-        Assert.Equal(6, divination.InquiryTime.Lunar.Month);
+        Assert.Equal(6, divination.CastingTime.Lunar.Month);
     }
 }
