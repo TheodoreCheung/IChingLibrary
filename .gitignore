@@ -324,6 +324,7 @@ FodyWeavers.xsd
 # Project-specific
 .claude/
 .idea/
+.worktrees/
 docs/
 old_resx/
 scripts/__pycache__/
