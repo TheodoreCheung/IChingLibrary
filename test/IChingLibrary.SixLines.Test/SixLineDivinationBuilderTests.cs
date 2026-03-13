@@ -319,6 +319,23 @@ public class SixLineDivinationBuilderTests
     }
 
     [Fact]
+    public void Builder_WithHiddenDeity_WithoutSixKin_ShouldThrowClearError()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+        {
+            SixLineDivination.CreateBuilder(TestInquiryTime)
+                .UseFourSymbols(fourSymbols)
+                .WithNajia()
+                .WithHiddenDeity()
+                .Build();
+        });
+
+        Assert.Contains("HiddenDeity", ex.Message);
+    }
+
+    [Fact]
     public void Builder_WithSymbolicStars_ShouldCalculateSymbolicStars()
     {
         // Arrange

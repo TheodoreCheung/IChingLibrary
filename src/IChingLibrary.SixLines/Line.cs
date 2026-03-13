@@ -5,6 +5,8 @@
 /// </summary>
 public class Line
 {
+    private SixKin? _sixKin;
+
     /// <summary>
     /// 爻位（初爻到上爻）
     /// </summary>
@@ -45,9 +47,15 @@ public class Line
     /// <exception cref="InvalidOperationException">访问时尚未通过六亲提供器设置</exception>
     public SixKin SixKin
     {
-        get => field ?? throw new InvalidOperationException("SixKin 尚未通过六亲提供器设置");
-        internal set;
+        get => _sixKin ?? throw new InvalidOperationException("SixKin 尚未通过六亲提供器设置");
+        internal set
+        {
+            _sixKin = value;
+            IsSixKinBound = true;
+        }
     }
+
+    internal bool IsSixKinBound { get; private set; }
 
     /// <summary>
     /// 世应位置（世爻或应爻）

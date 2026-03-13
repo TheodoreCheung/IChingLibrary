@@ -12,6 +12,9 @@ internal class DefaultHiddenDeityProvider : IHiddenDeityProvider
     {
         if (context.Original is null)
             throw new InvalidOperationException("未找到主卦");
+
+        if (context.Original.Lines.Any(l => !l.IsSixKinBound))
+            throw new InvalidOperationException("HiddenDeity requires SixKin to be bound first.");
         
         // 1. 统计主卦现有的六亲
         var existingKins = new HashSet<SixKin>();
