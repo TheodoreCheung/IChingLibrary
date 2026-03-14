@@ -1,10 +1,18 @@
 using IChingLibrary.Core;
 using IChingLibrary.SixLines.Builder;
+using Xunit.Abstractions;
 
 namespace IChingLibrary.SixLines.Test;
 
 public class SixLineDivinationBuilderTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public SixLineDivinationBuilderTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
     private static DateTimeOffset TestCastingTime => new(2024, 1, 1, 12, 0, 0, TimeSpan.Zero);
 
     [Fact]
@@ -466,5 +474,32 @@ public class SixLineDivinationBuilderTests
         // Assert - 流式 API 应该返回同一个 builder 实例
         Assert.Same(builder, result1);
         Assert.Same(builder, result2);
+    }
+
+    [Fact]
+    public void Builder_CoinCastingMethod_SpecifyMethod_ShouldReturnSameDivination()
+    {
+        var dt = new DateTimeOffset(2026, 3, 3, 13, 30, 00, TimeSpan.FromHours(8));
+
+        var d1 = new SixLineDivinationBuilder()
+            .UseMethod(new CoinCastingMethod(dt,
+            [
+                FourSymbol.YoungYin, FourSymbol.YoungYang, FourSymbol.YoungYin, 
+                FourSymbol.YoungYang, FourSymbol.YoungYang, FourSymbol.YoungYang
+            ]))
+            .WithDefaultSteps()
+            .Build();
+
+        var d2 = SixLineDivination.Create(dt, Hexagram.FromValue(0b111010));
+        
+        Assert.Equal(d1.Original.Meta.Value, d2.Original.Meta.Value);
+        for (var i = 0; i < 6; i++)
+        {
+            Assert.Equal(d1.Original[i].YinYang, d2.Original[i].YinYang);
+            Assert.Equal(d1.Original[i].StemBranch.Stem, d2.Original[i].StemBranch.Stem);
+            Assert.Equal(d1.Original[i].StemBranch.Branch, d2.Original[i].StemBranch.Branch);
+            Assert.Equal(d1.Original[i].SixSpirit, d2.Original[i].SixSpirit);
+            Assert.Equal(d1.Original[i].SixKin, d2.Original[i].SixKin);
+        }
     }
 }
