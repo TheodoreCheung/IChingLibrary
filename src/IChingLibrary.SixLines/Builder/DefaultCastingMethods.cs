@@ -157,8 +157,23 @@ public class SpecifyingHexagramCastingMethod(DateTimeOffset castingTime, Hexagra
     /// <inheritdoc />
     public SixLineDivination Cast()
     {
-        return new SixLineDivination(CastingTime.ConvertFrom(castingTime), 
-            new HexagramInstance(original),
-            changed is null ? null : new HexagramInstance(changed));
+        if (changed is null)
+            return new SixLineDivination(CastingTime.ConvertFrom(castingTime), new HexagramInstance(original));
+
+        var changingMask = original.Value ^ changed.Value;
+        var fourSymbols = new FourSymbol[6];
+        for (var i = 0; i < 6; i++)
+        {
+            if (((changingMask >> i) & 1) == 1)
+            {
+                fourSymbols[i] = ((original.Value >> i) & 1) == 1 ? FourSymbol.OldYang : FourSymbol.OldYin;
+            }
+            else
+            {
+                fourSymbols[i] = ((original.Value >> i) & 1) == 1 ? FourSymbol.YoungYang : FourSymbol.YoungYin;
+            }
+        }
+        
+        return new CoinCastingMethod(castingTime, fourSymbols).Cast();
     }
 }
