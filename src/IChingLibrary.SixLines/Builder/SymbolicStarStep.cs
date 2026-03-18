@@ -20,289 +20,85 @@ public sealed class SymbolicStarStep : IStructuringStep
     /// </summary>
     private readonly Dictionary<SymbolicStar, SymbolicStarCalculatorDelegate> _calculators = new();
 
+    /// <summary>
+    /// 计算三合局的长生位地支
+    /// </summary>
+    /// <param name="dayBranch">日支</param>
+    /// <param name="offset">偏移量</param>
+    /// <returns>返回对应的三合局长生位的地支</returns>
+    /// <example>
+    /// 驿马 = CalculateTrinityCombinationBranch(dayBranch, 6); // 对冲位
+    /// 桃花 = CalculateTrinityCombinationBranch(dayBranch, 1); // 沐浴位
+    /// 亡神 = CalculateTrinityCombinationBranch(dayBranch, 3); // 临官位
+    /// 劫煞：+9
+    /// 将星：+4
+    /// 华盖：+8
+    /// 谋星：+2
+    /// 灾煞：+10
+    /// </example>
+    private static EarthlyBranch CalculateTrinityCombinationBranch(EarthlyBranch dayBranch, int offset)
+    {
+        // 根据日支的值模4的结果来确定三合局类型
+        var changSheng = (dayBranch.Value % 4) switch
+        {
+            1 => EarthlyBranch.Shen.Value, // 申子辰 (水局)，长生在申
+            2 => EarthlyBranch.Si.Value, // 巳酉丑 (金局)，长生在巳
+            3 => EarthlyBranch.Yin.Value, // 寅午戌 (火局)，长生在寅
+            4 => EarthlyBranch.Hai.Value, // 亥卯未 (木局)，长生在亥
+            _ => throw new ArgumentException(null, nameof(dayBranch))
+        };
+
+        // 根据计算得到的值返回对应的地支
+        return EarthlyBranch.FromValue((byte)((changSheng + offset - 1) % 12 + 1));
+    }
+
+    /// <summary>
+    /// 计算依赖天干系列神煞（禄神、羊刃、文昌）地支
+    /// </summary>
+    /// <param name="dayStem">日干</param>
+    /// <param name="table">映射表</param>
+    /// <returns>返回天干系列神煞地支</returns>
+    private static EarthlyBranch CalculateStemStar(HeavenlyStem dayStem, int[] table)
+        => EarthlyBranch.FromValue((byte)table[dayStem.Value - 1]);
+
     #region 静态映射表
 
     /// <summary>
     /// 贵人映射表：甲戊→牛羊，乙己→鼠猴，丙丁→猪鸡，壬癸→兔蛇，庚辛→马虎
     /// </summary>
-    private static readonly Dictionary<HeavenlyStem, EarthlyBranch[]> NoblemanMap = new()
-    {
-        { HeavenlyStem.Jia, [EarthlyBranch.Chou, EarthlyBranch.Wei] },
-        { HeavenlyStem.Wu, [EarthlyBranch.Chou, EarthlyBranch.Wei] },
-        { HeavenlyStem.Yi, [EarthlyBranch.Zi, EarthlyBranch.Shen] },
-        { HeavenlyStem.Ji, [EarthlyBranch.Zi, EarthlyBranch.Shen] },
-        { HeavenlyStem.Bing, [EarthlyBranch.Hai, EarthlyBranch.You] },
-        { HeavenlyStem.Ding, [EarthlyBranch.Hai, EarthlyBranch.You] },
-        { HeavenlyStem.Ren, [EarthlyBranch.Mao, EarthlyBranch.Si] },
-        { HeavenlyStem.Gui, [EarthlyBranch.Mao, EarthlyBranch.Si] },
-        { HeavenlyStem.Geng, [EarthlyBranch.Wu, EarthlyBranch.Yin] },
-        { HeavenlyStem.Xin, [EarthlyBranch.Wu, EarthlyBranch.Yin] },
-    };
+    /// <remarks>
+    /// 索引 0-9 对应 甲(1)-癸(10)
+    /// 每两个元素代表一对贵人地支 (1-indexed)
+    /// </remarks>
+    private static readonly byte[] NoblemanTable =
+    [
+        2, 8,  // 甲(1) -> 丑未
+        1, 9,  // 乙(2) -> 子申
+        12, 10,// 丙(3) -> 亥酉
+        12, 10,// 丁(4) -> 亥酉
+        2, 8,  // 戊(5) -> 丑未
+        1, 9,  // 己(6) -> 子申
+        7, 3,  // 庚(7) -> 午寅
+        7, 3,  // 辛(8) -> 午寅
+        4, 6,  // 壬(9) -> 卯巳
+        4, 6   // 癸(10)-> 卯巳
+    ];
 
     /// <summary>
     /// 禄神映射表：甲→寅，乙→卯，丙戊→巳，丁己→午，庚→申，辛→酉，壬→亥，癸→子
     /// </summary>
-    private static readonly Dictionary<HeavenlyStem, EarthlyBranch[]> SalarySpiritMap = new()
-    {
-        { HeavenlyStem.Jia, [EarthlyBranch.Yin] },
-        { HeavenlyStem.Yi, [EarthlyBranch.Mao] },
-        { HeavenlyStem.Bing, [EarthlyBranch.Si] },
-        { HeavenlyStem.Wu, [EarthlyBranch.Si] },
-        { HeavenlyStem.Ding, [EarthlyBranch.Wu] },
-        { HeavenlyStem.Ji, [EarthlyBranch.Wu] },
-        { HeavenlyStem.Geng, [EarthlyBranch.Shen] },
-        { HeavenlyStem.Xin, [EarthlyBranch.You] },
-        { HeavenlyStem.Ren, [EarthlyBranch.Hai] },
-        { HeavenlyStem.Gui, [EarthlyBranch.Zi] },
-    };
+    private static readonly int[] SalarySpiritTable = [3, 4, 6, 7, 6, 7, 9, 10, 12, 1];
 
     /// <summary>
     /// 文昌映射表：甲→巳，乙→午，丙戊→申，丁己→酉，庚→亥，辛→子，壬→寅，癸→卯
     /// </summary>
-    private static readonly Dictionary<HeavenlyStem, EarthlyBranch[]> CultureFlourishMap = new()
-    {
-        { HeavenlyStem.Jia, [EarthlyBranch.Si] },
-        { HeavenlyStem.Yi, [EarthlyBranch.Wu] },
-        { HeavenlyStem.Bing, [EarthlyBranch.Shen] },
-        { HeavenlyStem.Wu, [EarthlyBranch.Shen] },
-        { HeavenlyStem.Ding, [EarthlyBranch.You] },
-        { HeavenlyStem.Ji, [EarthlyBranch.You] },
-        { HeavenlyStem.Geng, [EarthlyBranch.Hai] },
-        { HeavenlyStem.Xin, [EarthlyBranch.Zi] },
-        { HeavenlyStem.Ren, [EarthlyBranch.Yin] },
-        { HeavenlyStem.Gui, [EarthlyBranch.Mao] },
-    };
+    private static readonly int[] CultureFlourishTable = [6, 7, 9, 10, 9, 10, 12, 1, 3, 4];
 
     /// <summary>
     /// 羊刃映射表：甲→卯，乙→寅，丙戊→午，丁己→巳，庚→酉，辛→申，壬→子，癸→亥
     /// </summary>
-    private static readonly Dictionary<HeavenlyStem, EarthlyBranch[]> YangBladeMap = new()
-    {
-        { HeavenlyStem.Jia, [EarthlyBranch.Mao] },
-        { HeavenlyStem.Yi, [EarthlyBranch.Yin] },
-        { HeavenlyStem.Bing, [EarthlyBranch.Wu] },
-        { HeavenlyStem.Wu, [EarthlyBranch.Wu] },
-        { HeavenlyStem.Ding, [EarthlyBranch.Si] },
-        { HeavenlyStem.Ji, [EarthlyBranch.Si] },
-        { HeavenlyStem.Geng, [EarthlyBranch.You] },
-        { HeavenlyStem.Xin, [EarthlyBranch.Shen] },
-        { HeavenlyStem.Ren, [EarthlyBranch.Zi] },
-        { HeavenlyStem.Gui, [EarthlyBranch.Hai] },
-    };
-
-    /// <summary>
-    /// 驿马映射表：寅午戌→申，亥卯未→巳，巳酉丑→亥，申子辰→寅
-    /// </summary>
-    private static readonly Dictionary<EarthlyBranch, EarthlyBranch[]> PostHorseMap = new()
-    {
-        { EarthlyBranch.Yin, [EarthlyBranch.Shen] },
-        { EarthlyBranch.Wu, [EarthlyBranch.Shen] },
-        { EarthlyBranch.Xu, [EarthlyBranch.Shen] },
-        { EarthlyBranch.Hai, [EarthlyBranch.Si] },
-        { EarthlyBranch.Mao, [EarthlyBranch.Si] },
-        { EarthlyBranch.Wei, [EarthlyBranch.Si] },
-        { EarthlyBranch.Si, [EarthlyBranch.Hai] },
-        { EarthlyBranch.You, [EarthlyBranch.Hai] },
-        { EarthlyBranch.Chou, [EarthlyBranch.Hai] },
-        { EarthlyBranch.Shen, [EarthlyBranch.Yin] },
-        { EarthlyBranch.Zi, [EarthlyBranch.Yin] },
-        { EarthlyBranch.Chen, [EarthlyBranch.Yin] },
-    };
-
-    /// <summary>
-    /// 桃花映射表：寅午戌→卯，亥卯未→辰，巳酉丑→午，申子辰→酉
-    /// </summary>
-    private static readonly Dictionary<EarthlyBranch, EarthlyBranch[]> PeachBlossomMap = new()
-    {
-        { EarthlyBranch.Yin, [EarthlyBranch.Mao] },
-        { EarthlyBranch.Wu, [EarthlyBranch.Mao] },
-        { EarthlyBranch.Xu, [EarthlyBranch.Mao] },
-        { EarthlyBranch.Hai, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Mao, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Wei, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Si, [EarthlyBranch.Wu] },
-        { EarthlyBranch.You, [EarthlyBranch.Wu] },
-        { EarthlyBranch.Chou, [EarthlyBranch.Wu] },
-        { EarthlyBranch.Shen, [EarthlyBranch.You] },
-        { EarthlyBranch.Zi, [EarthlyBranch.You] },
-        { EarthlyBranch.Chen, [EarthlyBranch.You] },
-    };
-
-    /// <summary>
-    /// 将星映射表：寅午戌→午，亥卯未→卯，巳酉丑→酉，申子辰→子
-    /// </summary>
-    private static readonly Dictionary<EarthlyBranch, EarthlyBranch[]> GeneralsStarMap = new()
-    {
-        { EarthlyBranch.Yin, [EarthlyBranch.Wu] },
-        { EarthlyBranch.Wu, [EarthlyBranch.Wu] },
-        { EarthlyBranch.Xu, [EarthlyBranch.Wu] },
-        { EarthlyBranch.Hai, [EarthlyBranch.Mao] },
-        { EarthlyBranch.Mao, [EarthlyBranch.Mao] },
-        { EarthlyBranch.Wei, [EarthlyBranch.Mao] },
-        { EarthlyBranch.Si, [EarthlyBranch.You] },
-        { EarthlyBranch.You, [EarthlyBranch.You] },
-        { EarthlyBranch.Chou, [EarthlyBranch.You] },
-        { EarthlyBranch.Shen, [EarthlyBranch.Zi] },
-        { EarthlyBranch.Zi, [EarthlyBranch.Zi] },
-        { EarthlyBranch.Chen, [EarthlyBranch.Zi] },
-    };
-
-    /// <summary>
-    /// 华盖映射表：寅午戌→戌，亥卯未→未，巳酉丑→丑，申子辰→辰
-    /// </summary>
-    private static readonly Dictionary<EarthlyBranch, EarthlyBranch[]> CanopyMap = new()
-    {
-        { EarthlyBranch.Yin, [EarthlyBranch.Xu] },
-        { EarthlyBranch.Wu, [EarthlyBranch.Xu] },
-        { EarthlyBranch.Xu, [EarthlyBranch.Xu] },
-        { EarthlyBranch.Hai, [EarthlyBranch.Wei] },
-        { EarthlyBranch.Mao, [EarthlyBranch.Wei] },
-        { EarthlyBranch.Wei, [EarthlyBranch.Wei] },
-        { EarthlyBranch.Si, [EarthlyBranch.Chou] },
-        { EarthlyBranch.You, [EarthlyBranch.Chou] },
-        { EarthlyBranch.Chou, [EarthlyBranch.Chou] },
-        { EarthlyBranch.Shen, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Zi, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Chen, [EarthlyBranch.Chen] },
-    };
-
-    /// <summary>
-    /// 谋星映射表：寅午戌→辰，亥卯未→丑，巳酉丑→未，申子辰→戌
-    /// </summary>
-    private static readonly Dictionary<EarthlyBranch, EarthlyBranch[]> StarOfStrategyMap = new()
-    {
-        { EarthlyBranch.Yin, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Wu, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Xu, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Hai, [EarthlyBranch.Chou] },
-        { EarthlyBranch.Mao, [EarthlyBranch.Chou] },
-        { EarthlyBranch.Wei, [EarthlyBranch.Chou] },
-        { EarthlyBranch.Si, [EarthlyBranch.Wei] },
-        { EarthlyBranch.You, [EarthlyBranch.Wei] },
-        { EarthlyBranch.Chou, [EarthlyBranch.Wei] },
-        { EarthlyBranch.Shen, [EarthlyBranch.Xu] },
-        { EarthlyBranch.Zi, [EarthlyBranch.Xu] },
-        { EarthlyBranch.Chen, [EarthlyBranch.Xu] },
-    };
-
-    /// <summary>
-    /// 灾煞映射表：寅午戌→子，亥卯未→酉，巳酉丑→卯，申子辰→午
-    /// </summary>
-    private static readonly Dictionary<EarthlyBranch, EarthlyBranch[]> DisasterMalignityMap = new()
-    {
-        { EarthlyBranch.Yin, [EarthlyBranch.Zi] },
-        { EarthlyBranch.Wu, [EarthlyBranch.Zi] },
-        { EarthlyBranch.Xu, [EarthlyBranch.Zi] },
-        { EarthlyBranch.Hai, [EarthlyBranch.You] },
-        { EarthlyBranch.Mao, [EarthlyBranch.You] },
-        { EarthlyBranch.Wei, [EarthlyBranch.You] },
-        { EarthlyBranch.Si, [EarthlyBranch.Mao] },
-        { EarthlyBranch.You, [EarthlyBranch.Mao] },
-        { EarthlyBranch.Chou, [EarthlyBranch.Mao] },
-        { EarthlyBranch.Shen, [EarthlyBranch.Wu] },
-        { EarthlyBranch.Zi, [EarthlyBranch.Wu] },
-        { EarthlyBranch.Chen, [EarthlyBranch.Wu] },
-    };
-
-    /// <summary>
-    /// 劫煞映射表：寅午戌→亥，亥卯未→申，巳酉丑→寅，申子辰→巳
-    /// </summary>
-    private static readonly Dictionary<EarthlyBranch, EarthlyBranch[]> RobberyMalignityMap = new()
-    {
-        { EarthlyBranch.Yin, [EarthlyBranch.Hai] },
-        { EarthlyBranch.Wu, [EarthlyBranch.Hai] },
-        { EarthlyBranch.Xu, [EarthlyBranch.Hai] },
-        { EarthlyBranch.Hai, [EarthlyBranch.Shen] },
-        { EarthlyBranch.Mao, [EarthlyBranch.Shen] },
-        { EarthlyBranch.Wei, [EarthlyBranch.Shen] },
-        { EarthlyBranch.Si, [EarthlyBranch.Yin] },
-        { EarthlyBranch.You, [EarthlyBranch.Yin] },
-        { EarthlyBranch.Chou, [EarthlyBranch.Yin] },
-        { EarthlyBranch.Shen, [EarthlyBranch.Si] },
-        { EarthlyBranch.Zi, [EarthlyBranch.Si] },
-        { EarthlyBranch.Chen, [EarthlyBranch.Si] },
-    };
-
-    /// <summary>
-    /// 亡神映射表：寅午戌→巳，亥卯未→寅，巳酉丑→申，申子辰→亥
-    /// </summary>
-    private static readonly Dictionary<EarthlyBranch, EarthlyBranch[]> DeathSpiritMap = new()
-    {
-        { EarthlyBranch.Yin, [EarthlyBranch.Si] },
-        { EarthlyBranch.Wu, [EarthlyBranch.Si] },
-        { EarthlyBranch.Xu, [EarthlyBranch.Si] },
-        { EarthlyBranch.Hai, [EarthlyBranch.Yin] },
-        { EarthlyBranch.Mao, [EarthlyBranch.Yin] },
-        { EarthlyBranch.Wei, [EarthlyBranch.Yin] },
-        { EarthlyBranch.Si, [EarthlyBranch.Shen] },
-        { EarthlyBranch.You, [EarthlyBranch.Shen] },
-        { EarthlyBranch.Chou, [EarthlyBranch.Shen] },
-        { EarthlyBranch.Shen, [EarthlyBranch.Hai] },
-        { EarthlyBranch.Zi, [EarthlyBranch.Hai] },
-        { EarthlyBranch.Chen, [EarthlyBranch.Hai] },
-    };
-
-    /// <summary>
-    /// 天医映射表：月支退一位
-    /// </summary>
-    private static readonly Dictionary<EarthlyBranch, EarthlyBranch[]> CelestialPhysicianMap = new()
-    {
-        { EarthlyBranch.Yin, [EarthlyBranch.Chou] },
-        { EarthlyBranch.Mao, [EarthlyBranch.Yin] },
-        { EarthlyBranch.Chen, [EarthlyBranch.Mao] },
-        { EarthlyBranch.Si, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Wu, [EarthlyBranch.Si] },
-        { EarthlyBranch.Wei, [EarthlyBranch.Wu] },
-        { EarthlyBranch.Shen, [EarthlyBranch.Wei] },
-        { EarthlyBranch.You, [EarthlyBranch.Shen] },
-        { EarthlyBranch.Xu, [EarthlyBranch.You] },
-        { EarthlyBranch.Hai, [EarthlyBranch.Xu] },
-        { EarthlyBranch.Zi, [EarthlyBranch.Hai] },
-        { EarthlyBranch.Chou, [EarthlyBranch.Zi] },
-    };
-
-    /// <summary>
-    /// 天喜映射表：寅卯辰→戌，巳午未→丑，申酉戌→辰，亥子丑→未
-    /// </summary>
-    private static readonly Dictionary<EarthlyBranch, EarthlyBranch[]> HeavenlyJoyMap = new()
-    {
-        { EarthlyBranch.Yin, [EarthlyBranch.Xu] },
-        { EarthlyBranch.Mao, [EarthlyBranch.Xu] },
-        { EarthlyBranch.Chen, [EarthlyBranch.Xu] },
-        { EarthlyBranch.Si, [EarthlyBranch.Chou] },
-        { EarthlyBranch.Wu, [EarthlyBranch.Chou] },
-        { EarthlyBranch.Wei, [EarthlyBranch.Chou] },
-        { EarthlyBranch.Shen, [EarthlyBranch.Chen] },
-        { EarthlyBranch.You, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Xu, [EarthlyBranch.Chen] },
-        { EarthlyBranch.Hai, [EarthlyBranch.Wei] },
-        { EarthlyBranch.Zi, [EarthlyBranch.Wei] },
-        { EarthlyBranch.Chou, [EarthlyBranch.Wei] },
-    };
-
-    /// <summary>
-    /// 床帐映射表：火→辰戌丑未，金→寅卯，水→巳午，木→申酉，土→亥子
-    /// </summary>
-    private static readonly Dictionary<FivePhase, EarthlyBranch[]> MarriageBedMap = new()
-    {
-        { FivePhase.Fire, [EarthlyBranch.Chen, EarthlyBranch.Xu, EarthlyBranch.Chou, EarthlyBranch.Wei] },
-        { FivePhase.Metal, [EarthlyBranch.Yin, EarthlyBranch.Mao] },
-        { FivePhase.Water, [EarthlyBranch.Si, EarthlyBranch.Wu] },
-        { FivePhase.Wood, [EarthlyBranch.Shen, EarthlyBranch.You] },
-        { FivePhase.Earth, [EarthlyBranch.Hai, EarthlyBranch.Zi] },
-    };
-
-    /// <summary>
-    /// 香闺映射表：火→申酉，金→寅卯，水→巳午，木→辰戌丑未，土→亥子
-    /// </summary>
-    private static readonly Dictionary<FivePhase, EarthlyBranch[]> BridalChamberMap = new()
-    {
-        { FivePhase.Fire, [EarthlyBranch.Shen, EarthlyBranch.You] },
-        { FivePhase.Metal, [EarthlyBranch.Yin, EarthlyBranch.Mao] },
-        { FivePhase.Water, [EarthlyBranch.Si, EarthlyBranch.Wu] },
-        { FivePhase.Wood, [EarthlyBranch.Chen, EarthlyBranch.Xu, EarthlyBranch.Chou, EarthlyBranch.Wei] },
-        { FivePhase.Earth, [EarthlyBranch.Hai, EarthlyBranch.Zi] },
-    };
+    /// <remarks>给阳干(甲丙戊庚壬)定禄前一位，阴干定禄后一位</remarks>
+    private static readonly int[] YangBladeTable = [4, 3, 7, 6, 7, 6, 10, 9, 1, 12];
 
     #endregion
 
@@ -316,7 +112,7 @@ public sealed class SymbolicStarStep : IStructuringStep
     {
         RegisterDefaultCalculators();
     }
-    
+
     /// <summary>
     /// 注册所有默认神煞计算器
     /// </summary>
@@ -326,30 +122,62 @@ public sealed class SymbolicStarStep : IStructuringStep
     private void RegisterDefaultCalculators()
     {
         // 基于日干的神煞
-        Add(SymbolicStar.Nobleman, CalculateNobleman);
-        Add(SymbolicStar.SalarySpirit, CalculateSalarySpirit);
-        Add(SymbolicStar.CultureFlourish, CalculateCultureFlourish);
-        Add(SymbolicStar.YangBlade, CalculateYangBlade);
+        Add(SymbolicStar.Nobleman, (ct, _) => {
+            var startIndex = (ct.StemBranch.Day.Stem.Value - 1) * 2;
+            return
+            [
+                EarthlyBranch.FromValue(NoblemanTable[startIndex]),
+                EarthlyBranch.FromValue(NoblemanTable[startIndex + 1])
+            ];
+        });
+        Add(SymbolicStar.SalarySpirit, (ct, _) => [CalculateStemStar(ct.StemBranch.Day.Stem, SalarySpiritTable)]);
+        Add(SymbolicStar.CultureFlourish, (ct, _) => [CalculateStemStar(ct.StemBranch.Day.Stem, CultureFlourishTable)]);
+        Add(SymbolicStar.YangBlade, (ct, _) => [CalculateStemStar(ct.StemBranch.Day.Stem, YangBladeTable)]);
 
         // 基于日支的神煞
-        Add(SymbolicStar.PostHorse, CalculatePostHorse);
-        Add(SymbolicStar.PeachBlossom, CalculatePeachBlossom);
-        Add(SymbolicStar.GeneralsStar, CalculateGeneralsStar);
-        Add(SymbolicStar.Canopy, CalculateCanopy);
-        Add(SymbolicStar.StarOfStrategy, CalculateStarOfStrategy);
-        Add(SymbolicStar.DisasterMalignity, CalculateDisasterMalignity);
-        Add(SymbolicStar.RobberyMalignity, CalculateRobberyMalignity);
-        Add(SymbolicStar.DeathSpirit, CalculateDeathSpirit);
+        Add(SymbolicStar.PostHorse, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 6)]);
+        Add(SymbolicStar.PeachBlossom, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 1)]);
+        Add(SymbolicStar.GeneralsStar, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 4)]);
+        Add(SymbolicStar.Canopy, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 8)]);
+        Add(SymbolicStar.StarOfStrategy, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 2)]);
+        Add(SymbolicStar.DisasterMalignity, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 10)]);
+        Add(SymbolicStar.RobberyMalignity, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 9)]);
+        Add(SymbolicStar.DeathSpirit, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 3)]);
 
         // 基于月支的神煞
-        Add(SymbolicStar.CelestialPhysician, CalculateCelestialPhysician);
-        Add(SymbolicStar.HeavenlyJoy, CalculateHeavenlyJoy);
+        Add(SymbolicStar.CelestialPhysician,
+            (ct, _) => [EarthlyBranch.FromValue((byte)((ct.StemBranch.Month.Branch.Value - 1 + 11) % 12 + 1))]);
+        // 1. 将地支对齐到以 寅(3) 为起始的正月逻辑
+        // 寅(3)->0, 卯(4)->1, 辰(5)->2, ..., 丑(2)->11
+        // 2. 确定所属季度 (0:春, 1:夏, 2:秋, 3:冬)
+        // 3. 计算天喜地支 (以 1-indexed 返回)
+        // 春(0)->11, 夏(1)->2, 秋(2)->5, 冬(3)->8
+        // 公式：(11 + season * 3 - 1) % 12 + 1
+        Add(SymbolicStar.HeavenlyJoy, (ct, _) => [EarthlyBranch.FromValue((byte)(((ct.StemBranch.Month.Branch.Value + 9) % 12 / 3 * 3 + 10) % 12 + 1))]);
 
         // 基于卦身的神煞
-        Add(SymbolicStar.MarriageBed, CalculateMarriageBed);
-        Add(SymbolicStar.BridalChamber, CalculateBridalChamber);
+        Add(SymbolicStar.MarriageBed, (_, hi) => 
+            hi.FindHexagramBody()?.FivePhase.Value switch
+            {
+                1 => [EarthlyBranch.Hai, EarthlyBranch.Zi],
+                2 => [EarthlyBranch.Yin, EarthlyBranch.Mao],
+                3 => [EarthlyBranch.Si, EarthlyBranch.Wu],
+                4 => [EarthlyBranch.Chen, EarthlyBranch.Xu, EarthlyBranch.Chou, EarthlyBranch.Wei],
+                5 => [EarthlyBranch.Shen, EarthlyBranch.You],
+                _ => []
+            });
+        Add(SymbolicStar.BridalChamber, (_, hi) => 
+            hi.FindHexagramBody()?.FivePhase.Value switch
+            {
+                1 => [EarthlyBranch.Yin, EarthlyBranch.Mao],
+                2 => [EarthlyBranch.Si, EarthlyBranch.Wu],
+                3 => [EarthlyBranch.Chen, EarthlyBranch.Xu, EarthlyBranch.Chou, EarthlyBranch.Wei],
+                4 => [EarthlyBranch.Shen, EarthlyBranch.You],
+                5 => [EarthlyBranch.Hai, EarthlyBranch.Zi],
+                _ => []
+            });
     }
-    
+
     /// <summary>
     /// 添加神煞计算器（不覆盖已存在的计算器）
     /// </summary>
@@ -362,209 +190,6 @@ public sealed class SymbolicStarStep : IStructuringStep
     {
         _calculators.TryAdd(symbolicStar, calculator);
     }
-    
-    #region 默认神煞计算方法
-
-    /// <summary>
-    /// 根据日干查询映射表的神煞计算器
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <param name="map">日干映射表</param>
-    /// <returns>神煞对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateByDayStem(
-        CastingTime castingTime,
-        HexagramInstance hexagram,
-        Dictionary<HeavenlyStem, EarthlyBranch[]> map)
-        => map.GetValueOrDefault(castingTime.StemBranch.Day.Stem);
-
-    /// <summary>
-    /// 根据日支查询映射表的神煞计算器
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <param name="map">日支映射表</param>
-    /// <returns>神煞对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateByDayBranch(
-        CastingTime castingTime,
-        HexagramInstance hexagram,
-        Dictionary<EarthlyBranch, EarthlyBranch[]> map)
-        => map.GetValueOrDefault(castingTime.StemBranch.Day.Branch);
-
-    /// <summary>
-    /// 根据月支查询映射表的神煞计算器
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <param name="map">月支映射表</param>
-    /// <returns>神煞对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateByMonthBranch(
-        CastingTime castingTime,
-        HexagramInstance hexagram,
-        Dictionary<EarthlyBranch, EarthlyBranch[]> map)
-        => map.GetValueOrDefault(castingTime.StemBranch.Month.Branch);
-
-    /// <summary>
-    /// 根据卦身五行查询映射表的神煞计算器
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <param name="map">卦身五行映射表</param>
-    /// <returns>神煞对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateByHexagramBody(
-        CastingTime castingTime,
-        HexagramInstance hexagram,
-        Dictionary<FivePhase, EarthlyBranch[]> map)
-    {
-        var hexagramBody = hexagram.FindHexagramBody();
-        return hexagramBody == null ? null : map.GetValueOrDefault(hexagramBody.FivePhase);
-    }
-
-    /// <summary>
-    /// 计算贵人（甲戊→牛羊，乙己→鼠猴，丙丁→猪鸡，壬癸→兔蛇，庚辛→马虎）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>贵人对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateNobleman(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayStem(castingTime, hexagram, NoblemanMap);
-
-    /// <summary>
-    /// 计算禄神（甲→寅，乙→卯，丙戊→巳，丁己→午，庚→申，辛→酉，壬→亥，癸→子）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>禄神对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateSalarySpirit(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayStem(castingTime, hexagram, SalarySpiritMap);
-
-    /// <summary>
-    /// 计算文昌（甲→巳，乙→午，丙戊→申，丁己→酉，庚→亥，辛→子，壬→寅，癸→卯）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>文昌对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateCultureFlourish(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayStem(castingTime, hexagram, CultureFlourishMap);
-
-    /// <summary>
-    /// 计算羊刃（甲→卯，乙→寅，丙戊→午，丁己→巳，庚→酉，辛→申，壬→子，癸→亥）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>羊刃对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateYangBlade(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayStem(castingTime, hexagram, YangBladeMap);
-
-    /// <summary>
-    /// 计算驿马（寅午戌→申，亥卯未→巳，巳酉丑→亥，申子辰→寅）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>驿马对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculatePostHorse(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(castingTime, hexagram, PostHorseMap);
-
-    /// <summary>
-    /// 计算桃花（寅午戌→卯，亥卯未→辰，巳酉丑→午，申子辰→酉）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>桃花对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculatePeachBlossom(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(castingTime, hexagram, PeachBlossomMap);
-
-    /// <summary>
-    /// 计算将星（寅午戌→午，亥卯未→卯，巳酉丑→酉，申子辰→子）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>将星对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateGeneralsStar(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(castingTime, hexagram, GeneralsStarMap);
-
-    /// <summary>
-    /// 计算华盖（寅午戌→戌，亥卯未→未，巳酉丑→丑，申子辰→辰）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>华盖对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateCanopy(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(castingTime, hexagram, CanopyMap);
-
-    /// <summary>
-    /// 计算谋星（寅午戌→辰，亥卯未→丑，巳酉丑→未，申子辰→戌）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>谋星对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateStarOfStrategy(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(castingTime, hexagram, StarOfStrategyMap);
-
-    /// <summary>
-    /// 计算灾煞（寅午戌→子，亥卯未→酉，巳酉丑→卯，申子辰→午）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>灾煞对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateDisasterMalignity(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(castingTime, hexagram, DisasterMalignityMap);
-
-    /// <summary>
-    /// 计算劫煞（寅午戌→亥，亥卯未→申，巳酉丑→寅，申子辰→巳）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>劫煞对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateRobberyMalignity(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(castingTime, hexagram, RobberyMalignityMap);
-
-    /// <summary>
-    /// 计算亡神（寅午戌→巳，亥卯未→寅，巳酉丑→申，申子辰→亥）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>亡神对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateDeathSpirit(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByDayBranch(castingTime, hexagram, DeathSpiritMap);
-
-    /// <summary>
-    /// 计算天医（月支退一位）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>天医对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateCelestialPhysician(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByMonthBranch(castingTime, hexagram, CelestialPhysicianMap);
-
-    /// <summary>
-    /// 计算天喜（寅卯辰→戌，巳午未→丑，申酉戌→辰，亥子丑→未）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>天喜对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateHeavenlyJoy(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByMonthBranch(castingTime, hexagram, HeavenlyJoyMap);
-
-    /// <summary>
-    /// 计算床帐（火→辰戌丑未，金→寅卯，水→巳午，木→申酉，土→亥子）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>床帐对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateMarriageBed(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByHexagramBody(castingTime, hexagram, MarriageBedMap);
-
-    /// <summary>
-    /// 计算香闺（火→寅卯，金→辰戌丑未，水→申酉，木→亥子，土→巳午）
-    /// </summary>
-    /// <param name="castingTime">起卦时间</param>
-    /// <param name="hexagram">主卦实例</param>
-    /// <returns>香闺对应的地支数组，返回 null 表示不适用</returns>
-    private static EarthlyBranch[]? CalculateBridalChamber(CastingTime castingTime, HexagramInstance hexagram)
-        => CalculateByHexagramBody(castingTime, hexagram, BridalChamberMap);
-
-    #endregion
 
     /// <inheritdoc />
     public void Execute(DivinationContext context)

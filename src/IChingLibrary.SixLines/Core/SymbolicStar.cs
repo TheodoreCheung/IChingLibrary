@@ -102,7 +102,7 @@ public partial class SymbolicStar : IChingElement<SymbolicStar>
     public static readonly SymbolicStar HeavenlyJoy = new(14, nameof(HeavenlyJoy));
 
     /// <summary>
-    /// 床帐（火→辰戌丑未，金→寅卯，水→巳午，木→申酉，土→亥子）
+    /// 床帐（火→辰戌丑未，金→亥子，水→寅卯，木→巳午，土→申酉）
     /// </summary>
     /// <remarks>
     /// 先求卦身：阳世起子阴起午，俱从初爻数到世。
