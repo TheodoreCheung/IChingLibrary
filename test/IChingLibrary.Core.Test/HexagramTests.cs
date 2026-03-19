@@ -758,12 +758,34 @@ public class HexagramTests
     }
 
     [Fact]
+    public void Hexagram_GetAll_ShouldPreserveDeclarationOrder()
+    {
+        var allHexagrams = Hexagram.GetAll().ToList();
+
+        Assert.Equal(Hexagram.TheCreative, allHexagrams[0]);
+        Assert.Equal(Hexagram.ComingToMeet, allHexagrams[1]);
+        Assert.Equal(Hexagram.Retreat, allHexagrams[2]);
+        Assert.Equal(Hexagram.Standstill, allHexagrams[3]);
+        Assert.Equal(Hexagram.TheReceptive, allHexagrams[^8]);
+        Assert.Equal(Hexagram.Return, allHexagrams[^7]);
+        Assert.Equal(Hexagram.HoldingTogether, allHexagrams[^1]);
+    }
+
+    [Fact]
     public void Hexagram_FromValue_ShouldReturnCorrectHexagram()
     {
         // Act & Assert
         Assert.Equal(Hexagram.TheCreative, Hexagram.FromValue((byte)(0b111 << 3 | 0b111)));
         Assert.Equal(Hexagram.ComingToMeet, Hexagram.FromValue((byte)(0b111 << 3 | 0b110)));
         Assert.Equal(Hexagram.TheReceptive, Hexagram.FromValue((byte)(0b000 << 3 | 0b000)));
+    }
+
+    [Fact]
+    public void Hexagram_FromValue_ShouldReturnStaticSingletonInstance()
+    {
+        Assert.Same(Hexagram.TheCreative, Hexagram.FromValue((byte)(0b111 << 3 | 0b111)));
+        Assert.Same(Hexagram.ComingToMeet, Hexagram.FromValue((byte)(0b111 << 3 | 0b110)));
+        Assert.Same(Hexagram.TheReceptive, Hexagram.FromValue((byte)(0b000 << 3 | 0b000)));
     }
 
     [Fact]

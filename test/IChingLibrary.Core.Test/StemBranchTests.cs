@@ -185,6 +185,33 @@ public class StemBranchTests
         Assert.Contains(EarthlyBranch.Hai, emptyBranches);
     }
 
+    [Fact]
+    public void StemBranch_EmptyBranches_ShouldReturnCopyInsteadOfBackingArray()
+    {
+        // Arrange
+        var stemBranch = new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi);
+
+        // Act
+        var firstRead = stemBranch.EmptyBranches;
+        firstRead[0] = EarthlyBranch.Zi;
+        var secondRead = stemBranch.EmptyBranches;
+
+        // Assert
+        Assert.NotSame(firstRead, secondRead);
+        Assert.DoesNotContain(EarthlyBranch.Zi, secondRead);
+    }
+
+    [Fact]
+    public void StemBranch_EmptyBranchesMemory_ShouldExposeSameValuesAsEmptyBranches()
+    {
+        var stemBranch = new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi);
+
+        var fromProperty = stemBranch.EmptyBranches;
+        var fromMemory = stemBranch.EmptyBranchesMemory.ToArray();
+
+        Assert.Equal(fromProperty.Select(branch => branch.Value), fromMemory.Select(branch => branch.Value));
+    }
+
     // 验证各种干支组合的旬空
     [Theory]
     [InlineData(1, 1, 11, 12)]  // 甲子旬 - 戌亥空

@@ -45,6 +45,25 @@ public class SixLineDivinationTests
     }
 
     [Fact]
+    public void Create_WithFourSymbolsAndByteArray_ShouldProduceEquivalentDivination()
+    {
+        var fourSymbols = new[]
+        {
+            FourSymbol.OldYang,
+            FourSymbol.YoungYin,
+            FourSymbol.YoungYang,
+            FourSymbol.OldYin,
+            FourSymbol.YoungYang,
+            FourSymbol.YoungYin
+        };
+
+        var fromSymbols = SixLineDivination.Create(TestInquiryTime, fourSymbols);
+        var fromBytes = SixLineDivination.Create(TestInquiryTime, fourSymbols.Select(symbol => symbol.Value).ToArray());
+
+        AssertEquivalentDivinations(fromSymbols, fromBytes);
+    }
+
+    [Fact]
     public void Create_WithInquiryTimeOnly_ShouldUseTimeBasedHexagram()
     {
         // Act
@@ -53,6 +72,25 @@ public class SixLineDivinationTests
         // Assert
         Assert.NotNull(divination);
         Assert.NotNull(divination.Original);
+    }
+
+    [Fact]
+    public void Create_WithInquiryTime_ShouldMatchEquivalentNumberBasedCasting()
+    {
+        var castingTime = CastingTime.ConvertFrom(TestInquiryTime);
+        var yearBranchValue = castingTime.StemBranch.Year.Branch.Value;
+        var hourBranchValue = castingTime.StemBranch.Hour.Branch.Value;
+        var lunarMonth = castingTime.Lunar.Month;
+        var lunarDay = castingTime.Lunar.Day;
+
+        var upperTrigramNumber = yearBranchValue + lunarMonth + lunarDay;
+        var lowerTrigramNumber = upperTrigramNumber + hourBranchValue;
+        var changingLineNumber = lowerTrigramNumber;
+
+        var fromTime = SixLineDivination.Create(TestInquiryTime);
+        var fromNumbers = SixLineDivination.Create(TestInquiryTime, upperTrigramNumber, lowerTrigramNumber, changingLineNumber);
+
+        AssertEquivalentDivinations(fromTime, fromNumbers);
     }
 
     [Fact]
@@ -105,6 +143,16 @@ public class SixLineDivinationTests
     }
 
     [Fact]
+    public void Create_WithSameOriginalAndChangedHexagram_ShouldNotCreateChangedHexagram()
+    {
+        var divination = SixLineDivination.Create(TestInquiryTime, Hexagram.TheCreative, Hexagram.TheCreative);
+
+        Assert.Equal(Hexagram.TheCreative, divination.Original.Meta);
+        Assert.Null(divination.Changed);
+        Assert.All(divination.Original.Lines, line => Assert.False(line.IsChanging));
+    }
+
+    [Fact]
     public void Create_WithByteValues_ShouldReturnValidDivination()
     {
         // Arrange
@@ -133,6 +181,25 @@ public class SixLineDivinationTests
         Assert.NotNull(divination);
         Assert.NotNull(divination.Changed);
         Assert.Equal(Hexagram.FromValue(changedValue), divination.Changed.Meta);
+    }
+
+    [Fact]
+    public void Create_WithSameOriginalAndChangedByteValue_ShouldNotCreateChangedHexagram()
+    {
+        var divination = SixLineDivination.Create(TestInquiryTime, Hexagram.TheCreative.Value, Hexagram.TheCreative.Value);
+
+        Assert.Equal(Hexagram.TheCreative, divination.Original.Meta);
+        Assert.Null(divination.Changed);
+        Assert.All(divination.Original.Lines, line => Assert.False(line.IsChanging));
+    }
+
+    [Fact]
+    public void Create_WithHexagramsAndByteValues_ShouldProduceEquivalentDivination()
+    {
+        var fromHexagrams = SixLineDivination.Create(TestInquiryTime, Hexagram.TheCreative, Hexagram.TheReceptive);
+        var fromBytes = SixLineDivination.Create(TestInquiryTime, Hexagram.TheCreative.Value, Hexagram.TheReceptive.Value);
+
+        AssertEquivalentDivinations(fromHexagrams, fromBytes);
     }
 
     [Fact]
@@ -271,5 +338,74 @@ public class SixLineDivinationTests
 
         // Assert
         Assert.Null(ex);
+    }
+
+    [Fact]
+    public void ToString_AfterMutatingSymbolicStars_ShouldNotThrow()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+        var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
+        var customStar = SymbolicStar.CreateCustom("DynamicStar");
+
+        Assert.True(divination.SymbolicStars!.Add(customStar, () => [EarthlyBranch.Zi]));
+        Assert.True(divination.SymbolicStars.Remove(customStar));
+
+        var ex = Record.Exception(() => divination.ToString());
+
+        Assert.Null(ex);
+    }
+
+    private static void AssertEquivalentDivinations(SixLineDivination expected, SixLineDivination actual)
+    {
+        Assert.Equal(expected.CastingTime.Solar, actual.CastingTime.Solar);
+        AssertEquivalentHexagramInstances(expected.Original, actual.Original);
+
+        if (expected.Changed is null)
+        {
+            Assert.Null(actual.Changed);
+        }
+        else
+        {
+            Assert.NotNull(actual.Changed);
+            AssertEquivalentHexagramInstances(expected.Changed, actual.Changed);
+        }
+
+        Assert.NotNull(expected.SymbolicStars);
+        Assert.NotNull(actual.SymbolicStars);
+
+        var expectedStars = expected.SymbolicStars.AllStars;
+        var actualStars = actual.SymbolicStars.AllStars;
+
+        Assert.Equal(expectedStars.Count, actualStars.Count);
+        foreach (var (star, expectedBranches) in expectedStars)
+        {
+            Assert.True(actualStars.ContainsKey(star));
+            Assert.Equal(expectedBranches.Select(branch => branch.Value), actualStars[star].Select(branch => branch.Value));
+        }
+    }
+
+    private static void AssertEquivalentHexagramInstances(HexagramInstance expected, HexagramInstance actual)
+    {
+        Assert.Equal(expected.Meta, actual.Meta);
+        Assert.Equal(expected.Lines.Count, actual.Lines.Count);
+
+        for (var i = 0; i < expected.Lines.Count; i++)
+        {
+            var expectedLine = expected.Lines[i];
+            var actualLine = actual.Lines[i];
+
+            Assert.Equal(expectedLine.LinePosition, actualLine.LinePosition);
+            Assert.Equal(expectedLine.YinYang, actualLine.YinYang);
+            Assert.Equal(expectedLine.IsChanging, actualLine.IsChanging);
+            Assert.Equal(expectedLine.FourSymbol, actualLine.FourSymbol);
+            Assert.Equal(expectedLine.StemBranch.Stem, actualLine.StemBranch.Stem);
+            Assert.Equal(expectedLine.StemBranch.Branch, actualLine.StemBranch.Branch);
+            Assert.Equal(expectedLine.SixKin, actualLine.SixKin);
+            Assert.Equal(expectedLine.SixSpirit, actualLine.SixSpirit);
+            Assert.Equal(expectedLine.Position, actualLine.Position);
+            Assert.Equal(expectedLine.HiddenDeity?.SixKin, actualLine.HiddenDeity?.SixKin);
+            Assert.Equal(expectedLine.HiddenDeity?.StemBranch.Stem, actualLine.HiddenDeity?.StemBranch.Stem);
+            Assert.Equal(expectedLine.HiddenDeity?.StemBranch.Branch, actualLine.HiddenDeity?.StemBranch.Branch);
+        }
     }
 }

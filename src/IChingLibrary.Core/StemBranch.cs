@@ -24,6 +24,11 @@ public class StemBranch(HeavenlyStem stem, EarthlyBranch branch)
     /// </summary>
     public EarthlyBranch[] EmptyBranches => _emptyBranches.ToArray();
 
+    /// <summary>
+    /// 旬空的低分配只读视图
+    /// </summary>
+    public ReadOnlyMemory<EarthlyBranch> EmptyBranchesMemory => _emptyBranches;
+
     /// <inheritdoc />
     public override string ToString() => $"{Stem}{Branch}";
 
@@ -288,15 +293,10 @@ public partial class EarthlyBranch : IChingElement<EarthlyBranch>, IGenerative<E
     };
 
     /// <summary>
-    /// 地支三合局（申子辰水局、亥卯未木局、寅午戌火局、巳酉丑金局）
+    /// 地支三合局掩码，索引为当前地支值。
+    /// 同一三合局中的三个地支映射到相同掩码。
     /// </summary>
-    private static readonly EarthlyBranch[][] TriangularCombinationGroups =
-    [
-        [Shen, Zi, Chen], // 水局
-        [Hai, Mao, Wei], // 木局
-        [Yin, Wu, Xu], // 火局
-        [Si, You, Chou] // 金局
-    ];
+    private static readonly int[] TriangularCombinationMasks = CreateTriangularCombinationMasks();
 
     /// <inheritdoc />
     public bool IsGenerates(EarthlyBranch other) => FivePhase.IsGenerates(other.FivePhase);
@@ -323,6 +323,34 @@ public partial class EarthlyBranch : IChingElement<EarthlyBranch>, IGenerative<E
     public bool IsCombining(EarthlyBranch other) => CombinesMap.TryGetValue(this, out var partner) && partner == other;
 
     /// <inheritdoc />
-    public bool IsTriangularCombination(EarthlyBranch other, EarthlyBranch another) =>
-        TriangularCombinationGroups.Any(g => g.Contains(this) && g.Contains(other) && g.Contains(another));
+    public bool IsTriangularCombination(EarthlyBranch other, EarthlyBranch another)
+    {
+        var mask = TriangularCombinationMasks[Value];
+        return mask != 0 && mask == CreateCombinationMask(this, other, another);
+    }
+
+    private static int[] CreateTriangularCombinationMasks()
+    {
+        var masks = new int[13];
+        RegisterTriangularCombinationMask(masks, Shen, Zi, Chen);
+        RegisterTriangularCombinationMask(masks, Hai, Mao, Wei);
+        RegisterTriangularCombinationMask(masks, Yin, Wu, Xu);
+        RegisterTriangularCombinationMask(masks, Si, You, Chou);
+        return masks;
+    }
+
+    private static void RegisterTriangularCombinationMask(
+        int[] masks,
+        EarthlyBranch first,
+        EarthlyBranch second,
+        EarthlyBranch third)
+    {
+        var mask = CreateCombinationMask(first, second, third);
+        masks[first.Value] = mask;
+        masks[second.Value] = mask;
+        masks[third.Value] = mask;
+    }
+
+    private static int CreateCombinationMask(EarthlyBranch first, EarthlyBranch second, EarthlyBranch third) =>
+        (1 << first.Value) | (1 << second.Value) | (1 << third.Value);
 }

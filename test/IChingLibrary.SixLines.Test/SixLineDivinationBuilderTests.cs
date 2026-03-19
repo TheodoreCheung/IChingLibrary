@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Reflection;
 using IChingLibrary.Core;
 using IChingLibrary.SixLines.Builder;
 using Xunit.Abstractions;
@@ -369,6 +371,88 @@ public class SixLineDivinationBuilderTests
         {
             Assert.NotNull(line.SixSpirit);
         });
+    }
+
+    [Fact]
+    public void Builder_WithDefaultSteps_CalledTwice_ShouldMatchSingleDefaultPipeline()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+
+        var actual = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithDefaultSteps()
+            .WithDefaultSteps()
+            .Build();
+
+        var expected = SixLineDivination.Create(TestCastingTime, fourSymbols);
+
+        Assert.Equal(expected.Original.Meta, actual.Original.Meta);
+        Assert.Equal(expected.SymbolicStars!.AllStars.Count, actual.SymbolicStars!.AllStars.Count);
+        for (var i = 0; i < 6; i++)
+        {
+            Assert.Equal(expected.Original[i].StemBranch.Stem, actual.Original[i].StemBranch.Stem);
+            Assert.Equal(expected.Original[i].StemBranch.Branch, actual.Original[i].StemBranch.Branch);
+            Assert.Equal(expected.Original[i].SixKin, actual.Original[i].SixKin);
+            Assert.Equal(expected.Original[i].SixSpirit, actual.Original[i].SixSpirit);
+            Assert.Equal(expected.Original[i].Position, actual.Original[i].Position);
+            Assert.Equal(expected.Original[i].HiddenDeity?.SixKin, actual.Original[i].HiddenDeity?.SixKin);
+        }
+    }
+
+    [Fact]
+    public void Builder_WithCustomStepThenDefaultSteps_ShouldMatchSingleDefaultPipeline()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+
+        var actual = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new HiddenDeityStep())
+            .WithDefaultSteps()
+            .Build();
+
+        var expected = SixLineDivination.Create(TestCastingTime, fourSymbols);
+
+        Assert.Equal(expected.Original.Meta, actual.Original.Meta);
+        Assert.Equal(expected.SymbolicStars!.AllStars.Count, actual.SymbolicStars!.AllStars.Count);
+        for (var i = 0; i < 6; i++)
+        {
+            Assert.Equal(expected.Original[i].StemBranch.Stem, actual.Original[i].StemBranch.Stem);
+            Assert.Equal(expected.Original[i].StemBranch.Branch, actual.Original[i].StemBranch.Branch);
+            Assert.Equal(expected.Original[i].SixKin, actual.Original[i].SixKin);
+            Assert.Equal(expected.Original[i].SixSpirit, actual.Original[i].SixSpirit);
+            Assert.Equal(expected.Original[i].Position, actual.Original[i].Position);
+            Assert.Equal(expected.Original[i].HiddenDeity?.SixKin, actual.Original[i].HiddenDeity?.SixKin);
+        }
+    }
+
+    [Fact]
+    public void HiddenDeityStep_ShouldCachePalaceTemplateLazily()
+    {
+        var cacheField = typeof(HiddenDeityStep).GetField("_palaceTemplateCache", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(cacheField);
+
+        var cache = Assert.IsAssignableFrom<IDictionary>(cacheField!.GetValue(null));
+        cache.Clear();
+
+        var cacheLockField = typeof(HiddenDeityStep).GetField("_palaceTemplateCacheLock", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(cacheLockField);
+        Assert.Equal(typeof(System.Threading.Lock), cacheLockField!.FieldType);
+
+        var getTemplateMethod = typeof(HiddenDeityStep).GetMethod(
+            "GetOrCreatePalaceTemplate",
+            BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(getTemplateMethod);
+
+        var first = getTemplateMethod!.Invoke(null, [Trigram.Qian]);
+
+        Assert.NotNull(first);
+        Assert.True(cache.Contains(Trigram.Qian));
+        Assert.True(cache.Count < 8);
+
+        var second = getTemplateMethod.Invoke(null, [Trigram.Qian]);
+
+        Assert.Same(first, second);
+        Assert.True(cache.Contains(Trigram.Qian));
     }
 
     [Fact]

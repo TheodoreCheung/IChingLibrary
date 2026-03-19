@@ -22,8 +22,7 @@ public class TimeBasedCastingMethod(DateTimeOffset castingTime) : ICastingMethod
         var lowerTrigramNumber = yearBranchValue + lunarMonth + lunarDay + hourBranchValue;
         var changingLineNumber = yearBranchValue + lunarMonth + lunarDay + hourBranchValue;
 
-        return new NumberBasedCastingMethod(castingTime, upperTrigramNumber, lowerTrigramNumber, changingLineNumber)
-            .Cast();
+        return NumberBasedCastingMethod.CreateDivination(ctime, upperTrigramNumber, lowerTrigramNumber, changingLineNumber);
     }
 }
 
@@ -35,7 +34,9 @@ public class TimeBasedCastingMethod(DateTimeOffset castingTime) : ICastingMethod
 public class CoinCastingMethod(DateTimeOffset castingTime, FourSymbol[] fourSymbols) : ICastingMethod
 {
     /// <inheritdoc />
-    public SixLineDivination Cast()
+    public SixLineDivination Cast() => CreateDivination(CastingTime.ConvertFrom(castingTime), fourSymbols);
+
+    internal static SixLineDivination CreateDivination(CastingTime castingTime, FourSymbol[] fourSymbols)
     {
         if (fourSymbols.Length != 6)
             throw new ArgumentException("必须提供6个四象值", nameof(fourSymbols));
@@ -54,17 +55,10 @@ public class CoinCastingMethod(DateTimeOffset castingTime, FourSymbol[] fourSymb
 
         var hasChanging = changingMask != 0;
         var changedValue = (byte)(originalValue ^ changingMask);
-
-        var original = new HexagramInstance(Hexagram.FromValue(originalValue));
-        for (var i = 0; i < 6; i++)
-        {
-            if (fourSymbols[i].IsChanging) 
-                original.Lines[i].IsChanging = true;
-        }
-
-        return !hasChanging 
-            ? new SixLineDivination(CastingTime.ConvertFrom(castingTime), original) 
-            : new SixLineDivination(CastingTime.ConvertFrom(castingTime), original, new HexagramInstance(Hexagram.FromValue(changedValue)));
+        return SpecifyingHexagramCastingMethod.CreateDivination(
+            castingTime,
+            Hexagram.FromValue(originalValue),
+            hasChanging ? Hexagram.FromValue(changedValue) : null);
     }
 }
 
@@ -78,15 +72,19 @@ public class CoinCastingMethod(DateTimeOffset castingTime, FourSymbol[] fourSymb
 public class NumberBasedCastingMethod(DateTimeOffset castingTime, int upperTrigramNumber, int lowerTrigramNumber, int? changingLineNumber) : ICastingMethod
 {
     /// <inheritdoc />
-    public SixLineDivination Cast()
+    public SixLineDivination Cast() => CreateDivination(CastingTime.ConvertFrom(castingTime), upperTrigramNumber, lowerTrigramNumber, changingLineNumber);
+
+    internal static SixLineDivination CreateDivination(
+        CastingTime castingTime,
+        int upperTrigramNumber,
+        int lowerTrigramNumber,
+        int? changingLineNumber)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(upperTrigramNumber);
         ArgumentOutOfRangeException.ThrowIfNegative(lowerTrigramNumber);
         if (changingLineNumber is < 0)
             throw new ArgumentOutOfRangeException(nameof(changingLineNumber));
-        
-        var ctime = CastingTime.ConvertFrom(castingTime);
-        
+
         // 通过随机数获取上下卦
         var upperTrigram = GetTrigramByNumber(upperTrigramNumber);
         var lowerTrigram = GetTrigramByNumber(lowerTrigramNumber);
@@ -103,13 +101,12 @@ public class NumberBasedCastingMethod(DateTimeOffset castingTime, int upperTrigr
         else
         {
             // 如果没有提供动爻随机数，则使用公式：(上卦数 + 下卦数 + 日支) % 6
-            var dayBranchValue = ctime.StemBranch.Day.Branch.Value;
+            var dayBranchValue = castingTime.StemBranch.Day.Branch.Value;
             changingLinePosition = GetChangingLinePosition(upperTrigramNumber + lowerTrigramNumber + dayBranchValue);
         }
 
         var changed = (byte)(original.Value ^ (1 << changingLinePosition - 1));
-
-        return new SixLineDivination(ctime, new HexagramInstance(original), new HexagramInstance(Hexagram.FromValue(changed)));
+        return SpecifyingHexagramCastingMethod.CreateDivination(castingTime, original, Hexagram.FromValue(changed));
     }
     
     /// <summary>
@@ -155,25 +152,32 @@ public class NumberBasedCastingMethod(DateTimeOffset castingTime, int upperTrigr
 public class SpecifyingHexagramCastingMethod(DateTimeOffset castingTime, Hexagram original, Hexagram? changed = null) : ICastingMethod
 {
     /// <inheritdoc />
-    public SixLineDivination Cast()
-    {
-        if (changed is null)
-            return new SixLineDivination(CastingTime.ConvertFrom(castingTime), new HexagramInstance(original));
+    public SixLineDivination Cast() => CreateDivination(CastingTime.ConvertFrom(castingTime), original, changed);
 
-        var changingMask = original.Value ^ changed.Value;
-        var fourSymbols = new FourSymbol[6];
+    internal static SixLineDivination CreateDivination(CastingTime castingTime, Hexagram original, Hexagram? changed)
+    {
+        var originalInstance = new HexagramInstance(original);
+
+        if (changed is null)
+            return new SixLineDivination(castingTime, originalInstance);
+
+        var changingMask = (byte)(original.Value ^ changed.Value);
+        if (changingMask == 0)
+            return new SixLineDivination(castingTime, originalInstance);
+
+        ApplyChangingLines(originalInstance, changingMask);
+
+        return new SixLineDivination(castingTime, originalInstance, new HexagramInstance(changed));
+    }
+
+    private static void ApplyChangingLines(HexagramInstance original, byte changingMask)
+    {
         for (var i = 0; i < 6; i++)
         {
             if (((changingMask >> i) & 1) == 1)
             {
-                fourSymbols[i] = ((original.Value >> i) & 1) == 1 ? FourSymbol.OldYang : FourSymbol.OldYin;
-            }
-            else
-            {
-                fourSymbols[i] = ((original.Value >> i) & 1) == 1 ? FourSymbol.YoungYang : FourSymbol.YoungYin;
+                original.Lines[i].IsChanging = true;
             }
         }
-        
-        return new CoinCastingMethod(castingTime, fourSymbols).Cast();
     }
 }

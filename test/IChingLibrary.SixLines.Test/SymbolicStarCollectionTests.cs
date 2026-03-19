@@ -121,4 +121,60 @@ public class SymbolicStarCollectionTests
         Assert.DoesNotContain(EarthlyBranch.Zi, reread);
         Assert.False(allStars is Dictionary<SymbolicStar, EarthlyBranch[]>);
     }
+
+    [Fact]
+    public void SymbolicStarCollection_AllStars_ShouldReturnIndependentSnapshotPerCall()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+        var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
+
+        var firstSnapshot = divination.SymbolicStars!.AllStars;
+        var secondSnapshot = divination.SymbolicStars.AllStars;
+        firstSnapshot[SymbolicStar.Nobleman][0] = EarthlyBranch.Zi;
+
+        Assert.NotSame(firstSnapshot, secondSnapshot);
+        Assert.DoesNotContain(EarthlyBranch.Zi, secondSnapshot[SymbolicStar.Nobleman]);
+    }
+
+    [Fact]
+    public void SymbolicStarCollection_TryGetStarsMemory_ShouldExposeReadOnlyView()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+        var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
+
+        var found = divination.SymbolicStars!.TryGetStarsMemory(SymbolicStar.Nobleman, out var branches);
+
+        Assert.True(found);
+        Assert.Equal(
+            divination.SymbolicStars.GetStars(SymbolicStar.Nobleman)!.Select(branch => branch.Value),
+            branches.ToArray().Select(branch => branch.Value));
+    }
+
+    [Fact]
+    public void SymbolicStarCollection_PublicApi_ShouldNotExposeAllStarsMemoryProperty()
+    {
+        Assert.Null(typeof(SymbolicStarCollection).GetProperty("AllStarsMemory"));
+    }
+
+    [Fact]
+    public void SymbolicStarCollection_AllStars_ShouldStayInSyncAfterAddAndRemove()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+        var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
+        var customStar = SymbolicStar.CreateCustom("DynamicStar");
+
+        var added = divination.SymbolicStars!.Add(customStar, () => [EarthlyBranch.Zi, EarthlyBranch.Wu]);
+
+        Assert.True(added);
+        Assert.True(divination.SymbolicStars.AllStars.ContainsKey(customStar));
+        Assert.Equal(
+            [EarthlyBranch.Zi.Value, EarthlyBranch.Wu.Value],
+            divination.SymbolicStars.AllStars[customStar].Select(branch => branch.Value));
+
+        var removed = divination.SymbolicStars.Remove(customStar);
+
+        Assert.True(removed);
+        Assert.False(divination.SymbolicStars.AllStars.ContainsKey(customStar));
+        Assert.False(divination.SymbolicStars.TryGetStarsMemory(customStar, out _));
+    }
 }

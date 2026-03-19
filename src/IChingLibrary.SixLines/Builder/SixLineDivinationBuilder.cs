@@ -8,6 +8,8 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
     private ICastingMethod? _castingMethod;
     
     private readonly List<IStructuringStep> _steps = [];
+    private readonly HashSet<Type> _stepTypes = [];
+    private bool _requiresSorting;
 
     /// <inheritdoc />
     public ISixLineDivinationBuilder UseMethod(ICastingMethod castingMethod)
@@ -19,24 +21,30 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
     /// <inheritdoc />
     public ISixLineDivinationBuilder WithDefaultSteps()
     {
-        return WithStep(new NajiaStep())
-            .WithStep(new PositionStep())
-            .WithStep(new SixKinStep())
-            .WithStep(new SixSpiritStep())
-            .WithStep(new HiddenDeityStep())
-            .WithStep(new SymbolicStarStep());
+        var hadExistingSteps = _steps.Count > 0;
+        AddStep(new NajiaStep());
+        AddStep(new PositionStep());
+        AddStep(new SixKinStep());
+        AddStep(new SixSpiritStep());
+        AddStep(new HiddenDeityStep());
+        AddStep(new SymbolicStarStep());
+
+        if (hadExistingSteps)
+        {
+            _requiresSorting = true;
+        }
+
+        return this;
     }
 
     /// <inheritdoc />
     public ISixLineDivinationBuilder WithStep(IStructuringStep structuringStep)
     {
-        var stepType = structuringStep.GetType();
-        if (_steps.Any(s => s.GetType() == stepType))
+        if (AddStep(structuringStep))
         {
-            return this;
+            _requiresSorting = true;
         }
 
-        _steps.Add(structuringStep);
         return this;
     }
 
@@ -53,7 +61,7 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
         var context = new DivinationContext(seed);
 
         // 3. 拓扑排序（解决乱序添加问题）
-        var sortedSteps = SortSteps();
+        var sortedSteps = _requiresSorting ? SortSteps() : _steps;
 
         // 4. 依次执行
         foreach (var step in sortedSteps)
@@ -118,5 +126,16 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
             visited.Add(stepType);
             sorted.Add(step);
         }
+    }
+
+    private bool AddStep(IStructuringStep structuringStep)
+    {
+        if (!_stepTypes.Add(structuringStep.GetType()))
+        {
+            return false;
+        }
+
+        _steps.Add(structuringStep);
+        return true;
     }
 }

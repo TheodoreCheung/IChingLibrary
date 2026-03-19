@@ -47,7 +47,7 @@ public sealed class NajiaStep : IStructuringStep
             Bind(context.SixLineDivination.Changed);
     }
     
-    private static void Bind(HexagramInstance hexagram)
+    internal static void Bind(HexagramInstance hexagram)
     {
         // 1. 获取内卦和外卦的元数据索引 (0-7)
         var lowerIdx = hexagram.Meta.Lower.Value;

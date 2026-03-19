@@ -16,9 +16,9 @@ internal delegate EarthlyBranch[]? SymbolicStarCalculatorDelegate(
 public sealed class SymbolicStarStep : IStructuringStep
 {
     /// <summary>
-    /// 神煞计算器注册表，存储神煞类型与其计算委托的映射关系
+    /// 默认神煞计算器注册表，所有实例共享。
     /// </summary>
-    private readonly Dictionary<SymbolicStar, SymbolicStarCalculatorDelegate> _calculators = new();
+    private static readonly IReadOnlyDictionary<SymbolicStar, SymbolicStarCalculatorDelegate> Calculators = CreateCalculators();
 
     /// <summary>
     /// 计算三合局的长生位地支
@@ -106,23 +106,14 @@ public sealed class SymbolicStarStep : IStructuringStep
     public IEnumerable<Type> RequiredSteps { get; } = [];
 
     /// <summary>
-    /// 初始化神煞计算步骤并注册默认计算器
+    /// 创建所有默认神煞计算器
     /// </summary>
-    public SymbolicStarStep()
+    private static IReadOnlyDictionary<SymbolicStar, SymbolicStarCalculatorDelegate> CreateCalculators()
     {
-        RegisterDefaultCalculators();
-    }
+        var calculators = new Dictionary<SymbolicStar, SymbolicStarCalculatorDelegate>();
 
-    /// <summary>
-    /// 注册所有默认神煞计算器
-    /// </summary>
-    /// <remarks>
-    /// 包含基于日干、日支、月支和卦身的神煞
-    /// </remarks>
-    private void RegisterDefaultCalculators()
-    {
         // 基于日干的神煞
-        Add(SymbolicStar.Nobleman, (ct, _) => {
+        Add(calculators, SymbolicStar.Nobleman, (ct, _) => {
             var startIndex = (ct.StemBranch.Day.Stem.Value - 1) * 2;
             return
             [
@@ -130,22 +121,22 @@ public sealed class SymbolicStarStep : IStructuringStep
                 EarthlyBranch.FromValue(NoblemanTable[startIndex + 1])
             ];
         });
-        Add(SymbolicStar.SalarySpirit, (ct, _) => [CalculateStemStar(ct.StemBranch.Day.Stem, SalarySpiritTable)]);
-        Add(SymbolicStar.CultureFlourish, (ct, _) => [CalculateStemStar(ct.StemBranch.Day.Stem, CultureFlourishTable)]);
-        Add(SymbolicStar.YangBlade, (ct, _) => [CalculateStemStar(ct.StemBranch.Day.Stem, YangBladeTable)]);
+        Add(calculators, SymbolicStar.SalarySpirit, (ct, _) => [CalculateStemStar(ct.StemBranch.Day.Stem, SalarySpiritTable)]);
+        Add(calculators, SymbolicStar.CultureFlourish, (ct, _) => [CalculateStemStar(ct.StemBranch.Day.Stem, CultureFlourishTable)]);
+        Add(calculators, SymbolicStar.YangBlade, (ct, _) => [CalculateStemStar(ct.StemBranch.Day.Stem, YangBladeTable)]);
 
         // 基于日支的神煞
-        Add(SymbolicStar.PostHorse, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 6)]);
-        Add(SymbolicStar.PeachBlossom, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 1)]);
-        Add(SymbolicStar.GeneralsStar, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 4)]);
-        Add(SymbolicStar.Canopy, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 8)]);
-        Add(SymbolicStar.StarOfStrategy, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 2)]);
-        Add(SymbolicStar.DisasterMalignity, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 10)]);
-        Add(SymbolicStar.RobberyMalignity, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 9)]);
-        Add(SymbolicStar.DeathSpirit, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 3)]);
+        Add(calculators, SymbolicStar.PostHorse, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 6)]);
+        Add(calculators, SymbolicStar.PeachBlossom, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 1)]);
+        Add(calculators, SymbolicStar.GeneralsStar, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 4)]);
+        Add(calculators, SymbolicStar.Canopy, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 8)]);
+        Add(calculators, SymbolicStar.StarOfStrategy, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 2)]);
+        Add(calculators, SymbolicStar.DisasterMalignity, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 10)]);
+        Add(calculators, SymbolicStar.RobberyMalignity, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 9)]);
+        Add(calculators, SymbolicStar.DeathSpirit, (ct, _) => [CalculateTrinityCombinationBranch(ct.StemBranch.Day.Branch, 3)]);
 
         // 基于月支的神煞
-        Add(SymbolicStar.CelestialPhysician,
+        Add(calculators, SymbolicStar.CelestialPhysician,
             (ct, _) => [EarthlyBranch.FromValue((byte)((ct.StemBranch.Month.Branch.Value - 1 + 11) % 12 + 1))]);
         // 1. 将地支对齐到以 寅(3) 为起始的正月逻辑
         // 寅(3)->0, 卯(4)->1, 辰(5)->2, ..., 丑(2)->11
@@ -153,10 +144,10 @@ public sealed class SymbolicStarStep : IStructuringStep
         // 3. 计算天喜地支 (以 1-indexed 返回)
         // 春(0)->11, 夏(1)->2, 秋(2)->5, 冬(3)->8
         // 公式：(11 + season * 3 - 1) % 12 + 1
-        Add(SymbolicStar.HeavenlyJoy, (ct, _) => [EarthlyBranch.FromValue((byte)(((ct.StemBranch.Month.Branch.Value + 9) % 12 / 3 * 3 + 10) % 12 + 1))]);
+        Add(calculators, SymbolicStar.HeavenlyJoy, (ct, _) => [EarthlyBranch.FromValue((byte)(((ct.StemBranch.Month.Branch.Value + 9) % 12 / 3 * 3 + 10) % 12 + 1))]);
 
         // 基于卦身的神煞
-        Add(SymbolicStar.MarriageBed, (_, hi) => 
+        Add(calculators, SymbolicStar.MarriageBed, (_, hi) => 
             hi.FindHexagramBody()?.FivePhase.Value switch
             {
                 1 => [EarthlyBranch.Hai, EarthlyBranch.Zi],
@@ -166,7 +157,7 @@ public sealed class SymbolicStarStep : IStructuringStep
                 5 => [EarthlyBranch.Shen, EarthlyBranch.You],
                 _ => []
             });
-        Add(SymbolicStar.BridalChamber, (_, hi) => 
+        Add(calculators, SymbolicStar.BridalChamber, (_, hi) => 
             hi.FindHexagramBody()?.FivePhase.Value switch
             {
                 1 => [EarthlyBranch.Yin, EarthlyBranch.Mao],
@@ -176,26 +167,32 @@ public sealed class SymbolicStarStep : IStructuringStep
                 5 => [EarthlyBranch.Hai, EarthlyBranch.Zi],
                 _ => []
             });
+
+        return calculators;
     }
 
     /// <summary>
     /// 添加神煞计算器（不覆盖已存在的计算器）
     /// </summary>
+    /// <param name="calculators">目标计算器注册表</param>
     /// <param name="symbolicStar">神煞类型</param>
     /// <param name="calculator">神煞计算委托</param>
     /// <remarks>
     /// 如果神煞已存在，则不会覆盖原有计算器
     /// </remarks>
-    private void Add(SymbolicStar symbolicStar, SymbolicStarCalculatorDelegate calculator)
+    private static void Add(
+        Dictionary<SymbolicStar, SymbolicStarCalculatorDelegate> calculators,
+        SymbolicStar symbolicStar,
+        SymbolicStarCalculatorDelegate calculator)
     {
-        _calculators.TryAdd(symbolicStar, calculator);
+        calculators.TryAdd(symbolicStar, calculator);
     }
 
     /// <inheritdoc />
     public void Execute(DivinationContext context)
     {
-        var stars = new Dictionary<SymbolicStar, EarthlyBranch[]>();
-        foreach (var (symbolicStar, calculator) in _calculators)
+        var stars = new Dictionary<SymbolicStar, EarthlyBranch[]>(Calculators.Count);
+        foreach (var (symbolicStar, calculator) in Calculators)
         {
             var branches = calculator(context.SixLineDivination.CastingTime, context.SixLineDivination.Original);
             if (branches != null)
