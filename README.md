@@ -275,6 +275,8 @@ var divination5 = SixLineDivination
     .Build();
 ```
 
+如果只执行了部分结构化步骤，`SixLineDivination.ToString()` 现在会对尚未计算的字段输出 `_` 占位符，而不是抛出异常。
+
 ### 6. 自定义结构化步骤
 
 `IStructuringStep` 是结构化步骤扩展点，主要用于库内扩展。若需在外部程序集中访问占卜数据并实现自定义步骤，请基于源码进行扩展，或通过 `InternalsVisibleTo` 开放内部访问。
@@ -679,6 +681,25 @@ ChangeLanguage("zh-Hans");
 // 示例：切换为英文
 ChangeLanguage("en");
 ```
+
+#### 12.5.1 并发场景下的局部语言作用域
+
+如果你在 ASP.NET、后台任务或并发异步流程中需要为单个执行流临时覆盖语言或翻译提供者，建议使用 `BeginScope()`，避免直接修改全局静态状态：
+
+```csharp
+using System.Globalization;
+using IChingLibrary.Core;
+using IChingLibrary.Core.Localization;
+
+async Task<string> RenderAsync(string language)
+{
+    using var _ = IChingTranslationManager.BeginScope(culture: new CultureInfo(language));
+    await Task.Delay(10);
+    return YinYang.Yin.ToString();
+}
+```
+
+`BeginScope()` 只影响当前异步流；释放作用域后会自动恢复到之前的设置。
 
 #### 12.6 文化解析优先级
 
