@@ -434,6 +434,10 @@ public class SixLineDivinationBuilderTests
         var cache = Assert.IsAssignableFrom<IDictionary>(cacheField!.GetValue(null));
         cache.Clear();
 
+        var cacheLockField = typeof(HiddenDeityStep).GetField("_palaceTemplateCacheLock", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(cacheLockField);
+        Assert.Equal(typeof(System.Threading.Lock), cacheLockField!.FieldType);
+
         var getTemplateMethod = typeof(HiddenDeityStep).GetMethod(
             "GetOrCreatePalaceTemplate",
             BindingFlags.NonPublic | BindingFlags.Static);
