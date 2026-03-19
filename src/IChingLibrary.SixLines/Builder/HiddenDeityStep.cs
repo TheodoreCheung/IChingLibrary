@@ -6,7 +6,7 @@
 public class HiddenDeityStep : IStructuringStep
 {
     private static readonly Dictionary<Trigram, HiddenDeityInfo[]> _palaceTemplateCache = [];
-    private static readonly System.Threading.Lock _palaceTemplateCacheLock = new();
+    private static readonly Lock _palaceTemplateCacheLock = new();
 
     /// <inheritdoc />
     public IEnumerable<Type> RequiredSteps { get; } = [typeof(SixKinStep)];
@@ -51,7 +51,7 @@ public class HiddenDeityStep : IStructuringStep
 
     private static HiddenDeityInfo[] GetOrCreatePalaceTemplate(Trigram palace)
     {
-        lock (_palaceTemplateCacheLock)
+        using (_palaceTemplateCacheLock.EnterScope())
         {
             if (_palaceTemplateCache.TryGetValue(palace, out var template))
             {
