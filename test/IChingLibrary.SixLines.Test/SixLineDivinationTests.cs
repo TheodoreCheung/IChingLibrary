@@ -1,4 +1,5 @@
 using IChingLibrary.Core;
+using IChingLibrary.SixLines.Builder;
 
 namespace IChingLibrary.SixLines.Test;
 
@@ -26,7 +27,6 @@ public class SixLineDivinationTests
         // Assert
         Assert.NotNull(divination);
         Assert.NotNull(divination.Original);
-        Assert.NotNull(divination.CastingTime);
         Assert.NotNull(divination.SymbolicStars);
     }
 
@@ -53,7 +53,6 @@ public class SixLineDivinationTests
         // Assert
         Assert.NotNull(divination);
         Assert.NotNull(divination.Original);
-        Assert.NotNull(divination.CastingTime);
     }
 
     [Fact]
@@ -214,7 +213,6 @@ public class SixLineDivinationTests
         var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
 
         // Assert
-        Assert.NotNull(divination.CastingTime);
         Assert.NotNull(divination.Original);
         Assert.NotNull(divination.SymbolicStars);
 
@@ -257,5 +255,21 @@ public class SixLineDivinationTests
             var sixKin = line.SixKin;
             Assert.NotNull(sixKin);
         });
+    }
+
+    [Fact]
+    public void ToString_PartialBuild_ShouldNotThrow()
+    {
+        // Arrange
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+        var divination = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestInquiryTime, fourSymbols))
+            .Build();
+
+        // Act
+        var ex = Record.Exception(() => divination.ToString());
+
+        // Assert
+        Assert.Null(ex);
     }
 }

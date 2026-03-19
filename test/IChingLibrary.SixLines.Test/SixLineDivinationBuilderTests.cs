@@ -6,6 +6,37 @@ namespace IChingLibrary.SixLines.Test;
 
 public class SixLineDivinationBuilderTests
 {
+    private sealed class LoopStepA : IStructuringStep
+    {
+        private int _readCount;
+
+        public IEnumerable<Type> RequiredSteps
+        {
+            get
+            {
+                if (_readCount++ == 0)
+                {
+                    return [typeof(LoopStepB)];
+                }
+
+                return [];
+            }
+        }
+
+        public void Execute(DivinationContext context)
+        {
+        }
+    }
+
+    private sealed class LoopStepB : IStructuringStep
+    {
+        public IEnumerable<Type> RequiredSteps => [typeof(LoopStepA)];
+
+        public void Execute(DivinationContext context)
+        {
+        }
+    }
+
     private readonly ITestOutputHelper _testOutputHelper;
 
     public SixLineDivinationBuilderTests(ITestOutputHelper testOutputHelper)
@@ -411,6 +442,23 @@ public class SixLineDivinationBuilderTests
                 .WithDefaultSteps()
                 .Build();
         });
+    }
+
+    [Fact]
+    public void Builder_WithCircularDependencies_ShouldThrowClearError()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+
+        var ex = Assert.Throws<InvalidOperationException>(() =>
+        {
+            SixLineDivination.CreateBuilder()
+                .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+                .WithStep(new LoopStepA())
+                .WithStep(new LoopStepB())
+                .Build();
+        });
+
+        Assert.Contains("循环", ex.Message);
     }
 
     [Fact]

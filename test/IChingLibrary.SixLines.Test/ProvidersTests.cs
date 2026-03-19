@@ -7,6 +7,21 @@ public class ProvidersTests
 {
     private static DateTimeOffset TestInquiryTime => new(2024, 1, 1, 12, 0, 0, TimeSpan.Zero);
 
+    private static DateTimeOffset FindDateByDayBranch(EarthlyBranch branch)
+    {
+        var start = new DateTimeOffset(2024, 1, 1, 12, 0, 0, TimeSpan.Zero);
+        for (var i = 0; i < 180; i++)
+        {
+            var candidate = start.AddDays(i);
+            if (CastingTime.ConvertFrom(candidate).StemBranch.Day.Branch == branch)
+            {
+                return candidate;
+            }
+        }
+
+        throw new InvalidOperationException($"Unable to find test date for {branch}");
+    }
+
     [Fact]
     public void NajiaProvider_TheCreativeHexagram_ShouldBindCorrectStemBranches()
     {
@@ -231,7 +246,7 @@ public class ProvidersTests
         // Assert
         var noblemanBranches = divination.SymbolicStars!.GetStars(SymbolicStar.Nobleman);
         Assert.Contains(EarthlyBranch.Chou, noblemanBranches!);  // 牛
-        Assert.Contains(EarthlyBranch.Wei, noblemanBranches);    // 羊
+        Assert.Contains(EarthlyBranch.Wei, noblemanBranches!);   // 羊
     }
 
     [Fact]
@@ -260,6 +275,24 @@ public class ProvidersTests
 
         // Assert - 子日应有一些神煞
         Assert.NotEmpty(starsForZi);
+    }
+
+    [Theory]
+    [InlineData(4)]
+    [InlineData(8)]
+    [InlineData(12)]
+    public void SymbolicStarProvider_WoodTrinityDayBranches_ShouldNotThrow(byte branchValue)
+    {
+        // Arrange - 亥卯未属于木局，对应取模结果为 0
+        var branch = EarthlyBranch.FromValue(branchValue);
+        var inquiryTime = FindDateByDayBranch(branch);
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+
+        // Act
+        var ex = Record.Exception(() => SixLineDivination.Create(inquiryTime, fourSymbols));
+
+        // Assert
+        Assert.Null(ex);
     }
 
     [Fact]

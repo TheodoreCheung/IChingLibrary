@@ -44,7 +44,7 @@ public sealed class SymbolicStarStep : IStructuringStep
             1 => EarthlyBranch.Shen.Value, // 申子辰 (水局)，长生在申
             2 => EarthlyBranch.Si.Value, // 巳酉丑 (金局)，长生在巳
             3 => EarthlyBranch.Yin.Value, // 寅午戌 (火局)，长生在寅
-            4 => EarthlyBranch.Hai.Value, // 亥卯未 (木局)，长生在亥
+            0 => EarthlyBranch.Hai.Value, // 亥卯未 (木局)，长生在亥
             _ => throw new ArgumentException(null, nameof(dayBranch))
         };
 

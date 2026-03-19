@@ -143,6 +143,18 @@ public class SixLineDivination
             .WithDefaultSteps()
             .Build();
     }
+
+    private static string SafeString(Func<object?> getter)
+    {
+        try
+        {
+            return getter()?.ToString() ?? "_";
+        }
+        catch (InvalidOperationException)
+        {
+            return "_";
+        }
+    }
     
     /// <inheritdoc />
     public override string ToString()
@@ -170,7 +182,7 @@ public class SixLineDivination
         {
             var line = Original[i];
 
-            sb.Append($"|{line.LinePosition}|{line.StemBranch}|{line.SixKin}|{line.FourSymbol}|{line.SixSpirit}|");
+            sb.Append($"|{line.LinePosition}|{SafeString(() => line.StemBranch)}|{SafeString(() => line.SixKin)}|{line.FourSymbol}|{line.SixSpirit?.ToString() ?? "_"}|");
             if (line.Position is not null)
             {
                 sb.Append($"{line.Position}|");
@@ -207,7 +219,7 @@ public class SixLineDivination
             sb.AppendLine("|---|---|---|");
             for (var i = 5; i >= 0; i--)
             {
-                sb.AppendLine($"|{Changed[i].LinePosition}|{Changed[i].StemBranch}|{Changed[i].SixKin}|");
+                sb.AppendLine($"|{Changed[i].LinePosition}|{SafeString(() => Changed[i].StemBranch)}|{SafeString(() => Changed[i].SixKin)}|");
             }
         }
 

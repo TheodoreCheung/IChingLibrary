@@ -74,6 +74,8 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
         var stepDict = _steps.ToDictionary(s => s.GetType());
         // 用于记录已访问的类型，防止重复处理和循环依赖
         var visited = new HashSet<Type>();
+        // 用于记录当前递归路径上的类型，检测循环依赖
+        var visiting = new HashSet<Type>();
         // 存储排序后的结果列表
         var sorted = new List<IStructuringStep>();
 
@@ -92,6 +94,10 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
             var stepType = step.GetType();
             // 检查该步骤类型是否已经被访问过，如果是则直接返回
             if (visited.Contains(stepType)) return;
+            if (!visiting.Add(stepType))
+            {
+                throw new InvalidOperationException($"检测到循环依赖步骤: {stepType}");
+            }
 
             // 遍历当前步骤所需的所有依赖步骤类型
             foreach (var depType in step.RequiredSteps)
@@ -108,6 +114,7 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
                 }
             }
 
+            visiting.Remove(stepType);
             visited.Add(stepType);
             sorted.Add(step);
         }

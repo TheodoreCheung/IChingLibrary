@@ -51,6 +51,22 @@ public class CastingTimeTests
         Assert.Equal(inquiryTime.Lunar, copy.Lunar);
         Assert.Equal(inquiryTime.StemBranch, copy.StemBranch);
     }
+
+    [Fact]
+    public void ConvertFrom_SameInstantDifferentOffset_ShouldProduceDifferentLunarWallClock()
+    {
+        // Arrange - 同一绝对时刻，但输入方看到的本地时间不同
+        var utc = new DateTimeOffset(2024, 2, 10, 18, 30, 0, TimeSpan.Zero);
+        var plusEight = utc.ToOffset(TimeSpan.FromHours(8));
+
+        // Act
+        var utcResult = CastingTime.ConvertFrom(utc);
+        var plusEightResult = CastingTime.ConvertFrom(plusEight);
+
+        // Assert - 按调用方 wall-clock 计算时，农历本地时间和时辰都应不同
+        Assert.NotEqual(utcResult.Lunar.DateTime, plusEightResult.Lunar.DateTime);
+        Assert.NotEqual(utcResult.StemBranch.Hour.Branch, plusEightResult.StemBranch.Hour.Branch);
+    }
 }
 
 public class LunarStemBranchTests

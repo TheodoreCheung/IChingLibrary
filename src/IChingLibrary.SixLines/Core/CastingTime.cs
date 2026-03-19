@@ -31,7 +31,7 @@ public readonly struct CastingTime(DateTimeOffset solar, DateTimeOffset lunar, L
     public static CastingTime ConvertFrom(DateTimeOffset dateTime)
     {
         // 创建Solar对象，用于公历和农历转换
-        var solar = new Solar(dateTime.LocalDateTime);
+        var solar = new Solar(dateTime.DateTime);
         // 获取农历日期时间信息
         var lunar = solar.Lunar;
 
