@@ -330,3 +330,4 @@ old_resx/
 scripts/__pycache__/
 scripts/*.pyc
 CLAUDE.md
+nuget.config
