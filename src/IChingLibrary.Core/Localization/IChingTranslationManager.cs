@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Threading;
 using IChingLibrary.Core.Resources;
 
 namespace IChingLibrary.Core.Localization;
@@ -10,6 +11,8 @@ public static class IChingTranslationManager
 {
     private static IIChingTranslationProvider? _provider;
     private static CultureInfo? _defaultCulture;
+    private static readonly AsyncLocal<IIChingTranslationProvider?> ScopedProvider = new();
+    private static readonly AsyncLocal<CultureInfo?> ScopedCulture = new();
 
     /// <summary>
     /// 获取或设置当前翻译提供者
@@ -51,12 +54,45 @@ public static class IChingTranslationManager
     }
 
     /// <summary>
+    /// 在当前异步流范围内覆盖翻译提供者和文化设置
+    /// </summary>
+    /// <param name="culture">作用域文化，null 表示沿用上层配置</param>
+    /// <param name="provider">作用域提供者，null 表示沿用上层配置</param>
+    /// <returns>释放后恢复到进入作用域前的状态</returns>
+    public static IDisposable BeginScope(CultureInfo? culture = null, IIChingTranslationProvider? provider = null)
+    {
+        var previousCulture = ScopedCulture.Value;
+        var previousProvider = ScopedProvider.Value;
+
+        if (culture is not null)
+        {
+            ScopedCulture.Value = culture;
+        }
+
+        if (provider is not null)
+        {
+            ScopedProvider.Value = provider;
+        }
+
+        return new TranslationScope(() =>
+        {
+            ScopedCulture.Value = previousCulture;
+            ScopedProvider.Value = previousProvider;
+        });
+    }
+
+    /// <summary>
     /// 获取有效的文化信息
     /// </summary>
     /// <returns>如果设置了 DefaultCulture 则返回它，否则返回 CurrentUICulture</returns>
     internal static CultureInfo GetEffectiveCulture()
     {
-        return _defaultCulture ?? CultureInfo.CurrentUICulture;
+        return ScopedCulture.Value ?? _defaultCulture ?? CultureInfo.CurrentUICulture;
+    }
+
+    internal static IIChingTranslationProvider GetEffectiveProvider()
+    {
+        return ScopedProvider.Value ?? Provider;
     }
 
     /// <summary>
@@ -69,7 +105,7 @@ public static class IChingTranslationManager
     public static string? GetTranslation(string typeName, string label, CultureInfo? culture = null)
     {
         var effectiveCulture = culture ?? GetEffectiveCulture();
-        return Provider.GetTranslation(typeName, label, effectiveCulture);
+        return GetEffectiveProvider().GetTranslation(typeName, label, effectiveCulture);
     }
 
     /// <summary>
@@ -79,6 +115,8 @@ public static class IChingTranslationManager
     {
         _provider = null;
         _defaultCulture = null;
+        ScopedProvider.Value = null;
+        ScopedCulture.Value = null;
     }
 
     /// <summary>
@@ -87,5 +125,15 @@ public static class IChingTranslationManager
     private static IIChingTranslationProvider CreateDefaultProvider()
     {
         return new ResxTranslationProvider(IChingResources.ResourceManager);
+    }
+
+    private sealed class TranslationScope(Action restore) : IDisposable
+    {
+        private Action? _restore = restore;
+
+        public void Dispose()
+        {
+            Interlocked.Exchange(ref _restore, null)?.Invoke();
+        }
     }
 }

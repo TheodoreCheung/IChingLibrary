@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Reflection;
 using IChingLibrary.Core;
 using IChingLibrary.Core.Localization;
 
@@ -422,6 +423,41 @@ public class LocalizationTests
             IChingTranslationManager.DefaultCulture = null;
             CultureInfo.CurrentUICulture = originalCulture;
         }
+    }
+
+    [Fact]
+    public async Task TranslationScope_ShouldIsolateCulturesAcrossConcurrentFlows()
+    {
+        async Task<string> RenderAsync(string cultureName)
+        {
+            using var _ = IChingTranslationManager.BeginScope(culture: new CultureInfo(cultureName));
+            await Task.Delay(10);
+            return YinYang.Yin.ToString();
+        }
+
+        var zhTask = RenderAsync("zh-Hans");
+        var enTask = RenderAsync("en");
+
+        var results = await Task.WhenAll(zhTask, enTask);
+
+        Assert.Contains("阴", results);
+        Assert.Contains("Yin", results);
+    }
+
+    [Fact]
+    public void EmptyBranches_ShouldCacheInternallyAndReturnDefensiveCopies()
+    {
+        var stemBranch = new StemBranch(HeavenlyStem.Jia, EarthlyBranch.Zi);
+
+        var first = stemBranch.EmptyBranches;
+        var second = stemBranch.EmptyBranches;
+
+        first[0] = EarthlyBranch.Zi;
+
+        Assert.NotEqual(first[0], second[0]);
+
+        var cacheField = typeof(StemBranch).GetField("_emptyBranches", BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.NotNull(cacheField);
     }
 
     [Fact]

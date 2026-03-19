@@ -7,6 +7,8 @@ namespace IChingLibrary.Core;
 /// </summary>
 public class StemBranch(HeavenlyStem stem, EarthlyBranch branch)
 {
+    private readonly EarthlyBranch[] _emptyBranches = CreateEmptyBranches(stem, branch);
+
     /// <summary>
     /// 天干
     /// </summary>
@@ -20,30 +22,29 @@ public class StemBranch(HeavenlyStem stem, EarthlyBranch branch)
     /// <summary>
     /// 旬空（空亡地支）
     /// </summary>
-    public EarthlyBranch[] EmptyBranches
-    {
-        get
-        {
-            // 计算旬头地支（甲所在的地支）
-            // 旬头地支索引 = (地支索引 - (天干索引 - 1) + 11) % 12 + 1
-            var stemIndex = Stem.Value - 1; // 0-9
-            var branchIndex = Branch.Value; // 1-12
-            var xunBranchIndex = (branchIndex - stemIndex + 11) % 12 + 1;
-
-            // 空亡地支是旬头地支往后第10、11位
-            var empty1Index = (xunBranchIndex + 9) % 12 + 1;
-            var empty2Index = (xunBranchIndex + 10) % 12 + 1;
-
-            return
-            [
-                EarthlyBranch.FromValue((byte)empty1Index),
-                EarthlyBranch.FromValue((byte)empty2Index)
-            ];
-        }
-    }
+    public EarthlyBranch[] EmptyBranches => _emptyBranches.ToArray();
 
     /// <inheritdoc />
     public override string ToString() => $"{Stem}{Branch}";
+
+    private static EarthlyBranch[] CreateEmptyBranches(HeavenlyStem stem, EarthlyBranch branch)
+    {
+        // 计算旬头地支（甲所在的地支）
+        // 旬头地支索引 = (地支索引 - (天干索引 - 1) + 11) % 12 + 1
+        var stemIndex = stem.Value - 1; // 0-9
+        var branchIndex = branch.Value; // 1-12
+        var xunBranchIndex = (branchIndex - stemIndex + 11) % 12 + 1;
+
+        // 空亡地支是旬头地支往后第10、11位
+        var empty1Index = (xunBranchIndex + 9) % 12 + 1;
+        var empty2Index = (xunBranchIndex + 10) % 12 + 1;
+
+        return
+        [
+            EarthlyBranch.FromValue((byte)empty1Index),
+            EarthlyBranch.FromValue((byte)empty2Index)
+        ];
+    }
 }
 
 /// <summary>
