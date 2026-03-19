@@ -121,4 +121,18 @@ public class SymbolicStarCollectionTests
         Assert.DoesNotContain(EarthlyBranch.Zi, reread);
         Assert.False(allStars is Dictionary<SymbolicStar, EarthlyBranch[]>);
     }
+
+    [Fact]
+    public void SymbolicStarCollection_AllStars_ShouldReturnIndependentSnapshotPerCall()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+        var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
+
+        var firstSnapshot = divination.SymbolicStars!.AllStars;
+        var secondSnapshot = divination.SymbolicStars.AllStars;
+        firstSnapshot[SymbolicStar.Nobleman][0] = EarthlyBranch.Zi;
+
+        Assert.NotSame(firstSnapshot, secondSnapshot);
+        Assert.DoesNotContain(EarthlyBranch.Zi, secondSnapshot[SymbolicStar.Nobleman]);
+    }
 }

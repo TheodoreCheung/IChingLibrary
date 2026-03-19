@@ -89,4 +89,11 @@ public class IChingElementTests
         Assert.Equal(YinYang.Yin, YinYang.FromValue(0));
         Assert.Equal(YinYang.Yang, YinYang.FromValue(1));
     }
+
+    [Fact]
+    public void YinYang_FromValue_ShouldReturnStaticSingletonInstance()
+    {
+        Assert.Same(YinYang.Yin, YinYang.FromValue(0));
+        Assert.Same(YinYang.Yang, YinYang.FromValue(1));
+    }
 }

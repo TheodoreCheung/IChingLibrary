@@ -767,6 +767,14 @@ public class HexagramTests
     }
 
     [Fact]
+    public void Hexagram_FromValue_ShouldReturnStaticSingletonInstance()
+    {
+        Assert.Same(Hexagram.TheCreative, Hexagram.FromValue((byte)(0b111 << 3 | 0b111)));
+        Assert.Same(Hexagram.ComingToMeet, Hexagram.FromValue((byte)(0b111 << 3 | 0b110)));
+        Assert.Same(Hexagram.TheReceptive, Hexagram.FromValue((byte)(0b000 << 3 | 0b000)));
+    }
+
+    [Fact]
     public void Hexagram_AllValues_ShouldBeUnique()
     {
         // Act

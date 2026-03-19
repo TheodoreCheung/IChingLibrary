@@ -45,6 +45,25 @@ public class SixLineDivinationTests
     }
 
     [Fact]
+    public void Create_WithFourSymbolsAndByteArray_ShouldProduceEquivalentDivination()
+    {
+        var fourSymbols = new[]
+        {
+            FourSymbol.OldYang,
+            FourSymbol.YoungYin,
+            FourSymbol.YoungYang,
+            FourSymbol.OldYin,
+            FourSymbol.YoungYang,
+            FourSymbol.YoungYin
+        };
+
+        var fromSymbols = SixLineDivination.Create(TestInquiryTime, fourSymbols);
+        var fromBytes = SixLineDivination.Create(TestInquiryTime, fourSymbols.Select(symbol => symbol.Value).ToArray());
+
+        AssertEquivalentDivinations(fromSymbols, fromBytes);
+    }
+
+    [Fact]
     public void Create_WithInquiryTimeOnly_ShouldUseTimeBasedHexagram()
     {
         // Act
@@ -133,6 +152,15 @@ public class SixLineDivinationTests
         Assert.NotNull(divination);
         Assert.NotNull(divination.Changed);
         Assert.Equal(Hexagram.FromValue(changedValue), divination.Changed.Meta);
+    }
+
+    [Fact]
+    public void Create_WithHexagramsAndByteValues_ShouldProduceEquivalentDivination()
+    {
+        var fromHexagrams = SixLineDivination.Create(TestInquiryTime, Hexagram.TheCreative, Hexagram.TheReceptive);
+        var fromBytes = SixLineDivination.Create(TestInquiryTime, Hexagram.TheCreative.Value, Hexagram.TheReceptive.Value);
+
+        AssertEquivalentDivinations(fromHexagrams, fromBytes);
     }
 
     [Fact]
@@ -271,5 +299,59 @@ public class SixLineDivinationTests
 
         // Assert
         Assert.Null(ex);
+    }
+
+    private static void AssertEquivalentDivinations(SixLineDivination expected, SixLineDivination actual)
+    {
+        Assert.Equal(expected.CastingTime.Solar, actual.CastingTime.Solar);
+        AssertEquivalentHexagramInstances(expected.Original, actual.Original);
+
+        if (expected.Changed is null)
+        {
+            Assert.Null(actual.Changed);
+        }
+        else
+        {
+            Assert.NotNull(actual.Changed);
+            AssertEquivalentHexagramInstances(expected.Changed, actual.Changed);
+        }
+
+        Assert.NotNull(expected.SymbolicStars);
+        Assert.NotNull(actual.SymbolicStars);
+
+        var expectedStars = expected.SymbolicStars.AllStars;
+        var actualStars = actual.SymbolicStars.AllStars;
+
+        Assert.Equal(expectedStars.Count, actualStars.Count);
+        foreach (var (star, expectedBranches) in expectedStars)
+        {
+            Assert.True(actualStars.ContainsKey(star));
+            Assert.Equal(expectedBranches.Select(branch => branch.Value), actualStars[star].Select(branch => branch.Value));
+        }
+    }
+
+    private static void AssertEquivalentHexagramInstances(HexagramInstance expected, HexagramInstance actual)
+    {
+        Assert.Equal(expected.Meta, actual.Meta);
+        Assert.Equal(expected.Lines.Count, actual.Lines.Count);
+
+        for (var i = 0; i < expected.Lines.Count; i++)
+        {
+            var expectedLine = expected.Lines[i];
+            var actualLine = actual.Lines[i];
+
+            Assert.Equal(expectedLine.LinePosition, actualLine.LinePosition);
+            Assert.Equal(expectedLine.YinYang, actualLine.YinYang);
+            Assert.Equal(expectedLine.IsChanging, actualLine.IsChanging);
+            Assert.Equal(expectedLine.FourSymbol, actualLine.FourSymbol);
+            Assert.Equal(expectedLine.StemBranch.Stem, actualLine.StemBranch.Stem);
+            Assert.Equal(expectedLine.StemBranch.Branch, actualLine.StemBranch.Branch);
+            Assert.Equal(expectedLine.SixKin, actualLine.SixKin);
+            Assert.Equal(expectedLine.SixSpirit, actualLine.SixSpirit);
+            Assert.Equal(expectedLine.Position, actualLine.Position);
+            Assert.Equal(expectedLine.HiddenDeity?.SixKin, actualLine.HiddenDeity?.SixKin);
+            Assert.Equal(expectedLine.HiddenDeity?.StemBranch.Stem, actualLine.HiddenDeity?.StemBranch.Stem);
+            Assert.Equal(expectedLine.HiddenDeity?.StemBranch.Branch, actualLine.HiddenDeity?.StemBranch.Branch);
+        }
     }
 }
