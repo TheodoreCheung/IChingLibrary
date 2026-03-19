@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Reflection;
 using IChingLibrary.Core;
 using IChingLibrary.SixLines.Builder;
 using Xunit.Abstractions;
@@ -421,6 +423,32 @@ public class SixLineDivinationBuilderTests
             Assert.Equal(expected.Original[i].Position, actual.Original[i].Position);
             Assert.Equal(expected.Original[i].HiddenDeity?.SixKin, actual.Original[i].HiddenDeity?.SixKin);
         }
+    }
+
+    [Fact]
+    public void HiddenDeityStep_ShouldCachePalaceTemplateLazily()
+    {
+        var cacheField = typeof(HiddenDeityStep).GetField("_palaceTemplateCache", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(cacheField);
+
+        var cache = Assert.IsAssignableFrom<IDictionary>(cacheField!.GetValue(null));
+        cache.Clear();
+
+        var getTemplateMethod = typeof(HiddenDeityStep).GetMethod(
+            "GetOrCreatePalaceTemplate",
+            BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(getTemplateMethod);
+
+        var first = getTemplateMethod!.Invoke(null, [Trigram.Qian]);
+
+        Assert.NotNull(first);
+        Assert.True(cache.Contains(Trigram.Qian));
+        Assert.True(cache.Count < 8);
+
+        var second = getTemplateMethod.Invoke(null, [Trigram.Qian]);
+
+        Assert.Same(first, second);
+        Assert.True(cache.Contains(Trigram.Qian));
     }
 
     [Fact]

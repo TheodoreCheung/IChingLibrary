@@ -5,6 +5,9 @@
 /// </summary>
 public class HiddenDeityStep : IStructuringStep
 {
+    private static readonly Dictionary<Trigram, HiddenDeityInfo[]> _palaceTemplateCache = [];
+    private static readonly object _palaceTemplateCacheLock = new();
+
     /// <inheritdoc />
     public IEnumerable<Type> RequiredSteps { get; } = [typeof(SixKinStep)];
 
@@ -29,8 +32,8 @@ public class HiddenDeityStep : IStructuringStep
             return;
         }
 
-        // 3. 获取本宫卦模板（已预计算纳甲和六亲）
-        var palaceTemplate = PalaceHexagramTemplateCache.GetTemplate(context.SixLineDivination.Original.Meta.Palace).Span;
+        // 3. 获取本宫卦模板（按需缓存纳甲和六亲结果）
+        var palaceTemplate = GetOrCreatePalaceTemplate(context.SixLineDivination.Original.Meta.Palace);
 
         // 4. 按位置对应查找伏神
         for (var i = 0; i < 6; i++)
@@ -44,5 +47,37 @@ public class HiddenDeityStep : IStructuringStep
                 context.SixLineDivination.Original.Lines[i].HiddenDeity = palaceLine;
             }
         }
+    }
+
+    private static HiddenDeityInfo[] GetOrCreatePalaceTemplate(Trigram palace)
+    {
+        lock (_palaceTemplateCacheLock)
+        {
+            if (_palaceTemplateCache.TryGetValue(palace, out var template))
+            {
+                return template;
+            }
+
+            template = CreatePalaceTemplate(palace);
+            _palaceTemplateCache[palace] = template;
+            return template;
+        }
+    }
+
+    private static HiddenDeityInfo[] CreatePalaceTemplate(Trigram palace)
+    {
+        var hexagram = new HexagramInstance(Hexagram.Create(palace, palace));
+        NajiaStep.Bind(hexagram);
+
+        var palacePhase = palace.FivePhase;
+        var template = new HiddenDeityInfo[hexagram.Lines.Count];
+        for (var i = 0; i < hexagram.Lines.Count; i++)
+        {
+            hexagram.Lines[i].SixKin =
+                SixKinStep.GetSixKin(palacePhase, hexagram.Lines[i].StemBranch.Branch.FivePhase);
+            template[i] = HiddenDeityInfo.FromLine(hexagram.Lines[i]);
+        }
+
+        return template;
     }
 }
