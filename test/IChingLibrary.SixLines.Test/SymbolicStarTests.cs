@@ -1,3 +1,4 @@
+using System.Reflection;
 using IChingLibrary.Core;
 
 namespace IChingLibrary.SixLines.Test;
@@ -7,13 +8,13 @@ public class SymbolicStarTests
     [Fact]
     public void SymbolicStar_PresetValues_ShouldReturnCorrectValue()
     {
-        // 基于日干的神�?
+        // 基于日干的神煞
         Assert.Equal(1, SymbolicStar.Nobleman.Value);
         Assert.Equal(2, SymbolicStar.SalarySpirit.Value);
         Assert.Equal(3, SymbolicStar.CultureFlourish.Value);
         Assert.Equal(6, SymbolicStar.YangBlade.Value);
 
-        // 基于三合局的神�?
+        // 基于三合局的神煞
         Assert.Equal(4, SymbolicStar.PostHorse.Value);
         Assert.Equal(5, SymbolicStar.PeachBlossom.Value);
         Assert.Equal(9, SymbolicStar.GeneralsStar.Value);
@@ -147,9 +148,31 @@ public class SymbolicStarTests
 
         Assert.Equal(threadCount * starsPerThread, stars.Count);
 
-        // 检查所有值都是唯一�?
+        // 检查所有值都是唯一的
         var values = stars.Select(s => s.Value).ToList();
         var uniqueValues = new HashSet<byte>(values);
         Assert.Equal(values.Count, uniqueValues.Count);
     }
+
+    [Fact]
+    public void SymbolicStar_CreateCustom_WhenValueSpaceExhausted_ShouldThrowClearError()
+    {
+        var field = typeof(SymbolicStar).GetField("_nextCustomValue", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(field);
+
+        var originalValue = field!.GetValue(null);
+        try
+        {
+            field.SetValue(null, Convert.ChangeType(byte.MaxValue, field.FieldType));
+            _ = SymbolicStar.CreateCustom("BeforeOverflow");
+
+            var ex = Assert.Throws<InvalidOperationException>(() => SymbolicStar.CreateCustom("Overflow"));
+            Assert.Contains("上限", ex.Message);
+        }
+        finally
+        {
+            field.SetValue(null, originalValue);
+        }
+    }
 }
+

@@ -94,4 +94,31 @@ public class SymbolicStarCollectionTests
         Assert.True(allStars.ContainsKey(SymbolicStar.Nobleman));
         Assert.True(allStars.ContainsKey(SymbolicStar.SalarySpirit));
     }
+
+    [Fact]
+    public void SymbolicStarCollection_GetStars_ShouldReturnCopyInsteadOfInternalArray()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+        var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
+
+        var branches = divination.SymbolicStars!.GetStars(SymbolicStar.Nobleman)!;
+        branches[0] = EarthlyBranch.Zi;
+
+        var reread = divination.SymbolicStars.GetStars(SymbolicStar.Nobleman)!;
+        Assert.DoesNotContain(EarthlyBranch.Zi, reread);
+    }
+
+    [Fact]
+    public void SymbolicStarCollection_AllStars_ShouldReturnSnapshot()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+        var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
+
+        var allStars = divination.SymbolicStars!.AllStars;
+        allStars[SymbolicStar.Nobleman][0] = EarthlyBranch.Zi;
+
+        var reread = divination.SymbolicStars.GetStars(SymbolicStar.Nobleman)!;
+        Assert.DoesNotContain(EarthlyBranch.Zi, reread);
+        Assert.False(allStars is Dictionary<SymbolicStar, EarthlyBranch[]>);
+    }
 }

@@ -128,7 +128,7 @@ public partial class SymbolicStar : IChingElement<SymbolicStar>
     /// <summary>
     /// 下一个自定义神煞的值
     /// </summary>
-    private static byte _nextCustomValue = CustomStartValue;
+    private static int _nextCustomValue = CustomStartValue;
 
     /// <summary>
     /// 线程安全锁
@@ -144,7 +144,13 @@ public partial class SymbolicStar : IChingElement<SymbolicStar>
     {
         using (Lock.EnterScope())
         {
-            var value = _nextCustomValue++;
+            if (_nextCustomValue > byte.MaxValue)
+            {
+                throw new InvalidOperationException("自定义神煞值已达到上限。");
+            }
+
+            var value = checked((byte)_nextCustomValue);
+            _nextCustomValue++;
             return new SymbolicStar(value, name);
         }
     }

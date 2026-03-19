@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using IChingLibrary.SixLines.Builder;
 
 namespace IChingLibrary.SixLines;
@@ -25,7 +26,9 @@ public sealed class SymbolicStarCollection
     /// <returns>对应的地支数组，如果神煞不存在返回 null</returns>
     public EarthlyBranch[]? GetStars(SymbolicStar symbolicStar)
     {
-        return _symbolicStars.GetValueOrDefault(symbolicStar);
+        return _symbolicStars.TryGetValue(symbolicStar, out var branches)
+            ? branches.ToArray()
+            : null;
     }
 
     /// <summary>
@@ -55,7 +58,9 @@ public sealed class SymbolicStarCollection
     /// <summary>
     /// 获取所有神煞
     /// </summary>
-    public IReadOnlyDictionary<SymbolicStar, EarthlyBranch[]> AllStars => _symbolicStars;
+    public IReadOnlyDictionary<SymbolicStar, EarthlyBranch[]> AllStars =>
+        new ReadOnlyDictionary<SymbolicStar, EarthlyBranch[]>(
+            _symbolicStars.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToArray()));
 
     /// <summary>
     /// 添加神煞
