@@ -5,18 +5,6 @@
 /// </summary>
 public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
 {
-    private static readonly (Type StepType, Func<IStructuringStep> Factory)[] DefaultStepFactories =
-    [
-        (typeof(NajiaStep), static () => new NajiaStep()),
-        (typeof(PositionStep), static () => new PositionStep()),
-        (typeof(SixKinStep), static () => new SixKinStep()),
-        (typeof(SixSpiritStep), static () => new SixSpiritStep()),
-        (typeof(HiddenDeityStep), static () => new HiddenDeityStep()),
-        (typeof(SymbolicStarStep), static () => new SymbolicStarStep())
-    ];
-
-    private static readonly bool DefaultStepOrderValidated = ValidateDefaultStepOrder();
-
     private ICastingMethod? _castingMethod;
     
     private readonly List<IStructuringStep> _steps = [];
@@ -33,12 +21,13 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
     /// <inheritdoc />
     public ISixLineDivinationBuilder WithDefaultSteps()
     {
-        _ = DefaultStepOrderValidated;
         var hadExistingSteps = _steps.Count > 0;
-        foreach (var (stepType, factory) in DefaultStepFactories)
-        {
-            AddDefaultStep(stepType, factory);
-        }
+        AddStep(new NajiaStep());
+        AddStep(new PositionStep());
+        AddStep(new SixKinStep());
+        AddStep(new SixSpiritStep());
+        AddStep(new HiddenDeityStep());
+        AddStep(new SymbolicStarStep());
 
         if (hadExistingSteps)
         {
@@ -51,7 +40,11 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
     /// <inheritdoc />
     public ISixLineDivinationBuilder WithStep(IStructuringStep structuringStep)
     {
-        AddStep(structuringStep, keepOrder: false);
+        if (AddStep(structuringStep))
+        {
+            _requiresSorting = true;
+        }
+
         return this;
     }
 
@@ -135,51 +128,14 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
         }
     }
 
-    private void AddStep(IStructuringStep structuringStep, bool keepOrder)
+    private bool AddStep(IStructuringStep structuringStep)
     {
         if (!_stepTypes.Add(structuringStep.GetType()))
         {
-            return;
+            return false;
         }
 
         _steps.Add(structuringStep);
-        if (!keepOrder)
-        {
-            _requiresSorting = true;
-        }
-    }
-
-    private void AddDefaultStep(Type stepType, Func<IStructuringStep> factory)
-    {
-        if (!_stepTypes.Add(stepType))
-        {
-            return;
-        }
-
-        _steps.Add(factory());
-    }
-
-    private static bool ValidateDefaultStepOrder()
-    {
-        var visited = new HashSet<Type>();
-        foreach (var (stepType, factory) in DefaultStepFactories)
-        {
-            if (!visited.Add(stepType))
-            {
-                throw new InvalidOperationException($"默认步骤中存在重复类型: {stepType}");
-            }
-
-            var step = factory();
-            foreach (var dependencyType in step.RequiredSteps)
-            {
-                if (!visited.Contains(dependencyType))
-                {
-                    throw new InvalidOperationException(
-                        $"默认步骤顺序无效: {stepType} 依赖 {dependencyType}，但该依赖未在前面注册。");
-                }
-            }
-        }
-
         return true;
     }
 }

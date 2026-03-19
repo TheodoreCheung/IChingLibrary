@@ -398,6 +398,32 @@ public class SixLineDivinationBuilderTests
     }
 
     [Fact]
+    public void Builder_WithCustomStepThenDefaultSteps_ShouldMatchSingleDefaultPipeline()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+
+        var actual = SixLineDivination.CreateBuilder()
+            .UseMethod(new CoinCastingMethod(TestCastingTime, fourSymbols))
+            .WithStep(new HiddenDeityStep())
+            .WithDefaultSteps()
+            .Build();
+
+        var expected = SixLineDivination.Create(TestCastingTime, fourSymbols);
+
+        Assert.Equal(expected.Original.Meta, actual.Original.Meta);
+        Assert.Equal(expected.SymbolicStars!.AllStars.Count, actual.SymbolicStars!.AllStars.Count);
+        for (var i = 0; i < 6; i++)
+        {
+            Assert.Equal(expected.Original[i].StemBranch.Stem, actual.Original[i].StemBranch.Stem);
+            Assert.Equal(expected.Original[i].StemBranch.Branch, actual.Original[i].StemBranch.Branch);
+            Assert.Equal(expected.Original[i].SixKin, actual.Original[i].SixKin);
+            Assert.Equal(expected.Original[i].SixSpirit, actual.Original[i].SixSpirit);
+            Assert.Equal(expected.Original[i].Position, actual.Original[i].Position);
+            Assert.Equal(expected.Original[i].HiddenDeity?.SixKin, actual.Original[i].HiddenDeity?.SixKin);
+        }
+    }
+
+    [Fact]
     public void Builder_WithNajiaForChanged_ShouldBindChangedStemBranches()
     {
         // Arrange - 有变爻的卦
