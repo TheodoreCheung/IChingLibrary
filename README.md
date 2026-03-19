@@ -287,11 +287,6 @@ if (divination.SymbolicStars?.TryGetStarsMemory(SymbolicStar.Nobleman, out var n
     Console.WriteLine(string.Join("、", noblemanBranches.ToArray()));
 }
 
-foreach (var pair in divination.SymbolicStars?.AllStarsMemory ?? [])
-{
-    Console.WriteLine($"{pair.Key}: {string.Join("、", pair.Value.ToArray())}");
-}
-
 var line = divination.Original.Lines[0];
 if (line.TryGetStemBranch(out var stemBranch) && line.TryGetSixKin(out var sixKin))
 {

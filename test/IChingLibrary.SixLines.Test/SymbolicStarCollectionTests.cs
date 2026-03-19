@@ -151,23 +151,13 @@ public class SymbolicStarCollectionTests
     }
 
     [Fact]
-    public void SymbolicStarCollection_AllStarsMemory_ShouldExposeAllStarsWithoutSnapshotCopies()
+    public void SymbolicStarCollection_PublicApi_ShouldNotExposeAllStarsMemoryProperty()
     {
-        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
-        var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
-
-        var allStars = divination.SymbolicStars!.AllStarsMemory;
-
-        Assert.Equal(16, allStars.Count);
-        Assert.True(allStars.ContainsKey(SymbolicStar.Nobleman));
-        Assert.False(allStars is Dictionary<SymbolicStar, ReadOnlyMemory<EarthlyBranch>>);
-        Assert.Equal(
-            divination.SymbolicStars.GetStars(SymbolicStar.Nobleman)!.Select(branch => branch.Value),
-            allStars[SymbolicStar.Nobleman].ToArray().Select(branch => branch.Value));
+        Assert.Null(typeof(SymbolicStarCollection).GetProperty("AllStarsMemory"));
     }
 
     [Fact]
-    public void SymbolicStarCollection_AllStarsMemory_ShouldStayInSyncAfterAddAndRemove()
+    public void SymbolicStarCollection_AllStars_ShouldStayInSyncAfterAddAndRemove()
     {
         var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
         var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
@@ -176,15 +166,15 @@ public class SymbolicStarCollectionTests
         var added = divination.SymbolicStars!.Add(customStar, () => [EarthlyBranch.Zi, EarthlyBranch.Wu]);
 
         Assert.True(added);
-        Assert.True(divination.SymbolicStars.AllStarsMemory.ContainsKey(customStar));
+        Assert.True(divination.SymbolicStars.AllStars.ContainsKey(customStar));
         Assert.Equal(
             [EarthlyBranch.Zi.Value, EarthlyBranch.Wu.Value],
-            divination.SymbolicStars.AllStarsMemory[customStar].ToArray().Select(branch => branch.Value));
+            divination.SymbolicStars.AllStars[customStar].Select(branch => branch.Value));
 
         var removed = divination.SymbolicStars.Remove(customStar);
 
         Assert.True(removed);
-        Assert.False(divination.SymbolicStars.AllStarsMemory.ContainsKey(customStar));
+        Assert.False(divination.SymbolicStars.AllStars.ContainsKey(customStar));
         Assert.False(divination.SymbolicStars.TryGetStarsMemory(customStar, out _));
     }
 }
