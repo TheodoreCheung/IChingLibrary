@@ -19,8 +19,9 @@ public class HiddenDeityStep : IStructuringStep
         }
 
         // 2. 检查是否有缺少的六亲
-        var allKins = SixKin.GetAll().ToList();
-        var missingKins = allKins.Where(kin => !existingKins.Contains(kin)).ToList();
+        var missingKins = SixKin.GetAll()
+            .Where(kin => !existingKins.Contains(kin))
+            .ToHashSet();
 
         if (missingKins.Count == 0)
         {
@@ -28,29 +29,19 @@ public class HiddenDeityStep : IStructuringStep
             return;
         }
 
-        // 3. 获取本宫卦（上下卦相同的卦）
-        var palace = context.SixLineDivination.Original.Meta.Palace;
-        var palaceHexagram = Hexagram.Create(palace, palace);
+        // 3. 获取本宫卦模板（已预计算纳甲和六亲）
+        var palaceTemplate = PalaceHexagramTemplateCache.GetTemplate(context.SixLineDivination.Original.Meta.Palace);
 
-        
-        // 4. 创建本宫卦实例并执行纳甲和六亲绑定
-        var palaceDivination = new SixLineDivinationBuilder()
-            .UseMethod(new SpecifyingHexagramCastingMethod(context.SixLineDivination.CastingTime.Solar, palaceHexagram))
-            .WithStep(new NajiaStep())
-            .WithStep(new SixKinStep())
-            .Build();
-
-        // 5. 按位置对应查找伏神
-        // 对于每个爻位，检查本宫卦对应位置的爻的六亲是否在主卦中缺少
+        // 4. 按位置对应查找伏神
         for (var i = 0; i < 6; i++)
         {
-            var palaceLine = palaceDivination.Original.Lines[i];
+            var palaceLine = palaceTemplate[i];
 
             // 如果本宫卦此位置的六亲在主卦中缺少
             if (missingKins.Contains(palaceLine.SixKin))
             {
                 // 将本宫卦的爻作为伏神绑定到主卦对应位置的爻
-                context.SixLineDivination.Original.Lines[i].HiddenDeity = HiddenDeityInfo.FromLine(palaceLine);
+                context.SixLineDivination.Original.Lines[i].HiddenDeity = palaceLine;
             }
         }
     }

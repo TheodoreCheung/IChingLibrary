@@ -68,9 +68,15 @@ public class SixLineDivination
     {
         if (fourSymbolValues.Length != 6)
             throw new InvalidOperationException($"Invalid number of four symbol values. Expected 6, got {fourSymbolValues.Length}");
+
+        var fourSymbols = new FourSymbol[6];
+        for (var i = 0; i < fourSymbols.Length; i++)
+        {
+            fourSymbols[i] = FourSymbol.FromValue(fourSymbolValues[i]);
+        }
         
         return CreateBuilder()
-            .UseMethod(new CoinCastingMethod(castingTime, fourSymbolValues.Select(FourSymbol.FromValue).ToArray()))
+            .UseMethod(new CoinCastingMethod(castingTime, fourSymbols))
             .WithDefaultSteps()
             .Build();
     }
@@ -144,16 +150,21 @@ public class SixLineDivination
             .Build();
     }
 
-    private static string SafeString(Func<object?> getter)
+    private static string FormatEarthlyBranches(ReadOnlyMemory<EarthlyBranch> branches)
     {
-        try
-        {
-            return getter()?.ToString() ?? "_";
-        }
-        catch (InvalidOperationException)
+        var span = branches.Span;
+        if (span.Length == 0)
         {
             return "_";
         }
+
+        var branchNames = new string[span.Length];
+        for (var i = 0; i < span.Length; i++)
+        {
+            branchNames[i] = span[i].ToString();
+        }
+
+        return string.Join("、", branchNames);
     }
     
     /// <inheritdoc />
@@ -162,27 +173,54 @@ public class SixLineDivination
         var sb = new StringBuilder();
 
         const string tName = nameof(SixLineDivination);
+        var tTo = IChingTranslationManager.GetTranslation(tName, "To");
+        var tHexagram = IChingTranslationManager.GetTranslation(tName, "Hexagram");
+        var tCastingTime = IChingTranslationManager.GetTranslation(tName, "CastingTime");
+        var tGregorianCalendar = IChingTranslationManager.GetTranslation(tName, "GregorianCalendar");
+        var tDateFormat = IChingTranslationManager.GetTranslation(tName, "DateFormat");
+        var tLunarStemBranch = IChingTranslationManager.GetTranslation(tName, "LunarStemBranch");
+        var tDayEmptiness = IChingTranslationManager.GetTranslation(tName, "DayEmptiness");
+        var tOriginalHexagram = IChingTranslationManager.GetTranslation(tName, "OriginalHexagram");
+        var tHexagramName = IChingTranslationManager.GetTranslation(tName, "HexagramName");
+        var tHexagramPalace = IChingTranslationManager.GetTranslation(tName, "HexagramPalace");
+        var tPalace = IChingTranslationManager.GetTranslation(tName, "Palace");
+        var tPalaceFivePhases = IChingTranslationManager.GetTranslation(tName, "PalaceFivePhases");
+        var tLinePosition = IChingTranslationManager.GetTranslation(tName, "LinePosition");
+        var tStemBranch = IChingTranslationManager.GetTranslation(tName, "StemBranch");
+        var tSixKin = IChingTranslationManager.GetTranslation(tName, "SixKin");
+        var tFourSymbols = IChingTranslationManager.GetTranslation(tName, "FourSymbols");
+        var tSixSpirits = IChingTranslationManager.GetTranslation(tName, "SixSpirits");
+        var tPosition = IChingTranslationManager.GetTranslation(tName, "Position");
+        var tHiddenDeity = IChingTranslationManager.GetTranslation(tName, "HiddenDeity");
+        var tHiddenDeityStemBranch = IChingTranslationManager.GetTranslation(tName, "HiddenDeityStemBranch");
+        var tChangedHexagram = IChingTranslationManager.GetTranslation(tName, "ChangedHexagram");
+        var tSymbolicStar = IChingTranslationManager.GetTranslation(tName, "SymbolicStar");
+        var tSymbolicStarName = IChingTranslationManager.GetTranslation(tName, "SymbolicStarName");
+        var tSymbolicStarBranch = IChingTranslationManager.GetTranslation(tName, "SymbolicStarBranch");
+        var dayEmptiness = FormatEarthlyBranches(CastingTime.StemBranch.Day.EmptyBranchesMemory);
         
-        sb.AppendLine($"# {Original.Meta}{(Changed is null ? "" : $" {IChingTranslationManager.GetTranslation(tName, "To")} {Changed.Meta}")} {IChingTranslationManager.GetTranslation(tName, "Hexagram")}\n");
+        sb.AppendLine($"# {Original.Meta}{(Changed is null ? "" : $" {tTo} {Changed.Meta}")} {tHexagram}\n");
         
-        sb.AppendLine($"## {IChingTranslationManager.GetTranslation(tName, "CastingTime")}");
-        sb.AppendLine($"**{IChingTranslationManager.GetTranslation(tName, "GregorianCalendar")}**: _{CastingTime.Solar.ToString(IChingTranslationManager.GetTranslation(tName, "DateFormat"))}_  ");
-        sb.AppendLine($"**{IChingTranslationManager.GetTranslation(tName, "LunarStemBranch")}**: _{CastingTime.StemBranch}_  ");
-        sb.AppendLine($"**{IChingTranslationManager.GetTranslation(tName, "DayEmptiness")}**: _{string.Join("、", CastingTime.StemBranch.Day.EmptyBranches.Select(b => b.ToString()))}_  \n");
+        sb.AppendLine($"## {tCastingTime}");
+        sb.AppendLine($"**{tGregorianCalendar}**: _{CastingTime.Solar.ToString(tDateFormat)}_  ");
+        sb.AppendLine($"**{tLunarStemBranch}**: _{CastingTime.StemBranch}_  ");
+        sb.AppendLine($"**{tDayEmptiness}**: _{dayEmptiness}_  \n");
 
-        sb.AppendLine($"## {IChingTranslationManager.GetTranslation(tName, "OriginalHexagram")}");
+        sb.AppendLine($"## {tOriginalHexagram}");
         var originalNature = Original.Meta.GetNature();
-        sb.AppendLine($"**{IChingTranslationManager.GetTranslation(tName, "HexagramName")}**: _{Original.Meta}{(originalNature is null ? "" : $"（{originalNature}{IChingTranslationManager.GetTranslation(tName, "Hexagram")}）")}_  ");
-        sb.AppendLine($"**{IChingTranslationManager.GetTranslation(tName, "HexagramPalace")}**: _{Original.Meta.Palace}{IChingTranslationManager.GetTranslation(tName, "Palace")}_  ");
-        sb.AppendLine($"**{IChingTranslationManager.GetTranslation(tName, "PalaceFivePhases")}**: _{Original.Meta.Palace.FivePhase}_  \n");
+        sb.AppendLine($"**{tHexagramName}**: _{Original.Meta}{(originalNature is null ? "" : $"（{originalNature}{tHexagram}）")}_  ");
+        sb.AppendLine($"**{tHexagramPalace}**: _{Original.Meta.Palace}{tPalace}_  ");
+        sb.AppendLine($"**{tPalaceFivePhases}**: _{Original.Meta.Palace.FivePhase}_  \n");
 
-        sb.AppendLine($"|{IChingTranslationManager.GetTranslation(tName, "LinePosition")}|{IChingTranslationManager.GetTranslation(tName, "StemBranch")}|{IChingTranslationManager.GetTranslation(tName, "SixKin")}|{IChingTranslationManager.GetTranslation(tName, "FourSymbols")}|{IChingTranslationManager.GetTranslation(tName, "SixSpirits")}|{IChingTranslationManager.GetTranslation(tName, "Position")}|{IChingTranslationManager.GetTranslation(tName, "HiddenDeity")}|{IChingTranslationManager.GetTranslation(tName, "HiddenDeityStemBranch")}|");
+        sb.AppendLine($"|{tLinePosition}|{tStemBranch}|{tSixKin}|{tFourSymbols}|{tSixSpirits}|{tPosition}|{tHiddenDeity}|{tHiddenDeityStemBranch}|");
         sb.AppendLine("|---|---|---|---|---|---|---|---|");
         for (var i = 5; i >= 0; i--)
         {
             var line = Original[i];
+            var stemBranchText = line.TryGetStemBranch(out var lineStemBranch) ? lineStemBranch!.ToString() : "_";
+            var sixKinText = line.TryGetSixKin(out var lineSixKin) ? lineSixKin!.ToString() : "_";
 
-            sb.Append($"|{line.LinePosition}|{SafeString(() => line.StemBranch)}|{SafeString(() => line.SixKin)}|{line.FourSymbol}|{line.SixSpirit?.ToString() ?? "_"}|");
+            sb.Append($"|{line.LinePosition}|{stemBranchText}|{sixKinText}|{line.FourSymbol}|{line.SixSpirit?.ToString() ?? "_"}|");
             if (line.Position is not null)
             {
                 sb.Append($"{line.Position}|");
@@ -205,34 +243,37 @@ public class SixLineDivination
 
         if (Changed is not null)
         {
-            sb.AppendLine($"\n## {IChingTranslationManager.GetTranslation(tName, "ChangedHexagram")}");
+            sb.AppendLine($"\n## {tChangedHexagram}");
             var changedNature = Changed.Meta.GetNature();
             sb.AppendLine(
-                $"**{IChingTranslationManager.GetTranslation(tName, "HexagramName")}**: _{Changed.Meta}{(changedNature is null ? "" : $"（{changedNature}{IChingTranslationManager.GetTranslation(tName, "Hexagram")}）")}_  ");
+                $"**{tHexagramName}**: _{Changed.Meta}{(changedNature is null ? "" : $"（{changedNature}{tHexagram}）")}_  ");
             sb.AppendLine(
-                $"**{IChingTranslationManager.GetTranslation(tName, "HexagramPalace")}**: _{Changed.Meta.Palace}{IChingTranslationManager.GetTranslation(tName, "Palace")}_  ");
+                $"**{tHexagramPalace}**: _{Changed.Meta.Palace}{tPalace}_  ");
             sb.AppendLine(
-                $"**{IChingTranslationManager.GetTranslation(tName, "PalaceFivePhases")}**: _{Changed.Meta.Palace.FivePhase}_  \n");
+                $"**{tPalaceFivePhases}**: _{Changed.Meta.Palace.FivePhase}_  \n");
 
             sb.AppendLine(
-                $"|{IChingTranslationManager.GetTranslation(tName, "LinePosition")}|{IChingTranslationManager.GetTranslation(tName, "StemBranch")}|{IChingTranslationManager.GetTranslation(tName, "SixKin")}|");
+                $"|{tLinePosition}|{tStemBranch}|{tSixKin}|");
             sb.AppendLine("|---|---|---|");
             for (var i = 5; i >= 0; i--)
             {
-                sb.AppendLine($"|{Changed[i].LinePosition}|{SafeString(() => Changed[i].StemBranch)}|{SafeString(() => Changed[i].SixKin)}|");
+                var line = Changed[i];
+                var stemBranchText = line.TryGetStemBranch(out var lineStemBranch) ? lineStemBranch!.ToString() : "_";
+                var sixKinText = line.TryGetSixKin(out var lineSixKin) ? lineSixKin!.ToString() : "_";
+                sb.AppendLine($"|{line.LinePosition}|{stemBranchText}|{sixKinText}|");
             }
         }
 
         if (SymbolicStars is null)
             return sb.ToString();
         
-        sb.AppendLine($"\n## {IChingTranslationManager.GetTranslation(tName, "SymbolicStar")}");
-        sb.AppendLine($"|{IChingTranslationManager.GetTranslation(tName, "SymbolicStarName")}|{IChingTranslationManager.GetTranslation(tName, "SymbolicStarBranch")}|");
+        sb.AppendLine($"\n## {tSymbolicStar}");
+        sb.AppendLine($"|{tSymbolicStarName}|{tSymbolicStarBranch}|");
         sb.AppendLine("|---|---|");
         
-        foreach (var symbolicStar in SymbolicStars.AllStars)
+        foreach (var symbolicStar in SymbolicStars.AllStarsMemory)
         {
-            sb.AppendLine($"|{symbolicStar.Key}|{string.Join("、", symbolicStar.Value)}|");
+            sb.AppendLine($"|{symbolicStar.Key}|{FormatEarthlyBranches(symbolicStar.Value)}|");
         }
         
         return sb.ToString();

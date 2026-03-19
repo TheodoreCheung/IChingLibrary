@@ -6,6 +6,7 @@
 public class Line
 {
     private SixKin? _sixKin;
+    private StemBranch? _stemBranch;
 
     /// <summary>
     /// 爻位（初爻到上爻）
@@ -37,8 +38,17 @@ public class Line
     /// <exception cref="InvalidOperationException">未经过纳甲步骤构建</exception>
     public StemBranch StemBranch
     {
-        get => field ?? throw new InvalidOperationException($"{nameof(StemBranch)} not set in build step");
-        internal set;
+        get => _stemBranch ?? throw new InvalidOperationException($"{nameof(StemBranch)} not set in build step");
+        internal set => _stemBranch = value;
+    }
+
+    /// <summary>
+    /// 尝试获取干支（纳甲）
+    /// </summary>
+    public bool TryGetStemBranch(out StemBranch? stemBranch)
+    {
+        stemBranch = _stemBranch;
+        return stemBranch is not null;
     }
 
     /// <summary>
@@ -49,6 +59,15 @@ public class Line
     {
         get => _sixKin ?? throw new InvalidOperationException($"{nameof(SixKin)} not set in build step");
         internal set => _sixKin = value;
+    }
+
+    /// <summary>
+    /// 尝试获取六亲
+    /// </summary>
+    public bool TryGetSixKin(out SixKin? sixKin)
+    {
+        sixKin = _sixKin;
+        return sixKin is not null;
     }
 
     /// <summary>

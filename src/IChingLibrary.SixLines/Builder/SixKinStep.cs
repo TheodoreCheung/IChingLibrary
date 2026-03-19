@@ -11,7 +11,7 @@ public sealed class SixKinStep : IStructuringStep
     /// <param name="palacePhase">卦宫五行</param>
     /// <param name="linePhase">爻五行</param>
     /// <returns>六亲</returns>
-    private static SixKin GetSixKin(FivePhase palacePhase, FivePhase linePhase)
+    internal static SixKin GetSixKin(FivePhase palacePhase, FivePhase linePhase)
     {
         // 父母：生我者（爻生卦宫）
         if (linePhase.Generates(palacePhase))

@@ -75,6 +75,25 @@ public class SixLineDivinationTests
     }
 
     [Fact]
+    public void Create_WithInquiryTime_ShouldMatchEquivalentNumberBasedCasting()
+    {
+        var castingTime = CastingTime.ConvertFrom(TestInquiryTime);
+        var yearBranchValue = castingTime.StemBranch.Year.Branch.Value;
+        var hourBranchValue = castingTime.StemBranch.Hour.Branch.Value;
+        var lunarMonth = castingTime.Lunar.Month;
+        var lunarDay = castingTime.Lunar.Day;
+
+        var upperTrigramNumber = yearBranchValue + lunarMonth + lunarDay;
+        var lowerTrigramNumber = upperTrigramNumber + hourBranchValue;
+        var changingLineNumber = lowerTrigramNumber;
+
+        var fromTime = SixLineDivination.Create(TestInquiryTime);
+        var fromNumbers = SixLineDivination.Create(TestInquiryTime, upperTrigramNumber, lowerTrigramNumber, changingLineNumber);
+
+        AssertEquivalentDivinations(fromTime, fromNumbers);
+    }
+
+    [Fact]
     public void Create_WithRandomNumbers_ShouldReturnValidDivination()
     {
         // Arrange
@@ -124,6 +143,16 @@ public class SixLineDivinationTests
     }
 
     [Fact]
+    public void Create_WithSameOriginalAndChangedHexagram_ShouldNotCreateChangedHexagram()
+    {
+        var divination = SixLineDivination.Create(TestInquiryTime, Hexagram.TheCreative, Hexagram.TheCreative);
+
+        Assert.Equal(Hexagram.TheCreative, divination.Original.Meta);
+        Assert.Null(divination.Changed);
+        Assert.All(divination.Original.Lines, line => Assert.False(line.IsChanging));
+    }
+
+    [Fact]
     public void Create_WithByteValues_ShouldReturnValidDivination()
     {
         // Arrange
@@ -152,6 +181,16 @@ public class SixLineDivinationTests
         Assert.NotNull(divination);
         Assert.NotNull(divination.Changed);
         Assert.Equal(Hexagram.FromValue(changedValue), divination.Changed.Meta);
+    }
+
+    [Fact]
+    public void Create_WithSameOriginalAndChangedByteValue_ShouldNotCreateChangedHexagram()
+    {
+        var divination = SixLineDivination.Create(TestInquiryTime, Hexagram.TheCreative.Value, Hexagram.TheCreative.Value);
+
+        Assert.Equal(Hexagram.TheCreative, divination.Original.Meta);
+        Assert.Null(divination.Changed);
+        Assert.All(divination.Original.Lines, line => Assert.False(line.IsChanging));
     }
 
     [Fact]

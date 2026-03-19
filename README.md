@@ -277,6 +277,28 @@ var divination5 = SixLineDivination
 
 如果只执行了部分结构化步骤，`SixLineDivination.ToString()` 现在会对尚未计算的字段输出 `_` 占位符，而不是抛出异常。
 
+在性能敏感的读取路径中，可以优先使用低分配访问接口，避免重复快照或异常式读取：
+
+```csharp
+var emptyBranches = divination.CastingTime.StemBranch.Day.EmptyBranchesMemory;
+
+if (divination.SymbolicStars?.TryGetStarsMemory(SymbolicStar.Nobleman, out var noblemanBranches) == true)
+{
+    Console.WriteLine(string.Join("、", noblemanBranches.ToArray()));
+}
+
+foreach (var pair in divination.SymbolicStars?.AllStarsMemory ?? [])
+{
+    Console.WriteLine($"{pair.Key}: {string.Join("、", pair.Value.ToArray())}");
+}
+
+var line = divination.Original.Lines[0];
+if (line.TryGetStemBranch(out var stemBranch) && line.TryGetSixKin(out var sixKin))
+{
+    Console.WriteLine($"{stemBranch} / {sixKin}");
+}
+```
+
 ### 6. 自定义结构化步骤
 
 `IStructuringStep` 是结构化步骤扩展点，主要用于库内扩展。若需在外部程序集中访问占卜数据并实现自定义步骤，请基于源码进行扩展，或通过 `InternalsVisibleTo` 开放内部访问。

@@ -28,12 +28,15 @@ public class HexagramInstance
     {
         Meta = meta;
 
-        _lines = Enumerable.Range(0, 6)
-            .Select(i => new Line
+        _lines = new Line[6];
+        for (var i = 0; i < _lines.Length; i++)
+        {
+            _lines[i] = new Line
             {
                 LinePosition = LinePosition.FromArrayIndex(i),
                 YinYang = ((meta.Value >> i) & 1) == 1 ? YinYang.Yang : YinYang.Yin
-            }).ToArray();
+            };
+        }
     }
 
     /// <summary>

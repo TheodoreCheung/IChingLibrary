@@ -54,6 +54,36 @@ public class LineTests
     }
 
     [Fact]
+    public void Line_TryGetStemBranch_WhenNotSet_ShouldReturnFalse()
+    {
+        var line = new Line
+        {
+            LinePosition = LinePosition.First,
+            YinYang = YinYang.Yang
+        };
+
+        var found = line.TryGetStemBranch(out var stemBranch);
+
+        Assert.False(found);
+        Assert.Null(stemBranch);
+    }
+
+    [Fact]
+    public void Line_TryGetSixKin_WhenNotSet_ShouldReturnFalse()
+    {
+        var line = new Line
+        {
+            LinePosition = LinePosition.First,
+            YinYang = YinYang.Yang
+        };
+
+        var found = line.TryGetSixKin(out var sixKin);
+
+        Assert.False(found);
+        Assert.Null(sixKin);
+    }
+
+    [Fact]
     public void Line_HasHiddenDeity_ShouldReturnCorrectValue()
     {
         // Arrange

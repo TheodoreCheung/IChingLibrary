@@ -9,6 +9,8 @@ namespace IChingLibrary.SixLines;
 public sealed class SymbolicStarCollection
 {
     private readonly Dictionary<SymbolicStar, EarthlyBranch[]> _symbolicStars;
+    private readonly Dictionary<SymbolicStar, ReadOnlyMemory<EarthlyBranch>> _allStarsMemory;
+    private readonly IReadOnlyDictionary<SymbolicStar, ReadOnlyMemory<EarthlyBranch>> _allStarsMemoryView;
 
     /// <summary>
     /// 初始化神煞集合
@@ -17,6 +19,10 @@ public sealed class SymbolicStarCollection
     internal SymbolicStarCollection(Dictionary<SymbolicStar, EarthlyBranch[]> symbolicStars)
     {
         _symbolicStars = symbolicStars;
+        _allStarsMemory = symbolicStars.ToDictionary(
+            static kvp => kvp.Key,
+            static kvp => new ReadOnlyMemory<EarthlyBranch>(kvp.Value));
+        _allStarsMemoryView = new ReadOnlyDictionary<SymbolicStar, ReadOnlyMemory<EarthlyBranch>>(_allStarsMemory);
     }
 
     /// <summary>
@@ -29,6 +35,21 @@ public sealed class SymbolicStarCollection
         return _symbolicStars.TryGetValue(symbolicStar, out var branches)
             ? branches.ToArray()
             : null;
+    }
+
+    /// <summary>
+    /// 获取指定神煞对应的低分配只读视图
+    /// </summary>
+    public bool TryGetStarsMemory(SymbolicStar symbolicStar, out ReadOnlyMemory<EarthlyBranch> branches)
+    {
+        if (_symbolicStars.TryGetValue(symbolicStar, out var values))
+        {
+            branches = values;
+            return true;
+        }
+
+        branches = default;
+        return false;
     }
 
     /// <summary>
@@ -63,18 +84,41 @@ public sealed class SymbolicStarCollection
             _symbolicStars.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToArray()));
 
     /// <summary>
+    /// 获取所有神煞的低分配只读视图
+    /// </summary>
+    public IReadOnlyDictionary<SymbolicStar, ReadOnlyMemory<EarthlyBranch>> AllStarsMemory => _allStarsMemoryView;
+
+    /// <summary>
     /// 添加神煞
     /// </summary>
     /// <param name="symbolicStar">可以通过<see cref="SymbolicStar.CreateCustom"/>方法添加自定义神煞</param>
     /// <param name="symbolicStarCalculatorDelegate">计算神煞所临地支</param>
     /// <returns>添加成功与否</returns>
-    public bool Add(SymbolicStar symbolicStar, Func<EarthlyBranch[]> symbolicStarCalculatorDelegate) =>
-        _symbolicStars.TryAdd(symbolicStar, symbolicStarCalculatorDelegate());
+    public bool Add(SymbolicStar symbolicStar, Func<EarthlyBranch[]> symbolicStarCalculatorDelegate)
+    {
+        var values = symbolicStarCalculatorDelegate();
+        if (!_symbolicStars.TryAdd(symbolicStar, values))
+        {
+            return false;
+        }
+
+        _allStarsMemory[symbolicStar] = values;
+        return true;
+    }
     
     /// <summary>
     /// 移除指定神煞
     /// </summary>
     /// <param name="symbolicStar"></param>
     /// <returns></returns>
-    public bool Remove(SymbolicStar symbolicStar) => _symbolicStars.Remove(symbolicStar);
+    public bool Remove(SymbolicStar symbolicStar)
+    {
+        if (!_symbolicStars.Remove(symbolicStar))
+        {
+            return false;
+        }
+
+        _allStarsMemory.Remove(symbolicStar);
+        return true;
+    }
 }
