@@ -5,13 +5,13 @@ namespace IChingLibrary.SixLines.Builder;
 /// </summary>
 internal static class PalaceHexagramTemplateCache
 {
-    private static readonly IReadOnlyDictionary<Trigram, HiddenDeityInfo[]> Templates = CreateTemplates();
+    private static readonly IReadOnlyDictionary<Trigram, ReadOnlyMemory<HiddenDeityInfo>> Templates = CreateTemplates();
 
-    internal static HiddenDeityInfo[] GetTemplate(Trigram palace) => Templates[palace];
+    internal static ReadOnlyMemory<HiddenDeityInfo> GetTemplate(Trigram palace) => Templates[palace];
 
-    private static IReadOnlyDictionary<Trigram, HiddenDeityInfo[]> CreateTemplates()
+    private static IReadOnlyDictionary<Trigram, ReadOnlyMemory<HiddenDeityInfo>> CreateTemplates()
     {
-        var templates = new Dictionary<Trigram, HiddenDeityInfo[]>();
+        var templates = new Dictionary<Trigram, ReadOnlyMemory<HiddenDeityInfo>>();
         foreach (var palace in Trigram.GetAll())
         {
             templates[palace] = CreateTemplate(palace);
@@ -20,7 +20,7 @@ internal static class PalaceHexagramTemplateCache
         return templates;
     }
 
-    private static HiddenDeityInfo[] CreateTemplate(Trigram palace)
+    private static ReadOnlyMemory<HiddenDeityInfo> CreateTemplate(Trigram palace)
     {
         var hexagram = new HexagramInstance(Hexagram.Create(palace, palace));
         NajiaStep.Bind(hexagram);

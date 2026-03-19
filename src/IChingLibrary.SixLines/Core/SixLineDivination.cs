@@ -271,7 +271,7 @@ public class SixLineDivination
         sb.AppendLine($"|{tSymbolicStarName}|{tSymbolicStarBranch}|");
         sb.AppendLine("|---|---|");
         
-        foreach (var symbolicStar in SymbolicStars.AllStarsMemory)
+        foreach (var symbolicStar in SymbolicStars.AllStarsMemorySnapshot.Span)
         {
             sb.AppendLine($"|{symbolicStar.Key}|{FormatEarthlyBranches(symbolicStar.Value)}|");
         }

@@ -5,15 +5,17 @@
 /// </summary>
 public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
 {
-    private static readonly IStructuringStep[] DefaultSteps =
+    private static readonly (Type StepType, Func<IStructuringStep> Factory)[] DefaultStepFactories =
     [
-        new NajiaStep(),
-        new PositionStep(),
-        new SixKinStep(),
-        new SixSpiritStep(),
-        new HiddenDeityStep(),
-        new SymbolicStarStep()
+        (typeof(NajiaStep), static () => new NajiaStep()),
+        (typeof(PositionStep), static () => new PositionStep()),
+        (typeof(SixKinStep), static () => new SixKinStep()),
+        (typeof(SixSpiritStep), static () => new SixSpiritStep()),
+        (typeof(HiddenDeityStep), static () => new HiddenDeityStep()),
+        (typeof(SymbolicStarStep), static () => new SymbolicStarStep())
     ];
+
+    private static readonly bool DefaultStepOrderValidated = ValidateDefaultStepOrder();
 
     private ICastingMethod? _castingMethod;
     
@@ -31,10 +33,11 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
     /// <inheritdoc />
     public ISixLineDivinationBuilder WithDefaultSteps()
     {
+        _ = DefaultStepOrderValidated;
         var hadExistingSteps = _steps.Count > 0;
-        foreach (var step in DefaultSteps)
+        foreach (var (stepType, factory) in DefaultStepFactories)
         {
-            AddStep(step, keepOrder: true);
+            AddDefaultStep(stepType, factory);
         }
 
         if (hadExistingSteps)
@@ -144,5 +147,39 @@ public sealed class SixLineDivinationBuilder : ISixLineDivinationBuilder
         {
             _requiresSorting = true;
         }
+    }
+
+    private void AddDefaultStep(Type stepType, Func<IStructuringStep> factory)
+    {
+        if (!_stepTypes.Add(stepType))
+        {
+            return;
+        }
+
+        _steps.Add(factory());
+    }
+
+    private static bool ValidateDefaultStepOrder()
+    {
+        var visited = new HashSet<Type>();
+        foreach (var (stepType, factory) in DefaultStepFactories)
+        {
+            if (!visited.Add(stepType))
+            {
+                throw new InvalidOperationException($"默认步骤中存在重复类型: {stepType}");
+            }
+
+            var step = factory();
+            foreach (var dependencyType in step.RequiredSteps)
+            {
+                if (!visited.Contains(dependencyType))
+                {
+                    throw new InvalidOperationException(
+                        $"默认步骤顺序无效: {stepType} 依赖 {dependencyType}，但该依赖未在前面注册。");
+                }
+            }
+        }
+
+        return true;
     }
 }

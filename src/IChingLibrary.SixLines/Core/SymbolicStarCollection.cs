@@ -11,6 +11,7 @@ public sealed class SymbolicStarCollection
     private readonly Dictionary<SymbolicStar, EarthlyBranch[]> _symbolicStars;
     private readonly Dictionary<SymbolicStar, ReadOnlyMemory<EarthlyBranch>> _allStarsMemory;
     private readonly IReadOnlyDictionary<SymbolicStar, ReadOnlyMemory<EarthlyBranch>> _allStarsMemoryView;
+    private KeyValuePair<SymbolicStar, ReadOnlyMemory<EarthlyBranch>>[] _allStarsMemorySnapshot;
 
     /// <summary>
     /// 初始化神煞集合
@@ -23,6 +24,7 @@ public sealed class SymbolicStarCollection
             static kvp => kvp.Key,
             static kvp => new ReadOnlyMemory<EarthlyBranch>(kvp.Value));
         _allStarsMemoryView = new ReadOnlyDictionary<SymbolicStar, ReadOnlyMemory<EarthlyBranch>>(_allStarsMemory);
+        _allStarsMemorySnapshot = _allStarsMemory.ToArray();
     }
 
     /// <summary>
@@ -88,6 +90,9 @@ public sealed class SymbolicStarCollection
     /// </summary>
     public IReadOnlyDictionary<SymbolicStar, ReadOnlyMemory<EarthlyBranch>> AllStarsMemory => _allStarsMemoryView;
 
+    internal ReadOnlyMemory<KeyValuePair<SymbolicStar, ReadOnlyMemory<EarthlyBranch>>> AllStarsMemorySnapshot =>
+        _allStarsMemorySnapshot;
+
     /// <summary>
     /// 添加神煞
     /// </summary>
@@ -103,6 +108,7 @@ public sealed class SymbolicStarCollection
         }
 
         _allStarsMemory[symbolicStar] = values;
+        _allStarsMemorySnapshot = _allStarsMemory.ToArray();
         return true;
     }
     
@@ -119,6 +125,7 @@ public sealed class SymbolicStarCollection
         }
 
         _allStarsMemory.Remove(symbolicStar);
+        _allStarsMemorySnapshot = _allStarsMemory.ToArray();
         return true;
     }
 }

@@ -340,6 +340,21 @@ public class SixLineDivinationTests
         Assert.Null(ex);
     }
 
+    [Fact]
+    public void ToString_AfterMutatingSymbolicStars_ShouldNotThrow()
+    {
+        var fourSymbols = Enumerable.Repeat(FourSymbol.YoungYang, 6).ToArray();
+        var divination = SixLineDivination.Create(TestInquiryTime, fourSymbols);
+        var customStar = SymbolicStar.CreateCustom("DynamicStar");
+
+        Assert.True(divination.SymbolicStars!.Add(customStar, () => [EarthlyBranch.Zi]));
+        Assert.True(divination.SymbolicStars.Remove(customStar));
+
+        var ex = Record.Exception(() => divination.ToString());
+
+        Assert.Null(ex);
+    }
+
     private static void AssertEquivalentDivinations(SixLineDivination expected, SixLineDivination actual)
     {
         Assert.Equal(expected.CastingTime.Solar, actual.CastingTime.Solar);

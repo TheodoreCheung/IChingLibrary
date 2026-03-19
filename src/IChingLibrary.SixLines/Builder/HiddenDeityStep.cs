@@ -30,7 +30,7 @@ public class HiddenDeityStep : IStructuringStep
         }
 
         // 3. 获取本宫卦模板（已预计算纳甲和六亲）
-        var palaceTemplate = PalaceHexagramTemplateCache.GetTemplate(context.SixLineDivination.Original.Meta.Palace);
+        var palaceTemplate = PalaceHexagramTemplateCache.GetTemplate(context.SixLineDivination.Original.Meta.Palace).Span;
 
         // 4. 按位置对应查找伏神
         for (var i = 0; i < 6; i++)
