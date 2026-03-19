@@ -1,84 +1,84 @@
-﻿namespace IChingLibrary.Generators;
+namespace IChingLibrary.Generators;
 
 [Generator]
-public class IChingElementGenerator : IIncrementalGenerator
+public sealed class IChingElementGenerator : IIncrementalGenerator
 {
+    private const string AttributeMetadataName = "IChingLibrary.Core.Annotations.IChingElementEnumAttribute";
+
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        // 1. 筛选：寻找带有 [IChingEnum] 特性的 partial class
-        var classDeclarations = context.SyntaxProvider
-            .CreateSyntaxProvider(
-                predicate: static (s, _) => s is ClassDeclarationSyntax { AttributeLists.Count: > 0 },
-                transform: static (ctx, _) => GetSemanticTargetForGeneration(ctx))
-            .Where(static m => m is not null);
+        var models = context.SyntaxProvider
+            .ForAttributeWithMetadataName(
+                AttributeMetadataName,
+                static (node, _) => node is ClassDeclarationSyntax,
+                static (ctx, _) => TryCreateModel(ctx))
+            .Where(static model => model is not null)
+            .Select(static (model, _) => model!.Value);
 
-        // 2. 组合：将类信息与编译信息结合
-        IncrementalValueProvider<(Compilation, ImmutableArray<ClassDeclarationSyntax?>)> compilationAndClasses
-            = context.CompilationProvider.Combine(classDeclarations.Collect());
-
-        // 3. 注册：生成源代码
-        context.RegisterSourceOutput(compilationAndClasses,
-            static (spc, source) => Execute(source.Item1, source.Item2!, spc));
+        context.RegisterSourceOutput(models, static (spc, model) => Execute(model, spc));
     }
 
-    private static ClassDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext ctx)
+    private static ElementModel? TryCreateModel(GeneratorAttributeSyntaxContext context)
     {
-        var classDeclarationSyntax = (ClassDeclarationSyntax)ctx.Node;
-
-        // 遍历类上的所有特性，检查是否是我们的 IChingEnum
-        foreach (AttributeListSyntax attributeListSyntax in classDeclarationSyntax.AttributeLists)
+        if (context.TargetNode is not ClassDeclarationSyntax classDeclaration)
         {
-            foreach (AttributeSyntax attributeSyntax in attributeListSyntax.Attributes)
-            {
-                // 使用语义模型获取特性的全名，防止同名冲突
-                if (ctx.SemanticModel.GetSymbolInfo(attributeSyntax).Symbol is IMethodSymbol attributeSymbol)
-                {
-                    var attributeContainingTypeSymbol = attributeSymbol.ContainingType;
-                    var fullName = attributeContainingTypeSymbol.ToDisplayString();
-
-                    if (fullName == "IChingLibrary.Core.Annotations.IChingElementEnumAttribute")
-                    {
-                        return classDeclarationSyntax;
-                    }
-                }
-                // 备选方案：如果没有复杂的命名空间需求，也可以简单判断名称
-                else if (attributeSyntax.Name.ToString().Contains("IChingElementEnum"))
-                {
-                    return classDeclarationSyntax;
-                }
-            }
+            return null;
         }
 
-        return null;
+        if (!classDeclaration.Modifiers.Any(static modifier =>
+                modifier.IsKind(global::Microsoft.CodeAnalysis.CSharp.SyntaxKind.PartialKeyword)))
+        {
+            return null;
+        }
+
+        if (context.TargetSymbol is not INamedTypeSymbol { TypeKind: TypeKind.Class } symbol)
+        {
+            return null;
+        }
+
+        if (!IsPrimaryAttributedDeclaration(context, symbol))
+        {
+            return null;
+        }
+
+        var fieldNames = symbol.GetMembers()
+            .OfType<IFieldSymbol>()
+            .Where(static field => field.IsStatic && field.IsReadOnly &&
+                                   SymbolEqualityComparer.Default.Equals(field.Type, field.ContainingType))
+            .Select(static field => field.Name)
+            .ToImmutableArray();
+
+        if (fieldNames.IsDefaultOrEmpty)
+        {
+            return null;
+        }
+
+        return new ElementModel(
+            symbol.ContainingNamespace.ToDisplayString(),
+            symbol.Name,
+            fieldNames);
     }
 
-    private static void Execute(Compilation compilation, ImmutableArray<ClassDeclarationSyntax> classes,
-        SourceProductionContext context)
+    private static bool IsPrimaryAttributedDeclaration(GeneratorAttributeSyntaxContext context, INamedTypeSymbol symbol)
     {
-        if (classes.IsDefaultOrEmpty) return;
+        var currentAttributeStart = context.Attributes
+            .Select(static attribute => attribute.ApplicationSyntaxReference?.Span.Start ?? int.MaxValue)
+            .DefaultIfEmpty(int.MaxValue)
+            .Min();
 
-        foreach (var classSyntax in classes.Distinct())
-        {
-            var model = compilation.GetSemanticModel(classSyntax.SyntaxTree);
-            if (model.GetDeclaredSymbol(classSyntax) is not INamedTypeSymbol symbol) continue;
+        var firstAttributeStart = symbol.GetAttributes()
+            .Where(static attribute => attribute.AttributeClass?.ToDisplayString() == AttributeMetadataName)
+            .Select(static attribute => attribute.ApplicationSyntaxReference?.Span.Start ?? int.MaxValue)
+            .DefaultIfEmpty(int.MaxValue)
+            .Min();
 
-            // 提取信息
-            var namespaceName = symbol.ContainingNamespace.ToDisplayString();
-            var className = symbol.Name;
+        return currentAttributeStart == firstAttributeStart;
+    }
 
-            // 找出所有 static readonly 且类型是自身的字段
-            var fieldNames = symbol.GetMembers()
-                .OfType<IFieldSymbol>()
-                .Where(f => f.IsStatic && f.IsReadOnly && SymbolEqualityComparer.Default.Equals(f.Type, symbol))
-                .Select(f => f.Name)
-                .ToImmutableArray();
-
-            if (fieldNames.Length == 0) continue;
-
-            // 生成代码
-            var source = GeneratePartialClass(namespaceName, className, fieldNames);
-            context.AddSource($"{className}_Generated.g.cs", SourceText.From(source, Encoding.UTF8));
-        }
+    private static void Execute(ElementModel model, SourceProductionContext context)
+    {
+        var source = GeneratePartialClass(model.NamespaceName, model.ClassName, model.FieldNames);
+        context.AddSource($"{model.ClassName}_Generated.g.cs", SourceText.From(source, Encoding.UTF8));
     }
 
     private static string GeneratePartialClass(string ns, string className, ImmutableArray<string> fields)
@@ -86,6 +86,7 @@ public class IChingElementGenerator : IIncrementalGenerator
         var sb = new StringBuilder();
         sb.Append($$"""
                     // <auto-generated/>
+                    #nullable enable
                     using System;
                     using System.Collections.Generic;
 
@@ -93,28 +94,67 @@ public class IChingElementGenerator : IIncrementalGenerator
 
                     public partial class {{className}}
                     {
-                        private static readonly Dictionary<byte, {{className}}> _allElements = new Dictionary<byte, {{className}}>
+                        private static readonly IReadOnlyList<{{className}}> _allElements = Array.AsReadOnly(new[]
                         {
-
+                    
                     """);
         foreach (var field in fields)
         {
-            sb.AppendLine($"        {{ (byte){field}.Value, {field} }},");
+            sb.AppendLine($"        {field},");
         }
 
         sb.Append($$"""
-                        };
+                        });
 
-                        public static IEnumerable<{{className}}> GetAll() => _allElements.Values;
+                        private static readonly {{className}}?[] _elementsByValue = CreateElementsByValue();
+
+                        private static {{className}}?[] CreateElementsByValue()
+                        {
+                            byte maxValue = 0;
+                    """);
+
+        foreach (var field in fields)
+        {
+            sb.AppendLine($"        if ((byte){field}.Value > maxValue) maxValue = (byte){field}.Value;");
+        }
+
+        sb.Append($$"""
+
+                            var elements = new {{className}}?[maxValue + 1];
+                    """);
+
+        foreach (var field in fields)
+        {
+            sb.AppendLine($"        elements[(byte){field}.Value] = {field};");
+        }
+
+        sb.Append($$"""
+
+                            return elements;
+                        }
+
+                        public static IEnumerable<{{className}}> GetAll() => _allElements;
 
                         public static {{className}} FromValue(byte value) 
                         {
-                            return _allElements.TryGetValue(value, out var element) 
-                                ? element 
-                                : throw new KeyNotFoundException($"Value {value} not found in {{className}}");
+                            if (value < _elementsByValue.Length && _elementsByValue[value] is { } element)
+                            {
+                                return element;
+                            }
+
+                            throw new KeyNotFoundException($"Value {value} not found in {{className}}");
                         }
                     }
                     """);
         return sb.ToString();
+    }
+
+    private readonly struct ElementModel(string namespaceName, string className, ImmutableArray<string> fieldNames)
+    {
+        public string NamespaceName { get; } = namespaceName;
+
+        public string ClassName { get; } = className;
+
+        public ImmutableArray<string> FieldNames { get; } = fieldNames;
     }
 }

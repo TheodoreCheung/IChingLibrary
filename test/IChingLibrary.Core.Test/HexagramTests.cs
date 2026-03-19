@@ -758,6 +758,20 @@ public class HexagramTests
     }
 
     [Fact]
+    public void Hexagram_GetAll_ShouldPreserveDeclarationOrder()
+    {
+        var allHexagrams = Hexagram.GetAll().ToList();
+
+        Assert.Equal(Hexagram.TheCreative, allHexagrams[0]);
+        Assert.Equal(Hexagram.ComingToMeet, allHexagrams[1]);
+        Assert.Equal(Hexagram.Retreat, allHexagrams[2]);
+        Assert.Equal(Hexagram.Standstill, allHexagrams[3]);
+        Assert.Equal(Hexagram.TheReceptive, allHexagrams[^8]);
+        Assert.Equal(Hexagram.Return, allHexagrams[^7]);
+        Assert.Equal(Hexagram.HoldingTogether, allHexagrams[^1]);
+    }
+
+    [Fact]
     public void Hexagram_FromValue_ShouldReturnCorrectHexagram()
     {
         // Act & Assert
